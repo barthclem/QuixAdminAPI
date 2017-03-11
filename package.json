@@ -1,0 +1,27 @@
+{
+  "name": "messages",
+  "version": "1.0.0",
+  "description": "Testing App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.17.0",
+    "bookshelf": "^0.10.3",
+    "bookshelf-soft-delete": "^4.0.0",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.0",
+    "express-fileupload": "^0.1.1",
+    "joi": "^10.2.2",
+    "jscs": "^3.0.7",
+    "knex": "^0.12.7",
+    "morgan": "^1.8.1",
+    "mysql": "^2.13.0",
+    "node-uuid": "^1.4.7",
+    "nodemailer": "^3.1.4"
+  }
+}

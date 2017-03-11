@@ -1,0 +1,10 @@
+#notify{
+
+    -webkit-transition-timing-function: ease-in-out;
+    -webkit-transition-duration: 5s;
+    -webkit-transition-delay: 3s ;
+
+    transition-timing-function: ease-in-out;
+    transition-duration: 5s;
+    transition-delay: 3s ;
+}

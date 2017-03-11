@@ -1,0 +1,40 @@
+<div class="col-sm-5">
+<form name="flogin">
+    <div class="form-group"  ng-class="{ 'has-error': flogin.email.$touched && flogin.email.$invalid}">
+        <label> Email </label>
+        <input type="email"
+               class="form-control"
+               name="email"
+               ng-model="$lctrl.email"
+               ng-minlength="4"
+               ng-maxlength="25"
+               datum dtype = "email"
+               required>
+        <div class="help-block" ng-messages="flogin.email.$error" ng-if="flogin.email.$dirty">
+            <div ng-messages-include="partials/messageval.html"></div>
+        </div>
+    </div>
+    <div class="form-group"  ng-class="{ 'has-error': flogin.password.$touched && flogin.password.$invalid}">
+        <label> Password </label>
+        <input type="password"
+               class="form-control"
+               name="password"
+               ng-model="$lctrl.password"
+               ng-minlength="4"
+               ng-maxlength="25"
+               required>
+        <div class="help-block" ng-messages="flogin.password.$error" ng-if="flogin.password.$dirty">
+            <div ng-messages-include="partials/messageval.html"></div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="form-control btn btn-primary" ng-click="$lctrl.loginry()"> Login </button>
+    </div>
+    <pre>flogin.email.$error = {{ flogin.email.$error | json }}</pre>
+
+</form>
+
+
+
+</div>
