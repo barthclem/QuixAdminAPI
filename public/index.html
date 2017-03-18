@@ -6,15 +6,31 @@
     <base href="/" />
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
-    <link rel="stylesheet" href="css/validatee.css">
-    <link rel="stylesheet" href="css/display.css">
-    <link rel="stylesheet" href="css/form-validation.css">
+    <!--<link rel="stylesheet" href="css/validatee.css">-->
+    <!--<link rel="stylesheet" href="css/display.css">-->
+    <!--<link rel="stylesheet" href="css/form-validation.css">-->
 </head>
 <body >
 <div class="well text-center" >
     <h2> Form Test</h2>
     <a href="#">written in the stars</a>
 </div>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div class="navbar-brand">
+                <a href="#">messageApp</a>
+            </div>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="#">home</a> </li>
+            <li class="active"><a href="#">profile</a> </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li>Logout</li>
+        </ul>
+    </div>
+</nav>
 <div class="container" ng-controller="MainController as main">
     <div id="notify" class="alert alert-dismissible " ng-class="main.messageclass" ng-show="main.visible">
         <p>
@@ -24,6 +40,7 @@
     </div>
 
     <a href="registration" ><p class="btn btn-primary">Registration</p> </a>
+    <a href="profile" ><p class="btn btn-primary">profile</p> </a>
     <a href="login" ><p class="btn btn-primary">Login</p> </a>
     <div class="main">
         <div ng-view></div>
@@ -47,11 +64,13 @@
 <script src="js/controllers/FormCtrl.js"></script>
 <script src="js/controllers/MainController.js"></script>
 <script src="js/controllers/LoginCtrl.js"></script>
+<script src= "js/controllers/ProfileController.js"></script>
 <script src="js/directive/confirmDirective.js"></script>
 <script src="js/directive/nameFormDiv.js"></script>
 <script src="js/directive/regDataExists.js"></script>
 <script src="js/services/registerUser.js"></script>
 <script src="js/services/loginUser.js"></script>
+<script src="js/services/uploadService.js"></script>
 <script src="js/routes/routes.js"></script>
 </body>
 </html>

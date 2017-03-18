@@ -1,0 +1,128 @@
+
+  <div class="container">
+      <div class="row">
+          <div class="col-sm-4">
+            <div class="img-thumbnail text-center image-block">
+                <img src="../img/img1.jpg" alt="profilr-pics" width="80%">
+                <caption >
+                    <button class="btn btn-block btn-primary">Upload</button>
+                </caption>
+            </div>
+          </div>
+
+          <div class="col-sm-8">
+              <div class="form-group" ng-class="{ 'has-error': testForm.firstName.$touched && testForm.firstName.$invalid }">
+                  <label>First Name</label>
+                  <input type="text"
+                         name="firstName"
+                         ng-model="$rctrl.firstName"
+                         class="form-control"
+                         ng-minlength="3"
+                         ng-maxlength="20"
+                         valid-name
+                         required/>
+                  <div class="form-group">
+                      <div class="help-block" ng-messages="testForm.firstName.$error" ng-if="testForm.firstName.$dirty">
+                          <div ng-messages-include="partials/messageval.html"></div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="form-group" ng-class="{ 'has-error': testForm.lastName.$touched && testForm.lastName.$invalid }">
+                  <label>Last Name</label>
+                  <input type="text"
+                         name="lastName"
+                         ng-model="$rctrl.lastname"
+                         class="form-control"
+                         ng-minlength="3"
+                         ng-maxlength="20"
+                         valid-name
+                         required/>
+                  <div class="form-group">
+                      <div class="help-block" ng-messages="testForm.lastName.$error"
+                           ng-if="testForm.lastName.$dirty">
+                          <div ng-messages-include="partials/messageval.html"></div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="form-group" ng-class="{ 'has-error': testForm.username.$touched && testForm.username.$invalid }">
+                  <label>Username</label>
+                  <input type="text"
+                         name="username"
+                         ng-model="$rctrl.username"
+                         class="form-control"
+                         ng-minlength="3"
+                         ng-maxlength="20"
+                         ng-pattern = "/^[A-z]+([A-z0-9]){3,}$/"
+                         datum dtype = "username"
+                         required/>
+                  <div class="form-group">
+                      <div class="help-block" ng-messages="testForm.username.$error"
+                           ng-if="testForm.username.$dirty">
+                          <div ng-messages-include="partials/messageval.html"></div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="form-group" ng-class="{ 'has-error': testForm.email.$touched && testForm.email.$invalid }">
+                  <label>Email</label>
+                  <input type="text"
+                         name="email"
+                         ng-model="$rctrl.email"
+                         class="form-control"
+                         ng-minlength="3"
+                         ng-maxlength="30"
+                         datum dtype = "email"
+                         required/>
+                  <div class="form-group">
+                      <div class="help-block" ng-messages="testForm.email.$error" ng-if="testForm.email.$dirty">
+                          <div ng-messages-include="partials/messageval.html"></div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="form-group" ng-class="{ 'has-error': testForm.password.$touched && testForm.password.$invalid }">
+                  <label>Password</label>
+                  <input type="password"
+                         name="password"
+                         ng-model="$rctrl.password"
+                         class="form-control"
+                         ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z])/"
+                         ng-minlength="3"
+                         ng-maxlength="20"
+                         required/>
+                  <div class="form-group">
+                      <div class="help-block" ng-messages="testForm.password.$error"
+                           ng-if="testForm.password.$dirty">
+                          <div ng-messages-include="partials/messageval.html"></div>
+                      </div>
+                  </div>
+              </div>
+
+
+              <div class="form-group" ng-class="{ 'has-error': testForm.confirmPassword.$touched && testForm.confirmPassword.$invalid }">
+                  <label>Confirm Password</label>
+                  <input type="password"
+                         name="confirmPassword"
+                         ng-model="$rctrl.confirmPassword"
+                         class="form-control"
+                         ng-minlength="3"
+                         ng-maxlength="20"
+                         validate-confirm-password
+                         required/>
+                  <div class="form-group">
+                      <div class="help-block" ng-messages="testForm.confirmPassword.$error"
+                           ng-if="testForm.confirmPassword.$dirty">
+                          <div ng-message="validateConfirmPassword" > Ensure that the passwords match</div>
+                          <div ng-messages-include="partials/messageval.html"></div>
+                      </div>
+                  </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary" ng-disabled="testForm.$invalid" ng-click="$rctrl.registerData()"> Register </button>
+
+              </form>
+          </div>
+      </div>
+  </div>

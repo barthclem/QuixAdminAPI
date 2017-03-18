@@ -14,6 +14,11 @@
             controller : 'LoginController',
             controllerAs: '$lctrl'
         })
+        .when('/profile', {
+            templateUrl : 'partials/profile.html',
+            controller : 'ProfileController',
+            controllerAs : '$pctrl'
+        })
         .when('/validate', {
             templateUrl : 'partials/validate.html',
         })
