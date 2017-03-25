@@ -10,6 +10,7 @@ function MainController ($timeout, $scope) {
     vm.message = " Hey Guy ";
     vm.visible = false;
     $scope.$on('messageAlert', (event, data) => {
+        console.log(`Message Alert Event is received => ${JSON.stringify(data)}`);
         vm.message = data.message;
         vm.messageclass = "alert-"+ data.type;
         vm.visible = true;

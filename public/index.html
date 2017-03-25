@@ -6,11 +6,29 @@
     <base href="/" />
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
-    <link rel="stylesheet" href="css/validatee.css">
-    <link rel="stylesheet" href="css/display.css">
-    <link rel="stylesheet" href="css/form-validation.css">
+    <!--<link rel="stylesheet" href="css/validatee.css">-->
+    <!--<link rel="stylesheet" href="css/display.css">-->
+    <!--<link rel="stylesheet" href="css/form-validation.css">-->
 </head>
 <body >
+
+<nav class="navbar navbar-inverse" ng-controller="NavController as $nctrl">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">MessageApp</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">Page 2</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li ng-show="$nctrl.displayLogin"><a href="registration"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="login" ng-show="$nctrl.displayLogin"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+                <a  ng-click="$nctrl.logOut()" href="logout" ng-show="!$nctrl.displayLogin"><span class="glyphicon glyphicon-log-in"></span> LogOut</a>
+            </li>
+        </ul>
+    </div>
+</nav>
 <div class="well text-center" >
     <h2> Form Test</h2>
     <a href="#">written in the stars</a>
@@ -23,8 +41,6 @@
         </p>
     </div>
 
-    <a href="registration" ><p class="btn btn-primary">Registration</p> </a>
-    <a href="login" ><p class="btn btn-primary">Login</p> </a>
     <div class="main">
         <div ng-view></div>
     </div>
@@ -35,6 +51,7 @@
 <script src="https://code.angularjs.org/1.5.7/angular-route.js"></script>
 <script src="https://code.angularjs.org/1.5.7/angular-messages.js"></script>
 <script src="https://code.angularjs.org/1.5.7/angular-resource.js"></script>
+<script src="https://code.angularjs.org/1.5.7/angular-cookies.js"></script>
 <script src="https://code.angularjs.org/1.5.7/angular-sanitize.js"></script>
 
 <!--<script src="bower_components/angular/angular.min.js"></script>-->
@@ -47,6 +64,7 @@
 <script src="js/controllers/FormCtrl.js"></script>
 <script src="js/controllers/MainController.js"></script>
 <script src="js/controllers/LoginCtrl.js"></script>
+<script src="js/controllers/NavController.js"></script>
 <script src="js/directive/confirmDirective.js"></script>
 <script src="js/directive/nameFormDiv.js"></script>
 <script src="js/directive/regDataExists.js"></script>

@@ -1,9 +1,12 @@
 'use strict';
 let Express = require('express');
 let app = Express();
+let multer = require('multer');
+let multerDone = false;
 let router = Express.Router();
 let bodyParser = require('body-parser');
 let morgan = require('morgan');
+let path = require('path');
 let UserService = require('./app/services/userService');
 let userService = new UserService();
 let EmailService = require('./app/services/emailAuth');
@@ -44,10 +47,11 @@ router.route('/')
 router.post('/login',  (req, res) => {
     let data = req.body;
     userService.loginUser(data).then( (loginREsult) => {
+        loginREsult = loginREsult === undefined ? false : loginREsult;
         let responseObject = { isCorrect : loginREsult};
         console.log(`LoginRESULT => ${JSON.stringify(responseObject)}`);
         return res.send(responseObject);
-    }).catch ( error => { return res.send({ isCorrect : loginREsult});});
+    }).catch ( error => { return res.send({ isCorrect : false});});
 })
 
  router.route('/:id')
@@ -98,6 +102,29 @@ router.post('/login',  (req, res) => {
          res.send({status : 'failed'});
      })
  });
+
+router.post('/upload', (req, res) => {
+    if(multerDone == true) {
+        res.send('done');
+    }
+})
+
+//file upload multer configuration
+/*Configure the multer.*/
+
+app.use(multer({
+    dest: path.join(__dirname, 'public/uploads'),
+    rename: function (fieldname, filename) {
+        return filename+"_"+Date.now();
+    },
+    onFileUploadStart: function (file) {
+        console.log(file.originalname + ' is starting ...')
+    },
+    onFileUploadComplete: function (file) {
+        console.log(file.fieldname + ' uploaded to  ' + file.path)
+        multerDone=true;
+    }
+}));
 
  //Email Authorisation code part
 app.use('/users', router);
