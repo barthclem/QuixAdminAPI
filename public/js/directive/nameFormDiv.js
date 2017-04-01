@@ -7,7 +7,7 @@
          require : 'ngModel',
          link : function (scope, elm, attr, ctrl){
              function validator( viewValue) {
-                 ctrl.$setValidity('validName', String.prototype.match.call(''+viewValue,/^[A-z]{3,}$/) !== null);
+                 ctrl.$setValidity('validName', String.prototype.match.call(''+viewValue,/^[A-z]{3,}\s[A-z]{3,}$/) !== null);
                  return viewValue;
              }
              ctrl.$parsers.unshift(validator)

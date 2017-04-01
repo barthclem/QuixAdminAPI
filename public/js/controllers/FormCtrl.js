@@ -9,7 +9,7 @@ function RegistrationController (RegisterUserService, $http, $location) {
     vm.registerData = function () {
 
         let userRegData = {
-            name : vm.lastName + "  " + vm.firstName,
+            name :vm.fullname,
             email : vm.email,
             username : vm.username,
             password : vm.password
@@ -17,7 +17,7 @@ function RegistrationController (RegisterUserService, $http, $location) {
 
         RegisterUserService.registerUser(userRegData).then(
             data => {
-               $location.path('/');
+               $location.path('login');
             }
         )
             .catch( () => {

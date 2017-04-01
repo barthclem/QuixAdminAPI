@@ -2,9 +2,9 @@
  * Created by aanu.oyeyemi on 03/03/2017.
  */
 'use strict';
-var app = angular.module('messageApp', ['ngRoute', 'ngMessages', 'ngCookies', 'ngResource', 'ngSanitize'])
+var app = angular.module('messageApp', ['ngRoute', 'ngMessages', 'ngCookies', 'ngResource', 'ngSanitize', 'ui.router'])
     .controller('RootController', ['$rootScope', RootController])
-    .run([ 'CookieService', 'LoginService', 'NavService', FirstRun]);
+    .run([ '$location', 'CookieService', 'LoginService', 'NavService', FirstRun]);
 
 function RootController ($rootScope) {
     //this handles broadcasting of events
@@ -16,13 +16,16 @@ function RootController ($rootScope) {
     })
 }
 
-function FirstRun( cookieService, loginService, navService ) {
-    console.log('first run');
+function FirstRun( $location, cookieService, loginService, navService ) {
+
      let data = cookieService.getCookie('authentication');
      if(data){
          loginService.login(data).then((response) => {
-             if( response ) {
+             if(response) {
+                 $location.path('listMyEvent');
                  navService.setLogInStatus(true);
+             }else{
+                 $location.path('login');
              }
          }).catch(
              error => {

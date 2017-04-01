@@ -49,7 +49,6 @@ router.post('/login',  (req, res) => {
     userService.loginUser(data).then( (loginREsult) => {
         loginREsult = loginREsult === undefined ? false : loginREsult;
         let responseObject = { isCorrect : loginREsult};
-        console.log(`LoginRESULT => ${JSON.stringify(responseObject)}`);
         return res.send(responseObject);
     }).catch ( error => { return res.send({ isCorrect : false});});
 })
@@ -72,7 +71,6 @@ router.post('/login',  (req, res) => {
         let body = req.body;
         userService.updateUser(id, body).then(
             data => {
-                console.log(` UPDATED USER => ${data}`);
                 res.send(data);
             }
         ).catch(error => {
@@ -112,19 +110,19 @@ router.post('/upload', (req, res) => {
 //file upload multer configuration
 /*Configure the multer.*/
 
-app.use(multer({
-    dest: path.join(__dirname, 'public/uploads'),
-    rename: function (fieldname, filename) {
-        return filename+"_"+Date.now();
-    },
-    onFileUploadStart: function (file) {
-        console.log(file.originalname + ' is starting ...')
-    },
-    onFileUploadComplete: function (file) {
-        console.log(file.fieldname + ' uploaded to  ' + file.path)
-        multerDone=true;
-    }
-}));
+// app.use(multer({
+//     dest: path.join(__dirname, 'public/uploads'),
+//     rename: function (fieldname, filename) {
+//         return filename+"_"+Date.now();
+//     },
+//     onFileUploadStart: function (file) {
+//         console.log(file.originalname + ' is starting ...')
+//     },
+//     onFileUploadComplete: function (file) {
+//         console.log(file.fieldname + ' uploaded to  ' + file.path)
+//         multerDone=true;
+//     }
+// }));
 
  //Email Authorisation code part
 app.use('/users', router);

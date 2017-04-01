@@ -7,18 +7,14 @@ function LoginController($location, $scope, $rootScope, cookieService, loginServ
     let vm = this;
     vm.count = 0;
 
-
-
-
     vm.loginry = function (){
         loginService.login({ email: vm.email, password : vm.password}).then(
             result => {
-                console.log(`RESULT => ${result}`);
                 if(result){
                     //store the authentication data in the cookies
                     if(vm.remember === true){
                         cookieService.setCookie('authentication', {
-                            username : vm.email,
+                            email : vm.email,
                            password : vm.password
                         });
 
@@ -26,7 +22,7 @@ function LoginController($location, $scope, $rootScope, cookieService, loginServ
                         $rootScope.$broadcast('loggedInEvent', { loggedIn: true });
                     }
 
-                    $location.path('/');
+                    $location.path('listMyEvent');
                     $scope.$emit('messageAlert', {message : 'Successful Log n', type : 'success'})
                 }
                 else {
@@ -36,12 +32,16 @@ function LoginController($location, $scope, $rootScope, cookieService, loginServ
         );
 
 
-
-
     };
 
     vm.logOut = function () {
         cookieService.deleteCookie('authentication');
+        $location.path('login');
         $scope.$emit('loggedInEvent', { loggedIn: false });
     }
+
+    vm.signUp = function () {
+        $location.path('registration');
+    }
+
 }

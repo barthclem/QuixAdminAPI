@@ -1,75 +1,163 @@
 <!DOCTYPE html>
-<html lang="en-us" ng-app="messageApp" >
-<head >
-    <title> Form Test</title>
+<html lang="en" ng-app="messageApp">
+  <head>
+      <base href="/">
     <meta charset="utf-8">
-    <base href="/" />
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/bootstrap-theme.css">
-    <!--<link rel="stylesheet" href="css/validatee.css">-->
-    <!--<link rel="stylesheet" href="css/display.css">-->
-    <!--<link rel="stylesheet" href="css/form-validation.css">-->
-</head>
-<body >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="img/favicon.png">
 
-<nav class="navbar navbar-inverse" ng-controller="NavController as $nctrl">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">MessageApp</a>
-        </div>
-        <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#">Page 2</a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li ng-show="$nctrl.displayLogin"><a href="registration"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-            <li><a href="login" ng-show="$nctrl.displayLogin"><span class="glyphicon glyphicon-log-in"></span> Login</a>
-                <a  ng-click="$nctrl.logOut()" href="logout" ng-show="!$nctrl.displayLogin"><span class="glyphicon glyphicon-log-in"></span> LogOut</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-<div class="well text-center" >
-    <h2> Form Test</h2>
-    <a href="#">written in the stars</a>
-</div>
-<div class="container" ng-controller="MainController as main">
-    <div id="notify" class="alert alert-dismissible " ng-class="main.messageclass" ng-show="main.visible">
-        <p>
-                <strong>Success:</strong> {{ main.message }}
-                <span class="glyphicon glyphicon-remove" style="float:right"  aria-hidden="true" ng-click="main.visible = false"></span>
-        </p>
-    </div>
+    <title>Message App</title>
 
-    <div class="main">
-        <div ng-view></div>
-    </div>
-</div>
+    <!-- Bootstrap CSS -->    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="css/elegant-icons-style.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />    
+    <!-- full calendar css-->
+    <link href="assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css" rel="stylesheet" />
+	<link href="assets/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" />
+    <!-- easy pie chart-->
+    <link href="assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen"/>
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="css/owl.carousel.css" type="text/css">
+	<link href="css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+    <!-- Custom styles -->
+	<link rel="stylesheet" href="css/fullcalendar.css">
+	<link href="css/widgets.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style-responsive.css" rel="stylesheet" />
+	<link href="css/xcharts.min.css" rel=" stylesheet">	
+	<link href="css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+    </head>
+
+    <body class="default">
+    <!-- container section start -->
+
+  <section id="container" class="">
+      <div  ui-view></div>
+  </section>
+  <!-- container section start -->
+
+    <!-- javascripts -->
+    <script src="js/lib/jquery.js"></script>
+	<script src="js/lib/jquery-ui-1.10.4.min.js"></script>
+    <script src="js/lib/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="js/lib/jquery-ui-1.9.2.custom.min.js"></script>
+    <!-- bootstrap -->
+    <script src="js/lib/bootstrap.min.js"></script>
+    <!-- nice scroll -->
+    <script src="js/lib/jquery.scrollTo.min.js"></script>
+    <script src="js/lib/jquery.nicescroll.js" type="text/javascript"></script>
+    <!-- charts scripts -->
+    <script src="assets/jquery-knob/js/jquery.knob.js"></script>
+    <script src="js/lib/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="js/lib/owl.carousel.js" ></script>
+    <!-- jQuery full calendar -->
+    <<script src="js/lib/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
+	<script src="assets/fullcalendar/fullcalendar/fullcalendar.js"></script>
+    <!--script for this page only-->
+    <script src="js/lib/calendar-custom.js"></script>
+	<script src="js/lib/jquery.rateit.min.js"></script>
+    <!-- custom select -->
+    <script src="js/lib/jquery.customSelect.min.js" ></script>
+	<script src="assets/chart-master/Chart.js"></script>
+
+    <!--custome script for all page-->
+    <script src="js/lib/scripts.js"></script>
+    <!-- custom script for this page-->
+    <script src="js/lib/sparkline-chart.js"></script>
+    <script src="js/lib/easy-pie-chart.js"></script>
+	<script src="js/lib/jquery-jvectormap-1.2.2.min.js"></script>
+	<script src="js/lib/jquery-jvectormap-world-mill-en.js"></script>
+	<script src="js/lib/xcharts.min.js"></script>
+	<script src="js/lib/jquery.autosize.min.js"></script>
+	<script src="js/lib/jquery.placeholder.min.js"></script>
+	<script src="js/lib/gdp-data.js"></script>
+	<script src="js/lib/morris.min.js"></script>
+	<script src="js/lib/sparklines.js"></script>
+	<script src="js/lib/charts.js"></script>
+	<script src="js/lib/jquery.slimscroll.min.js"></script>
+  <script>
+
+      //knob
+      $(function() {
+        $(".knob").knob({
+          'draw' : function () {
+            $(this.i).val(this.cv + '%')
+          }
+        })
+      });
+
+      //carousel
+      $(document).ready(function() {
+          $("#owl-slider").owlCarousel({
+              navigation : true,
+              slideSpeed : 300,
+              paginationSpeed : 400,
+              singleItem : true
+
+          });
+      });
+
+      //custom select box
+
+      $(function(){
+          $('select.styled').customSelect();
+      });
+
+	  /* ---------- Map ---------- */
+	$(function(){
+	  $('#map').vectorMap({
+	    map: 'world_mill_en',
+	    series: {
+	      regions: [{
+	        values: gdpData,
+	        scale: ['#000', '#000'],
+	        normalizeFunction: 'polynomial'
+	      }]
+	    },
+		backgroundColor: '#eef3f7',
+	    onLabelShow: function(e, el, code){
+	      el.html(el.html()+' (GDP - '+gdpData[code]+')');
+	    }
+	  });
+	});
+
+  </script>
 
 
-<script src="https://code.angularjs.org/1.5.7/angular.js"></script>
-<script src="https://code.angularjs.org/1.5.7/angular-route.js"></script>
-<script src="https://code.angularjs.org/1.5.7/angular-messages.js"></script>
-<script src="https://code.angularjs.org/1.5.7/angular-resource.js"></script>
-<script src="https://code.angularjs.org/1.5.7/angular-cookies.js"></script>
-<script src="https://code.angularjs.org/1.5.7/angular-sanitize.js"></script>
-
-<!--<script src="bower_components/angular/angular.min.js"></script>-->
-<!--<script src="bower_components/angular-route/angular-route.min.js"></script>-->
-<!--<script src="bower_components/angular-messages/angular-messages.min.js"></script>-->
-<!--<script src="bower_components/angular-resource/angular-resource.min.js"></script>-->
+  <script src="https://code.angularjs.org/1.5.7/angular.js"></script>
+  <script src="https://code.angularjs.org/1.5.7/angular-route.js"></script>
+  <script src="http://angular-ui.github.io/ui-router/release/angular-ui-router.min.js"></script>
+  <script src="https://code.angularjs.org/1.5.7/angular-messages.js"></script>
+  <script src="https://code.angularjs.org/1.5.7/angular-resource.js"></script>
+  <script src="https://code.angularjs.org/1.5.7/angular-cookies.js"></script>
+  <script src="https://code.angularjs.org/1.5.7/angular-sanitize.js"></script>
 
 
-<script src="app.js"></script>
-<script src="js/controllers/FormCtrl.js"></script>
-<script src="js/controllers/MainController.js"></script>
-<script src="js/controllers/LoginCtrl.js"></script>
-<script src="js/controllers/NavController.js"></script>
-<script src="js/directive/confirmDirective.js"></script>
-<script src="js/directive/nameFormDiv.js"></script>
-<script src="js/directive/regDataExists.js"></script>
-<script src="js/services/registerUser.js"></script>
-<script src="js/services/loginUser.js"></script>
-<script src="js/routes/routes.js"></script>
-</body>
+  <script src="app.js"></script>
+  <script src="js/controllers/FormCtrl.js"></script>
+  <script src="js/controllers/MainController.js"></script>
+  <script src="js/controllers/LoginCtrl.js"></script>
+  <script src="js/controllers/NavController.js"></script>
+    <script src="js/controllers/EventController.js"></script>
+  <script src="js/directive/confirmDirective.js"></script>
+  <script src="js/directive/nameFormDiv.js"></script>
+  <script src="js/directive/regDataExists.js"></script>
+  <script src="js/directive/uploadDirective.js"></script>
+  <script src="js/services/registerUser.js"></script>
+  <script src="js/services/loginUser.js"></script>
+  <script src="js/services/navService.js"></script>
+  <script src="js/services/uploadService.js"></script>
+  <script src="js/services/cookieService.js"></script>
+  <script src="js/routes/routes.js"></script>
+
+  </body>
 </html>

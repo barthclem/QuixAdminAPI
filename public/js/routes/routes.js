@@ -1,27 +1,31 @@
 'use strict';
  angular.module('messageApp')
 .config(
- function Router ($routeProvider , $locationProvider)
+ function Router ($stateProvider, $locationProvider, $urlRouterProvider)
 {
-    $routeProvider
-        .when('/registration', {
-            templateUrl : 'partials/registration.html',
+    $urlRouterProvider.otherwise('/listMyEvent');
+    $stateProvider
+        .state('registration', {
+            url : '/registration',
+            templateUrl : 'partials/signUp.html',
             controller : 'RegistrationController',
             controllerAs: '$rctrl'
         })
-        .when('/login', {
+        .state ('login', {
+            url : '/login',
             templateUrl : 'partials/login.html',
             controller : 'LoginController',
             controllerAs: '$lctrl'
         })
-        .when('/validate', {
-            templateUrl : 'partials/validate.html',
+        .state ('validate', {
+            url : 'validate',
+            templateUrl : 'partials/validate.html'
         })
-        .otherwise({
-            templateUrl : 'partials/welcome.html'
-            });
-
-
+        .state ('listMyEvent', {
+            url : '/listMyEvent',
+            templateUrl : 'partials/listEvent.html',
+            controller : 'EventController'
+        })
     $locationProvider.html5Mode(true);
 
 });

@@ -7,11 +7,9 @@ angular.module('messageApp').service('LoginService', ['$http', LoginService]);
 
 function LoginService ($http) {
     this.login = function (data) {
-        console.log(`Sending data => ${data}`);
+        console.log(`Sending data => ${JSON.stringify(data)}`);
         return new Promise ( (resolve, reject) => {
             $http.post('/users/login', data).then((loginData) => {
-                console.log(`Response Login Message => ${loginData.data.isCorrect}`);
-                console.log(`Response Login Message Object => ${JSON.stringify(loginData)}`);
                 return resolve(loginData.data.isCorrect);
             })
                 .catch(error => {

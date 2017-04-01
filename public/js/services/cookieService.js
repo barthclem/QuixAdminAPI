@@ -15,28 +15,29 @@ function CookieService ( $cookies) {
         temp_date.setDate( temp_date.getDate() + dayValidity);
     }
 
-    this.getValidDuration = function ( dayValidity) {
+    this.getValidDuration = function () {
         return temp_date;
     }
 
     this.setCookie = function ( name, data , validity) {
         let savedData = {};
+        $cookies.remove(name);
         for( let datum in data){
-            savedData[`${datum}`] = data[`${datum}`];//new Buffer(data[`${datum}`]).toString('base64');
+            savedData[`${datum}`] = btoa(data[`${datum}`]);//new Buffer(data[`${datum}`]).toString('base64');
         }
-        $cookies.put(name, savedData, { expires : this.getValidDuration() || validity});
+        $cookies.putObject(name, savedData, { expires : this.getValidDuration() || validity});
     }
 
     this.getCookie = function ( name ) {
-        let savedData = $cookies.get(name);
+        let savedData = $cookies.getObject(name);
         let data = {};
-        for( let datum in savedData){
-            data[`${datum}`] = savedData[`${datum}`];//new Buffer(savedData[`${datum}`], 'base64').toString('base64');
-        }
+         for( let datum in savedData){
+             data[`${datum}`] = atob(savedData[`${datum}`]);//new Buffer(savedData[`${datum}`], 'base64').toString('base64');
+         }
         return data;
     }
 
     this.deleteCookie = function ( name ) {
-        $cookies.deleteCookie(name);
+        $cookies.remove(name);
     }
 }

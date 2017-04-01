@@ -4,8 +4,8 @@
 'use strict';
 let joi = require('joi');
 module.exports = {
-    name : joi.string().required(),
+    fullname : joi.string().required(),
     email : joi.string().noHtml().required(),
-    username : joi.string().noHtml(),
-    password : joi.string().require()
+    username : joi.string().noHtml().required(),
+    password : joi.string().required()
 };

@@ -3,9 +3,9 @@
  */
 'use strict';
 
-angular.module('messageApp').controller('NavController', ['NavService', '$scope', NavController]);
+angular.module('messageApp').controller('NavController', ['NavService', 'CookieService', '$location', '$scope', NavController]);
 
-function NavController( navService, $scope ) {
+function NavController( navService, cookieService, $location, $scope ) {
     let vm = this;
 
 
@@ -16,12 +16,20 @@ function NavController( navService, $scope ) {
         }
     })(navService.getLogInStatus());
     $scope.$on('loggedInEvent', (event, data)=> {
-        console.log(`Log In Event is received => ${JSON.stringify(data)}`);
+
         if (data.loggedIn === true){
             vm.displayLogin = false;
         }
         else{
             vm.displayLogin= true;
         }
-    })
+    });
+
+    vm.logOut  = function () {
+        console.log(' Log Out ?');
+        cookieService.deleteCookie('authentication');
+        $location.path('login');
+        $scope.$emit('loggedInEvent', { loggedIn: false });
+    }
+
 };

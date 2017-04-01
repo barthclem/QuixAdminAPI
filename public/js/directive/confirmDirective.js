@@ -7,7 +7,7 @@ angular.module('messageApp').directive('validateConfirmPassword', function(){ re
     link: function (scope, elm, attr, ctrl) {
 
         function validator(viewValue) {
-            ctrl.$setValidity('validateConfirmPassword', viewValue === scope.testForm.password.$viewValue);
+            ctrl.$setValidity('validateConfirmPassword', viewValue === scope.regForm.password.$viewValue);
             return viewValue;
         };
         ctrl.$parsers.unshift(validator);
