@@ -7,10 +7,12 @@ let cryptor = require('bcrypt-nodejs');
 let config = require('../config/config');
  class UserService {
 
-     constructor(){}
+     constructor(users){
+         this.users = users;
+     }
 
      getAllUsers () {
-         return users.forge().fetchAll().then(
+         return this.users.forge().fetchAll().then(
              data => { return data;}
          )
              .catch(error => {
@@ -20,7 +22,7 @@ let config = require('../config/config');
      };
 
      getUser (id) {
-         return users.forge({id :id}).fetch().then(
+         return this.users.forge({id :id}).fetch().then(
              data => { return data;}
          )
              .catch(
@@ -29,7 +31,7 @@ let config = require('../config/config');
      }
 
      getUserByUsername (username) {
-         return users.forge({username :username}).fetch().then(
+         return this.users.forge({username :username}).fetch().then(
              data => { return data;}
          )
              .catch(
@@ -38,7 +40,7 @@ let config = require('../config/config');
      }
 
      getUserByEmail (email) {
-         return users.forge({email : email}).fetch().then(
+         return this.users.forge({email : email}).fetch().then(
              data => { return data;}
          )
              .catch(
@@ -48,7 +50,7 @@ let config = require('../config/config');
 
      createUser ( userData ) {
          userData.password = cryptor.hashSync(userData.password, config.someCherche.data);
-         return users.forge().save(userData).then(
+         return this.users.forge().save(userData).then(
              data => {
                  //this sends authorization email to the newly reg member
                  return data;
@@ -74,7 +76,7 @@ let config = require('../config/config');
      }
 
      updateUser (id, userData ) {
-         return users.forge({id : id}).save(userData).then(
+         return this.users.forge({id : id}).save(userData).then(
              data => { return data;}
          )
              .catch(error => {
@@ -83,7 +85,7 @@ let config = require('../config/config');
      }
 
      deleteUser (id) {
-         return users.forge({id : id}).destroy().then(
+         return this.users.forge({id : id}).destroy().then(
              data => { return ` User ${id} deleted successfully`;}
          )
              .catch(error => {

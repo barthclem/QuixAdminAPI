@@ -27,6 +27,7 @@
     "mysql": "^2.13.0",
     "node-uuid": "^1.4.7",
     "nodemailer": "^3.1.4",
-    "rbac": "^4.0.1"
+    "rbac": "^4.0.1",
+    "servicelocator": "^1.0.0"
   }
 }

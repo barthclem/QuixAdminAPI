@@ -9,9 +9,12 @@ let mailer = require('../../lib/mailer')();
 let authCodeGenerator = require('node-uuid');
 
 class EmailAuth {
-    constructor () {}
+    constructor (userService, mailer) {
+        this.mailer = mailer;
+        this.userService = userService;
+    }
     sendAuthMail ( emailAddress , username, authCode) {
-        return mailer({
+        return this.mailer({
             from: 'Event Tiers',
             to: emailAddress,
             subject: 'Event Registration',
@@ -26,7 +29,7 @@ class EmailAuth {
     createEmailAuth ( email, username ) {
     let authCode = authCodeGenerator.v4();
     let data = { email : email , email_auth_code : authCode};
-    return userService.getUserByEmail(email)
+    return this.userService.getUserByEmail(email)
         .then( user => {
             //after the email auth is saved in the database ... send the auth to user
             user.related('emailAuth').create(data).then( (result) => {
@@ -48,14 +51,14 @@ class EmailAuth {
     }
 
     getEmailAuth ( email ) {
-    return userService.getUserByEmail(email).related('emailAuth').fetch()
+    return this.userService.getUserByEmail(email).related('emailAuth').fetch()
         .then( data => { return data})
         .catch(error => { return error});
     }
 
     updateEmailAuth ( email ) {
     let authCode = authCodeGenerator.v4();
-    return userService.getUserByEmail(email).related('emailAuth').save(
+    return this.userService.getUserByEmail(email).related('emailAuth').save(
         { email : email , email_auth_code : authCode})
         .then( data => { return data})
         .catch(error => { return error});
