@@ -4,21 +4,29 @@
 'use strict';
 let express = require('express');
 let router = express.Router();
+let validate = require('express-validation');
+let HttpStatus = require('http-status-codes');
+let responseFormatter = require('../lib/responseFormatter');
+
+let authMiddleware = require('../lib/authMiddleWare');
+let authorizer = require('../lib/rbac/roleBase');
+
 module.exports.route = router;
 
 module.exports.setup = function setUp (serviceLocator) {
     let userService = serviceLocator.get('userService');
-    router.route('/').get( (req, res) => {
+    router.route('/').get( [authMiddleware, authorizer.wants('viewFrontPage')], (req, res) => {
             userService.getAllUsers().then(
                 data => {
-                    res.send(data);
+                    res.send(responseFormatter(HttpStatus.OK, data));
                 }
             ).catch( error => {
-                res.send({status : 'failed'});
+                res.status(HttpStatus.INTERNAL_SERVER_ERROR);
+                res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, data));
             });
 
         })
-        .post ( (req, res)=> {
+        .post (  validate(require('./validation/login')), (req, res)=> {
             let body = req.body;
             userService.createUser(body).
             then(
@@ -33,7 +41,7 @@ module.exports.setup = function setUp (serviceLocator) {
 
         });
 
-    router.post('/login',  (req, res) => {
+    router.post('/login',  validate(require('./validation/login')), (req, res) => {
         let data = req.body;
         userService.loginUser(data).then( (loginREsult) => {
             loginREsult = loginREsult === undefined ? false : loginREsult;
@@ -90,6 +98,7 @@ module.exports.setup = function setUp (serviceLocator) {
         })
     });
 
+    // Route to upload file
     router.post('/upload', (req, res) => {
         if(multerDone == true) {
             res.send('done');

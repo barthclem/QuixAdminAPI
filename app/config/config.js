@@ -31,6 +31,17 @@
                  min : (process.env.DATABASE_POOL_MIN) ? parseInt(process.env.DATABASE_POOL_MIN) : 1,
                  max : (process.env.DATABASE_POOL_MAX) ? parseInt(process.env.DATABASE_POOL_MAX) : 5
              }
+         },
+         redis : {
+             redis_host : process.env.REDIS_HOST,
+             redis_port : process.env.REDIS_PORT,
+             redis_secret : process.env.REDIS_SECRET_KEY
+         }
+     },
+     
+     session : {
+         cookie : {
+             duration : (process.env.COOKIE_DURATION) ? parseInt(process.env.COOKIE_DURATION) : 2000
          }
      }
  };
