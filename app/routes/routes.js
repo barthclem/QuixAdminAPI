@@ -7,7 +7,6 @@ let router = express.Router();
 let validate = require('express-validation');
 let HttpStatus = require('http-status-codes');
 let responseFormatter = require('../lib/responseFormatter');
-
 let authMiddleware = require('../lib/authMiddleWare');
 let authorizer = require('../lib/rbac/roleBase');
 
@@ -15,16 +14,21 @@ module.exports.route = router;
 
 module.exports.setup = function setUp (serviceLocator) {
     let userService = serviceLocator.get('userService');
-    router.route('/').get( [authMiddleware, authorizer.wants('viewFrontPage')], (req, res) => {
-            userService.getAllUsers().then(
-                data => {
-                    res.send(responseFormatter(HttpStatus.OK, data));
-                }
-            ).catch( error => {
-                res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-                res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, data));
-            });
+    let userController = serviceLocator.get('userController');
 
+    router.use(function (req, res, next) {
+        // Website you wish to allow to connect
+        // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        next();
+      });
+
+
+    router.route('/').get( [authMiddleware, authorizer.wants('getAllUsers')], (req, res, next) => {
+            userController.listAll(req, res, next);
+            next();
         })
         .post (  validate(require('../validation/login')), (req, res)=> {
             let body = req.body;

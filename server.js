@@ -14,7 +14,6 @@ app.use(Express.static(__dirname + '/public/')); // switch for angular -- commen
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(morgan('dev'));
 
-
  //Email Authorisation code part
 app.use('/users', router.setup(ServiceLocator));
 
@@ -25,16 +24,7 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + 'index.html');
 });
 
-app.use(redis);
 
-app.use(function (req, res, next) {
-    // Website you wish to allow to connect
-    // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    next();
-});
 
 app.use(function(err, req, res, next){
     console.log(JSON.stringify(err));
@@ -45,5 +35,6 @@ app.use(function(err, req, res, next){
 let server = app.listen(8000, function () {
     let port = server.address().port;
     let host = server.address().address;
+    app.use(redis);
     console.log( 'Server started on '+ host + ' on port : '+port);
 })
