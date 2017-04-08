@@ -1,10 +1,7 @@
 'use strict';
 let Express = require('express');
 let app = Express();
-let session = require('express-session');
-let redis = require('redis');
-let redisStore = require('connect-redis')(session);
-let client = redis.createClient();
+let redis = require('./app/config/redis');
 let router = require('./app/routes/routes');
 let bodyParser = require('body-parser');
 let morgan = require('morgan');
