@@ -26,7 +26,7 @@ module.exports.setup = function setUp (serviceLocator) {
             });
 
         })
-        .post (  validate(require('./validation/login')), (req, res)=> {
+        .post (  validate(require('../validation/login')), (req, res)=> {
             let body = req.body;
             userService.createUser(body).
             then(
@@ -41,7 +41,7 @@ module.exports.setup = function setUp (serviceLocator) {
 
         });
 
-    router.post('/login',  validate(require('./validation/login')), (req, res) => {
+    router.post('/login',  validate(require('../validation/login')), (req, res) => {
         let data = req.body;
         userService.loginUser(data).then( (loginREsult) => {
             loginREsult = loginREsult === undefined ? false : loginREsult;
@@ -107,6 +107,3 @@ module.exports.setup = function setUp (serviceLocator) {
 
     return router;
 }
-
-
-
