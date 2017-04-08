@@ -1,0 +1,94 @@
+<form name = "regForm" class="login-form" id="register_form" method="get" action="">
+    <div class="login-wrap">
+        <div class="input-group " ng-class="{ 'has-error': regForm.fullname.$touched && regForm.fullname.$invalid }">
+            <span class="input-group-addon"><i class="icon_profile"></i></span>
+            <input type="text"
+                   name="fullname"
+                   id = "fullname"
+                   ng-model="$rctrl.fullname"
+                   class="form-control"
+                   ng-minlength="3"
+                   ng-maxlength="20"
+                   placeholder="Full Name"
+                   valid-name
+                   required/>
+        </div>
+        <div class="help-block" ng-messages="regForm.fullname.$error" ng-if="regForm.fullname.$dirty">
+            <div ng-messages-include="partials/messageval.html"></div>
+        </div>
+
+        <div class="input-group " ng-class="{ 'has-error': regForm.email.$touched && regForm.email.$invalid }">
+            <span class="input-group-addon"><i class="material-icons">&#xe0be;</i></span>
+            <input type="email"
+                   name="email"
+                   id= "email"
+                   ng-model="$rctrl.email"
+                   class="form-control"
+                   ng-minlength="3"
+                   ng-maxlength="30"
+                   datum dtype = "email"
+                   placeholder="Email"
+                   required />
+        </div>
+        <div class="help-block" ng-messages="regForm.email.$error" ng-if="regForm.email.$dirty">
+            <div ng-messages-include="partials/messageval.html"></div>
+        </div>
+
+        <div class="input-group " ng-class="{ 'has-error': regForm.username.$touched && regForm.username.$invalid }">
+            <span class="input-group-addon"><i class="icon_profile"></i></span>
+            <input type="text"
+                   name="username"
+                   id ="username"
+                   ng-model="$rctrl.username"
+                   class="form-control"
+                   ng-minlength="3"
+                   ng-maxlength="20"
+                   ng-pattern = "/^[A-z]+([A-z0-9]){3,}$/"
+                   datum dtype = "username"
+                   placeholder="Username"
+                   required/>
+        </div>
+        <div class="help-block" ng-messages="regForm.username.$error" ng-if="regForm.username.$dirty">
+            <div ng-messages-include="partials/messageval.html"></div>
+        </div>
+
+        <div class="input-group " ng-class="{ 'has-error': regForm.password.$touched && regForm.password.$invalid }">
+            <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+            <input type="password"
+                   name="password"
+                   id = "password"
+                   ng-model="$rctrl.password"
+                   class="form-control"
+                   ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z])/"
+                   ng-minlength="3"
+                   ng-maxlength="20"
+                   placeholder="Password"
+                   required />
+        </div>
+        <div class="help-block" ng-messages="regForm.password.$error" ng-if="regForm.password.$dirty">
+            <div ng-messages-include="partials/messageval.html"></div>
+        </div>
+
+        <div class="input-group " ng-class="{ 'has-error': regForm.confirm_password.$touched && regForm.confirm_password.$invalid }">
+            <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+            <input type="password"
+                   name="confirmPassword"
+                   id = "confirm_password"
+                   ng-model="$rctrl.confirmPassword"
+                   class="form-control"
+                   ng-minlength="3"
+                   ng-maxlength="20"
+                   placeholder="Confirm Password"
+                   validate-confirm-password
+                   required />
+        </div>
+        <div class="help-block" ng-messages="regForm.confirm_password.$error" ng-if="regForm.confirm_password.$dirty">
+            <div ng-messages-include="partials/messageval.html"></div>
+        </div>
+
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="regForm.$invalid" ng-click="$rctrl.registerData()">Sign Up</button>
+    </div>
+</form>
+
+
+
