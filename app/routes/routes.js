@@ -10,7 +10,6 @@ let responseFormatter = require('../lib/responseFormatter');
 let authMiddleware = require('../lib/authMiddleWare');
 let authorizer = require('../config/authorizator');
 let constants = require('../config/constants');
-module.exports.route = router;
 
 module.exports.setup = function setUp (serviceLocator) {
     let userService = serviceLocator.get('userService');
@@ -60,13 +59,13 @@ module.exports.setup = function setUp (serviceLocator) {
 //get user wi
     router.get('/:username', [authMiddleware, authorizer.wants(constants.GET_A_USER)], (req, res, next) => {
       userController.getUserByUsername(req, res, next);
+      next();
     });
 
     // Route to upload file
-    router.post('/upload', (req, res) => {
-        if(multerDone == true) {
-            res.send('done');
-        }
+    router.post('/upload', (req, res, next) => {
+        userController.uploadPic(req, res, next);
+        next();
     });
 
     return router;

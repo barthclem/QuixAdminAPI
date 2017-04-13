@@ -4,6 +4,15 @@
 'use strict';
 let HttpStatus = require('http-status-codes');
 let responseFormatter = require('../lib/responseFormatter');
+let multer = require('multer');
+
+let storage = multer.diskStorage({
+    destination : (req, file, callback) => { callback(null, './uploads') },
+    filename : (req, file, callback) => { callback(null, file.fieldname + '-' + Date.now())}
+});
+
+let upload = multer({ storage : storage}).single('upload');
+module.exports.route = router;
 
 /**
 *@description this is class handles all action to be performed on Users
@@ -55,10 +64,10 @@ class UserController {
     */
     createUser (data) {
       let body = req.body;
-      userService.createUser(body).
+      this.userService.createUser(body).
       then(
           data => {
-              emailService.createEmailAuth(data.attributes.email, data.attributes.username);
+              this.emailService.createEmailAuth(data.attributes.email, data.attributes.username);
               return res.send(responseFormatter(HttpStatus.OK, data));
           }
       ).catch( error => {
@@ -167,7 +176,27 @@ class UserController {
         )
         next();
       }
-      
+
+    /**
+     * @description Handles File Upload
+     *
+     * @param {object}  res express response object
+     * @param {object}  req express request object
+     * @param {function} next callback function
+     *
+     * @return {callback}
+     */
+
+    uploadPic (req, res, next) {
+        upload(req, res, function (err) {
+            if(err){
+                return res.send(responseFormatter(HttpStatus.UNSUPPORTED_MEDIA_TYPE, {status : 'failed'}));
+            }
+            return res.send(responseFormatter(HttpStatus.OK, {message : 'file uploaded successfully'}))
+        });
+        next();
+    }
+
 }
 
 module.exports = UserController;
