@@ -40,11 +40,8 @@ class EmailAuth {
                 .catch(
                     error => {
                         console.log(`Unable to fetch user => ${error}`);
-                    }
-                )
-
-
-        })
+                    })
+              })
         .catch(error => {
             console.log(`Email Saved Error => ${error}`);
             return error });

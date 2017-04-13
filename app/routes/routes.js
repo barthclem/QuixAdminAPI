@@ -8,8 +8,8 @@ let validate = require('express-validation');
 let HttpStatus = require('http-status-codes');
 let responseFormatter = require('../lib/responseFormatter');
 let authMiddleware = require('../lib/authMiddleWare');
-let authorizer = require('../lib/rbac/roleBase');
-
+let authorizer = require('../config/authorizator');
+let constants = require('../config/constants');
 module.exports.route = router;
 
 module.exports.setup = function setUp (serviceLocator) {
@@ -26,80 +26,40 @@ module.exports.setup = function setUp (serviceLocator) {
       });
 
 
-    router.route('/').get( [authMiddleware, authorizer.wants('getAllUsers')], (req, res, next) => {
+    router.route('/').get( [authMiddleware, authorizer.wants(constants.GET_ALL_USERS)], (req, res, next) => {
+            console.log('Logged \n\n\n');
             userController.listAll(req, res, next);
             next();
         })
-        .post (  validate(require('../validation/login')), (req, res)=> {
-            let body = req.body;
-            userService.createUser(body).
-            then(
-                data => {
-                    emailService.createEmailAuth(data.attributes.email, data.attributes.username);
-                    res.send(data)
-                }
-            ).catch( error => {
-                console.log(`POST ERROR => ${error}`);
-                res.send({status : 'failed'})
-            })
-
+        .post (validate(require('../validation/signup')), (req, res)=> {
+            userController.createUser(req, res, next);
+            next();
         });
 
-    router.post('/login',  validate(require('../validation/login')), (req, res) => {
-        let data = req.body;
-        userService.loginUser(data).then( (loginREsult) => {
-            loginREsult = loginREsult === undefined ? false : loginREsult;
-            let responseObject = { isCorrect : loginREsult};
-            return res.send(responseObject);
-        }).catch ( error => { return res.send({ isCorrect : false});});
+    router.post('/login',  validate(require('../validation/login')), (req, res, next) => {
+          userController.login(req, res, next);
+          next();
     })
 
     router.route('/:id')
-        .get((req, res) => {
-            let id = req.param('id');
-            userService.getUser(id).then(
-                data => {
-                    console.log(` GET USER => ${data}`);
-                    res.send(data);
-                }
-            ).catch( error => {
-                res.send({status : 'failed'})
-            })
+        .get([authMiddleware, authorizer.wants(constants.GET_A_USER)], (req, res, next) => {
+          userController.getUser(req, res, next);
+          next();
         })
 
-        .put((req, res) => {
-            let id = req.param('id');
-            let body = req.body;
-            userService.updateUser(id, body).then(
-                data => {
-                    res.send(data);
-                }
-            ).catch(error => {
-                res.send({status : 'failed'});
-            })
-
+        .put([authMiddleware, validate(require('../validation/editUser')), authorizer.wants(constants.UPDATE_A_USER)], (req, res, next) => {
+          userController.updateUser(req, res ,next);
+          next();
         })
 
-        .delete ((req, res) => {
-            let id = req.param('id');
-
-            userService.deleteUser(id).then(
-                data => res.send(data)
-            ).catch(
-                error => {
-                    res.send(error);
-                }
-            )
+        .delete ([authMiddleware, authorizer.wants(constants.DELETE_A_USER)], (req, res, next) => {
+          userController.deleteUser(req, res, next);
+          next();
         })
 
 //get user wi
-    router.get('/:username', (req, res) => {
-        let username = req.param('username');
-        userService.getUserByUsername(username).then(
-            data => {res.send(data); }
-        ).catch(error => {
-            res.send({status : 'failed'});
-        })
+    router.get('/:username', [authMiddleware, authorizer.wants(constants.GET_A_USER)], (req, res, next) => {
+      userController.getUserByUsername(req, res, next);
     });
 
     // Route to upload file

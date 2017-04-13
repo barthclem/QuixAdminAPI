@@ -7,11 +7,13 @@ let rolePolicy = authorizor.RoleBasedPolicy;
 authorizor.initialize({path : 'session.role'});
 authorizor.use('redisPolicy', rolePolicy);
 
-function Role(roleName) {
+function Role(authorizor, roleName) {
     authorizor.addRole(roleName);
     this.role = authorizor.getRole(roleName);
-}
+};
+
 Role.prototype.canDo = function can () {
+
     let actions = Array.prototype.slice.call(arguments);
     actions.forEach(action => {
         authorizor.addAction(action);
@@ -19,14 +21,12 @@ Role.prototype.canDo = function can () {
         this.role.can(act);
         act.requires(this.role);
     });
+
 };
 
+Role.prototype.inherit = function inherit (roleEntry) {
+  this.role.inherits(roleEntry);
+}
 
-let guest = new Role('guest');
-guest.canDo('viewFrontPage','peepOngoingEvents');
 
-let superAdmin = new Role('superAdmin');
-//superAdmin.inherits(guest);
-superAdmin.canDo('addAdmin', 'editAdmin', 'deleteAdmin', 'createUsers', 'EditUsers');
-
-module.exports = authorizor;
+module.exports = Role;

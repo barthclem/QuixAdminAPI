@@ -19,18 +19,17 @@ let invalidSchema = {
 	        joi.string().optional()
 	  )
 	})
-       )
-
-    };
+)
+};
 
 
 describe('when the request has a missing item in payload', function () {
   it('should return a 400 ok response and a single error', function(done){
- 
+
     let login = {
         email: "andrew.keig@gmail.com"
     };
- 
+
     request.post('/')
       .send(login)
       .expect('Content-type', /json/)
@@ -41,7 +40,3 @@ describe('when the request has a missing item in payload', function () {
       .end(done);
     });
 });
-
-
-
-

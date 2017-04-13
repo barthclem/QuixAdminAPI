@@ -13,6 +13,7 @@ class UserController {
   /**
   *
   *@description User Controller
+  *
   *@param  {object} userService - user service instance
   *@param {object}  EmailAuthService email service instance
   *
@@ -21,6 +22,7 @@ class UserController {
         this.userService = userService;
         this.emailAuthService = emailAuthService;
     }
+
 
 
     /**
@@ -34,10 +36,11 @@ class UserController {
     listAll (req, res, next ) {
       this.userService.getAllUsers().then(
           data => {
-              res.send(responseFormatter(HttpStatus.OK, data));
+              return res.send(responseFormatter(HttpStatus.OK, data));
+
           }
       ).catch( error => {
-          res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
+          return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
       });
 
     }
@@ -56,13 +59,115 @@ class UserController {
       then(
           data => {
               emailService.createEmailAuth(data.attributes.email, data.attributes.username);
-              res.send(data)
+              return res.send(responseFormatter(HttpStatus.OK, data));
           }
       ).catch( error => {
           console.log(`POST ERROR => ${error}`);
-          res.send({status : 'failed'})
+          return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
       })
+    };
 
+      /**
+      *@description ENDPOINT  POST /login/ - login user
+      *
+      *@param  {object} req express request object
+      *@param {object}  res express response object
+      *@param {function} next express routing callback
+      *@return {callback}
+      */
+      login (req, res, next) {
+        let data = req.body;
+        this.userService.loginUser(data).then( (loginREsult) => {
+            loginREsult = loginREsult === undefined ? false : loginREsult;
+            let responseObject = { isCorrect : loginREsult};
+            return res.send(responseFormatter(HttpStatus.OK, responseObject));
+        }).catch ( error => { return res.send({ isCorrect : false});});
+        next();
+      }
+
+      /**
+      *@description ENDPOINT  GET /:/id - get a user by id
+      *
+      *@param  {object} req express request object
+      *@param {object}  res express response object
+      *@param {function} next express routing callback
+      *@return {callback}
+      */
+      getUser (req, res, next) {
+        let id = req.param('id');
+        this.userService.getUser(id).then(
+          data => {
+              console.log(` GET USER => ${data}`);
+              return res.send(responseFormatter(HttpStatus.OK, data));
+          }).catch( error => {
+            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+          });
+
+          next();
+      }
+
+      /**
+      *@description ENDPOINT  GET /:/username - get a user by username
+      *
+      *@param  {object} req express request object
+      *@param {object}  res express response object
+      *@param {function} next express routing callback
+      *@return {callback}
+      */
+      getUserByUsername (req, res, next) {
+        let username = req.param('username');
+        this.userService.getUserByUsername(username).then(
+          data => {
+              console.log(` GET USER => ${data}`);
+              return res.send(responseFormatter(HttpStatus.OK, data));
+          }).catch( error => {
+            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+          });
+
+          next();
+      }
+
+      /**
+      *@description ENDPOINT  PUT /:/id - update a user
+      *
+      *@param  {object} req express request object
+      *@param {object}  res express response object
+      *@param {function} next express routing callback
+      *@return {callback}
+      */
+      updateUser (req, res, next) {
+        let id = req.param('id');
+        let body = req.body;
+        this.userService.updateUser(id, body).then(
+            data => {
+              return res.send(responseFormatter(HttpStatus.OK, data));
+            }
+        ).catch(error => {
+            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+        });
+        next();
+      }
+
+      /**
+      *@description ENDPOINT  DELETE /:/id - delete a user
+      *
+      *@param  {object} req express request object
+      *@param {object}  res express response object
+      *@param {function} next express routing callback
+      *@return {callback}
+      */
+      deleteUser (req, res, next) {
+        let id = req.param('id');
+        this.userService.deleteUser(id).then(
+            data => {return res.send(responseFormatter(HttpStatus.OK, data));}
+        ).catch(
+            error => {
+          return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            }
+        )
+        next();
+      }
+      
 }
 
 module.exports = UserController;
