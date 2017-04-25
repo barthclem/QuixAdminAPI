@@ -12,7 +12,7 @@ let storage = multer.diskStorage({
 });
 
 let upload = multer({ storage : storage}).single('upload');
-module.exports.route = router;
+
 
 /**
 *@description this is class handles all action to be performed on Users
