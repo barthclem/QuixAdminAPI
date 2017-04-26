@@ -2,7 +2,7 @@
 let Express = require('express');
 let app = Express();
 let redis = require('./app/config/redis');
-let router = require('./app/routes/routes');
+let router = require('./app/config/router');
 let bodyParser = require('body-parser');
 let morgan = require('morgan');
 let path = require('path');
@@ -14,9 +14,10 @@ app.use(Express.static(__dirname + '/public/')); // switch for angular -- commen
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(morgan('dev'));
 
- //Email Authorisation code part
-app.use('/users', router.setup(ServiceLocator));
+ //Set Up the router
+ router.setUp(app, ServiceLocator);
 
+ //Send files to be displayed
 app.get('*', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');
 });
@@ -37,4 +38,4 @@ let server = app.listen(8000, function () {
     let host = server.address().address;
     app.use(redis);
     console.log( 'Server started on '+ host + ' on port : '+port);
-})
+});
