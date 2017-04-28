@@ -34,7 +34,7 @@ let UserService = require('../services/userService');
 let RoleUserService = require('../services/roleUserService');
 
 //Models
-let CategoryEntryModel = require('../models/categoryEntry');
+let CategoryEntryModel = require('../models/categoryEntry.js');
 let CategoryModel = require('../models/category');
 let EventModel = require('../models/event');
 let EventAdminModel = require('../models/eventAdmin');
@@ -78,7 +78,7 @@ module.exports = (()=> {
             connection: config.database.mysql.connection,
             pool: config.database.mysql.pool
         };
-        return require('knex')(databaseConfig);
+        return knex;
     });
 
     /**
@@ -100,7 +100,10 @@ module.exports = (()=> {
      */
     serviceLocator.register('userService', (serviceLocator) => {
         let userModel = serviceLocator.get('userModel');
-        return new UserService(userModel);
+        console.log(`userModel Registered => ${JSON.stringify(userModel)}`);
+        let userService = UserService.init(userModel);
+        console.log(`userService Registered => ${JSON.stringify(userService)}`);
+        return userService;
     });
 
     /**
@@ -119,7 +122,9 @@ module.exports = (()=> {
     serviceLocator.register('userController', (serviceLocator) => {
         let userService = serviceLocator.get('userService');
         let emailAuthService = serviceLocator.get('emailAuthService');
-        return new UserController(userService, emailAuthService);
+        let userController = UserController.init(userService, emailAuthService);
+        console.log(`userController Registered => ${JSON.stringify(userController)}`);
+        return userController;
     });
 
     /**

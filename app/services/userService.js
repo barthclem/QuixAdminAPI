@@ -166,4 +166,4 @@ let config = require('../config/config');
 
 }
 
-module.exports = UserService;
+module.exports.init = (users) => { console.log(`User Model ${require('../models/user')}`);return  new UserService(users);};

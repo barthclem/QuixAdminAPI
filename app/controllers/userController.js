@@ -199,4 +199,6 @@ class UserController {
 
 }
 
-module.exports = UserController;
+module.exports.init = (userService, emailAuthService)=> {
+    return new UserController(userService, emailAuthService);
+};

@@ -3,8 +3,6 @@
  */
 'use strict';
 
-let UserService = require('./userService');
-let userService = new UserService();
 let mailer = require('../../lib/mailer')();
 let authCodeGenerator = require('node-uuid');
 

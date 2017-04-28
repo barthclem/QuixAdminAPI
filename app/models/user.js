@@ -15,4 +15,4 @@ let user = bookshelf.Model.extend({
     }
 });
 
-module.exports = bookshelf.model('user', user);
+module.exports =  bookshelf.model('user', user);

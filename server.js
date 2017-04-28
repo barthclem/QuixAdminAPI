@@ -7,6 +7,8 @@ let bodyParser = require('body-parser');
 let morgan = require('morgan');
 let path = require('path');
 let ServiceLocator = require('./app/config/serviceLocator');
+let userRoute = require('./app/routes/user');
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended : true }));
@@ -15,7 +17,8 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(morgan('dev'));
 
  //Set Up the router
- router.setUp(app, ServiceLocator);
+app.use('/api', userRoute);
+ //router.setUp(app, ServiceLocator);
 
  //Send files to be displayed
 app.get('*', (req, res) => {
