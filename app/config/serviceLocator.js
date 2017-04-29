@@ -34,7 +34,7 @@ let UserService = require('../services/userService');
 let RoleUserService = require('../services/roleUserService');
 
 //Models
-let CategoryEntryModel = require('../models/categoryEntry.js');
+let CategoryEntryModel = require('../models/categoryEntry');
 let CategoryModel = require('../models/category');
 let EventModel = require('../models/event');
 let EventAdminModel = require('../models/eventAdmin');
@@ -100,9 +100,7 @@ module.exports = (()=> {
      */
     serviceLocator.register('userService', (serviceLocator) => {
         let userModel = serviceLocator.get('userModel');
-        console.log(`userModel Registered => ${JSON.stringify(userModel)}`);
-        let userService = UserService.init(userModel);
-        console.log(`userService Registered => ${JSON.stringify(userService)}`);
+        let userService = new UserService(userModel);
         return userService;
     });
 
@@ -122,8 +120,7 @@ module.exports = (()=> {
     serviceLocator.register('userController', (serviceLocator) => {
         let userService = serviceLocator.get('userService');
         let emailAuthService = serviceLocator.get('emailAuthService');
-        let userController = UserController.init(userService, emailAuthService);
-        console.log(`userController Registered => ${JSON.stringify(userController)}`);
+        let userController = new UserController(userService, emailAuthService);
         return userController;
     });
 

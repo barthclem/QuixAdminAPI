@@ -13,7 +13,7 @@ exports.up = function(knex) {
       })
       .createTableIfNotExists('organizer', (table) => {
           table.increments('id').primary();
-          table.string('username').default('');
+          table.string('organizername').default('');
           table.integer('user_id').unsigned().references('id').inTable('user');
       })
       .createTableIfNotExists('emailAuth', table => {
@@ -46,6 +46,12 @@ exports.up = function(knex) {
           table.integer('organizer_id').unsigned().references('id').inTable('organizer');
           table.timestamps();
       })
+      .createTableIfNotExists('eventAdmin', (table) => {
+          table.increments('id').primary();
+          table.integer('event_id').unsigned().references('event.id');
+          table.integer('user_id').unsigned().references('user.id');
+          table.timestamps();
+      })
       .createTableIfNotExists('participant', (table) => {
           table.increments('id').primary();
           table.integer('event_id').unsigned().references('event.id');
@@ -55,12 +61,12 @@ exports.up = function(knex) {
       .createTableIfNotExists('category', (table) => {
           table.increments('id').primary();
           table.integer('event_id').unsigned().references('event.id');
-          table.string('created_by').unsigned().references('eventAdmin.id');
+          table.integer('created_by').unsigned().references('eventAdmin.id');
           table.boolean('has_bonus');
           table.integer('question_time').unsigned();
           table.integer('bonus_time').unsigned();
-          table.float('question_grade').unsigned();
-          table.float('bonus_grade').unsigned();
+          table.float('question_grade');
+          table.float('bonus_grade');
           table.timestamps();
       })
       .createTableIfNotExists('category_entry', (table) => {
@@ -77,12 +83,17 @@ exports.up = function(knex) {
           table.float('time_allowed');
           table.timestamps();
       })
+      .createTableIfNotExists('data_group', (table) => {
+          table.increments('id').primary();
+          table.string('group_name').unique().notNullable();
+      })
       //Role And User Join table
       .createTableIfNotExists('user_role', (table) => {
           table.increments('id').primary();
           table.integer('user_id').unsigned().notNullable().references('user.id');
           table.integer('role_id').unsigned().notNullable().references('role.id');
           table.integer('event_id').unsigned().notNullable().references('event.id');
+          table.integer('data_group_id').unsigned().notNullable().references('data_group.id');
       })
 };
 
@@ -96,6 +107,7 @@ exports.down = function(knex) {
         .dropTableIfExists('role_permission')
         .dropTableIfExists('permission')
         .dropTableIfExists('event')
+        .dropTableIfExists('eventAdmin')
         .dropTableIfExists('category')
         .dropTableIfExists('category_entry');
 

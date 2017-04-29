@@ -2,7 +2,7 @@
  * Created by aanu.oyeyemi on 07/03/2017.
  */
 'use strict';
-let users = require('../models/user');
+
 let cryptor = require('bcrypt-nodejs');
 let config = require('../config/config');
 
@@ -18,6 +18,7 @@ let config = require('../config/config');
      *@param  {object} user - User model instance
      *
      */
+
      constructor(users){
          this.users = users;
      }
@@ -29,13 +30,16 @@ let config = require('../config/config');
      * @return {object} a newly created participant object
      */
      getAllUsers () {
-         return this.users.forge().fetchAll().then(
-             data => { return data;}
-         )
-             .catch(error => {
-
-                 throw error;
-             })
+        return new Promise((resolve, reject) => {
+            return this.users.forge().fetchAll().then(
+                data => {
+                    return resolve(data);
+                }
+            )
+                .catch(error => {
+                    return reject(error);
+                })
+        });
      };
 
     /**
@@ -46,12 +50,18 @@ let config = require('../config/config');
      * @return {object} Error/Data
      */
      getUser (id) {
-         return this.users.forge({id :id}).fetch().then(
-             data => { return data;}
-         )
-             .catch(
-                 error => { throw error;}
-             );
+        return new Promise((resolve, reject) => {
+            return this.users.forge({id: id}).fetch().then(
+                data => {
+                    return resolve(data);
+                }
+            )
+                .catch(
+                    error => {
+                        return reject(error);
+                    }
+                );
+        });
      }
     /**
      *
@@ -61,13 +71,15 @@ let config = require('../config/config');
      * @return {object} Error/Data
      */
      getUserByUsername (username) {
-         return this.users.forge({username :username}).fetch().then(
-             data => { return data;}
-         )
-             .catch(
-                 error => { throw error;}
-             );
-     }
+        return new Promise((resolve, reject) => {
+            return this.users.forge({username :username}).fetch().then(
+                data => { return resolve(data);}
+                )
+                .catch(
+                    error => { return reject(error);}
+                    );
+        });
+    }
 
 
     /**
@@ -78,13 +90,15 @@ let config = require('../config/config');
      * @return {object} Error/Data
      */
      getUserByEmail (email) {
+        return new Promise((resolve, reject) => {
          return this.users.forge({email : email}).fetch().then(
-             data => { return data;}
+             data => { return resolve(data);}
          )
              .catch(
-                 error => { throw error;}
+                 error => { return reject(error);}
              );
-     }
+        });
+    }
 
      /**
       *
@@ -95,17 +109,19 @@ let config = require('../config/config');
       * @return {object} a newly created user object
       */
      createUser ( userData ) {
-         userData.password = cryptor.hashSync(userData.password, config.someCherche.data);
-         return this.users.forge().save(userData).then(
-             data => {
-                 //this sends authorization email to the newly reg member
-                 return data;
-             }
-         )
-             .catch (error => {
-                 console.log( ` Error creating user ${error}`);
-                 throw error;
-             });
+         return new Promise((resolve, reject) => {
+             userData.password = cryptor.hashSync(userData.password, config.someCherche.data);
+             return this.users.forge().save(userData).then(
+                 data => {
+                     //this sends authorization email to the newly reg member
+                     return data;
+                 }
+             )
+                 .catch(error => {
+                     console.log(` Error creating user ${error}`);
+                     throw error;
+                 });
+         });
      }
 
     /**
@@ -138,12 +154,14 @@ let config = require('../config/config');
       * @return {object} a newly created participant object
       */
      updateUser (id, userData ) {
-         return this.users.forge({id : id}).save(userData).then(
-             data => { return data;}
-         )
-             .catch(error => {
-                 throw error;
-             })
+         return new Promise((resolve, reject) => {
+             return this.users.forge({id : id}).save(userData).then(
+                 data => { return resolve(data);}
+                 )
+                 .catch(error => {
+                     return reject(error);
+                 })
+         });
      }
 
     /**
@@ -155,15 +173,19 @@ let config = require('../config/config');
      * @return {object} object - an object containing message/error
      */
      deleteUser (id) {
-         return this.users.forge({id : id}).destroy().then(
-             data => { return ` User ${id} deleted successfully`;}
-         )
-             .catch(error => {
-                 throw    ` unable to delete user with  id ${id}`;
-             })
+        return new Promise((resolve, reject) => {
+            return this.users.forge({id: id}).destroy().then(
+                data => {
+                    return resolve(` User ${id} deleted successfully`);
+                }
+            )
+                .catch(error => {
+                    return  reject(` unable to delete user with  id ${id}`);
+                })
+        });
      }
 
 
 }
 
-module.exports.init = (users) => { console.log(`User Model ${require('../models/user')}`);return  new UserService(users);};
+module.exports = UserService;

@@ -45,10 +45,12 @@ class UserController {
     listAll (req, res, next ) {
       this.userService.getAllUsers().then(
           data => {
+              console.log(`${JSON.stringify(data)}`);
               return res.send(responseFormatter(HttpStatus.OK, data));
 
           }
       ).catch( error => {
+          console.log(`${JSON.stringify(error)}`);
           return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
       });
 
@@ -89,6 +91,10 @@ class UserController {
         this.userService.loginUser(data).then( (loginREsult) => {
             loginREsult = loginREsult === undefined ? false : loginREsult;
             let responseObject = { isCorrect : loginREsult};
+            let sessionData = req.session;
+            sessionData.email = data.email;
+            sessionData.userId  = data.userId;
+            res.send('Data saved successfully');
             return res.send(responseFormatter(HttpStatus.OK, responseObject));
         }).catch ( error => { return res.send({ isCorrect : false});});
         next();
@@ -199,6 +205,4 @@ class UserController {
 
 }
 
-module.exports.init = (userService, emailAuthService)=> {
-    return new UserController(userService, emailAuthService);
-};
+module.exports = UserController;

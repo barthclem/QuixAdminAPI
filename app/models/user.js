@@ -8,7 +8,7 @@ let emailAuth = require('./emailAuth');
 
 let user = bookshelf.Model.extend({
     tableName : "user",
-    hidden : ['id'],
+    //hidden : ['id'],
 
     emailAuth : function () {
         return this.hasMany(emailAuth);

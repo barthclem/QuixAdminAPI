@@ -21,4 +21,4 @@ module.exports = (() => {
     return router;
 })();
 
-module.exports.route = router;
+// module.exports.route = router;
