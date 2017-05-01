@@ -26,7 +26,7 @@ exports.up = function(knex) {
       //Permissions and Roles
       .createTableIfNotExists('role', (table) => {
           table.increments('id').primary();
-          table.string('title');
+          table.string('title').primary();
       })
       .createTableIfNotExists('permission', (table) => {
           table.increments('id').primary();
@@ -91,8 +91,8 @@ exports.up = function(knex) {
       .createTableIfNotExists('user_role', (table) => {
           table.increments('id').primary();
           table.integer('user_id').unsigned().notNullable().references('user.id');
-          table.integer('role_id').unsigned().notNullable().references('role.id');
-          table.integer('event_id').unsigned().notNullable().references('event.id');
+          table.string('role_title').notNullable().references('role.title');
+          table.integer('itemId').unsigned().notNullable();
           table.integer('data_group_id').unsigned().notNullable().references('data_group.id');
       })
 };

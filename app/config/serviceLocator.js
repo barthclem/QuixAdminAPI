@@ -88,6 +88,30 @@ module.exports = (()=> {
         return require('../models/emailAuth');
     });
 
+
+    /**
+     * @description Creates an instance of Role User model
+     */
+    serviceLocator.register('roleUserModel', () => {
+        return RoleUserModel;
+    });
+
+    /**
+     * @description Creates an instance of roleUser Service
+     */
+    serviceLocator.register('roleUserService', (serviceLocator) => {
+        let roleUserModel = serviceLocator.get('roleUserModel');
+        return new RoleUserService(Role, roleUserModel);
+    });
+
+    /**
+     * @description Creates an instance of roleUser Controller
+     */
+    serviceLocator.register('roleUserController', (serviceLocator) => {
+        let roleUserService = serviceLocator.get('roleUserService');
+        return new RoleUserController(roleUserService);
+    });
+
     /**
      * @description Creates an instance of user model
      */
@@ -120,7 +144,8 @@ module.exports = (()=> {
     serviceLocator.register('userController', (serviceLocator) => {
         let userService = serviceLocator.get('userService');
         let emailAuthService = serviceLocator.get('emailAuthService');
-        let userController = new UserController(userService, emailAuthService);
+        let roleUserService = serviceLocator.get('roleUserService');
+        let userController = new UserController(userService, emailAuthService, roleUserService);
         return userController;
     });
 
@@ -265,30 +290,6 @@ module.exports = (()=> {
         let participantService = serviceLocator.get('participantService');
         return new ParticipantController(participantService);
     });
-
-    /**
-     * @description Creates an instance of Role User model
-     */
-    serviceLocator.register('roleUserModel', () => {
-        return RoleUserModel;
-    });
-
-    /**
-     * @description Creates an instance of roleUser Service
-     */
-    serviceLocator.register('roleUserService', (serviceLocator) => {
-        let roleUserModel = serviceLocator.get('roleUserModel');
-        return new RoleUserService(Role, roleUserModel);
-    });
-
-    /**
-     * @description Creates an instance of roleUser Controller
-     */
-    serviceLocator.register('roleUserController', (serviceLocator) => {
-        let roleUserService = serviceLocator.get('roleUserService');
-        return new RoleUserController(roleUserService);
-    });
-
     return serviceLocator;
 })();
 

@@ -7,7 +7,7 @@ let bodyParser = require('body-parser');
 let morgan = require('morgan');
 let path = require('path');
 let ServiceLocator = require('./app/config/serviceLocator');
-
+let responseFormatter = require('./app/lib/responseFormatter');
 
 
 app.use(bodyParser.json());
@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended : true }));
 app.use(Express.static(__dirname + '/public/')); // switch for angular -- comment out to switch angular off
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(morgan('dev'));
-
+app.use(redis);
  //Set Up the router
  router.setUp(app, ServiceLocator);
 
@@ -30,14 +30,14 @@ app.get('/', (req, res) => {
 
 
 app.use(function(err, req, res, next){
-    console.log(JSON.stringify(err));
-    res.status(400).json(err);
+    console.log(`Internal Server Error Message : ${err.message}`);
+    return res.status(400).send(responseFormatter(400, {message : "We have a little itch, we will soon be done"}));
+    //res.status(400).json(err);
 });
 
 
 let server = app.listen(8000, function () {
     let port = server.address().port;
     let host = server.address().address;
-    app.use(redis);
     console.log( 'Server started on '+ host + ' on port : '+port);
 });

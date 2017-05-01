@@ -27,9 +27,10 @@ class UserController {
   *@param {object}  EmailAuthService email service instance
   *
   */
-    constructor(userService, emailAuthService){
+    constructor(userService, emailAuthService, roleUserService){
         this.userService = userService;
         this.emailAuthService = emailAuthService;
+        this.roleUserService = roleUserService;
     }
 
 
@@ -45,12 +46,9 @@ class UserController {
     listAll (req, res, next ) {
       this.userService.getAllUsers().then(
           data => {
-              console.log(`${JSON.stringify(data)}`);
               return res.send(responseFormatter(HttpStatus.OK, data));
-
           }
       ).catch( error => {
-          console.log(`${JSON.stringify(error)}`);
           return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
       });
 
@@ -73,7 +71,6 @@ class UserController {
               return res.send(responseFormatter(HttpStatus.OK, data));
           }
       ).catch( error => {
-          console.log(`POST ERROR => ${error}`);
           return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
       })
     };
@@ -86,18 +83,21 @@ class UserController {
       *@param {function} next express routing callback
       *@return {callback}
       */
-      login (req, res, next) {
+      userLogin (req, res, next) {
         let data = req.body;
-        this.userService.loginUser(data).then( (loginREsult) => {
-            loginREsult = loginREsult === undefined ? false : loginREsult;
-            let responseObject = { isCorrect : loginREsult};
-            let sessionData = req.session;
-            sessionData.email = data.email;
-            sessionData.userId  = data.userId;
-            res.send('Data saved successfully');
-            return res.send(responseFormatter(HttpStatus.OK, responseObject));
-        }).catch ( error => { return res.send({ isCorrect : false});});
-        next();
+        this.userService.loginUser(data).then( (loginData) => {
+            if(loginData) {
+                let userData = loginData.attributes;
+                let roles = loginData.related('roleUser');
+                let sessionData = req.session;
+                sessionData.email = userData.email;
+                sessionData.userId  = userData.id;
+                sessionData.roleData = roles;
+                sessionData.role = null; // set this to null because of rbac module
+                return res.send(responseFormatter(HttpStatus.OK, { isCorrect : true}));
+            }
+            return res.send(responseFormatter(HttpStatus.OK, { isCorrect : false}));
+        }).catch ( error => { return res.send(responseFormatter(HttpStatus.BAD_REQUEST,{ isCorrect : false}));});
       }
 
       /**
@@ -112,7 +112,6 @@ class UserController {
         let id = req.param('id');
         this.userService.getUser(id).then(
           data => {
-              console.log(` GET USER => ${data}`);
               return res.send(responseFormatter(HttpStatus.OK, data));
           }).catch( error => {
             return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));

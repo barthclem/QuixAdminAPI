@@ -52,10 +52,7 @@ let config = require('../config/config');
      getUser (id) {
         return new Promise((resolve, reject) => {
             return this.users.forge({id: id}).fetch().then(
-                data => {
-                    return resolve(data);
-                }
-            )
+                data => {return resolve(data);})
                 .catch(
                     error => {
                         return reject(error);
@@ -91,9 +88,9 @@ let config = require('../config/config');
      */
      getUserByEmail (email) {
         return new Promise((resolve, reject) => {
-         return this.users.forge({email : email}).fetch().then(
-             data => { return resolve(data);}
-         )
+         return this.users.forge({email : email})
+             .fetch({withRelated : ['roleUser']})
+             .then(data => { return resolve(data);})
              .catch(
                  error => { return reject(error);}
              );
@@ -135,9 +132,13 @@ let config = require('../config/config');
      loginUser (userData) {
          return new Promise((resolve, reject) => {
              this.getUserByEmail(userData.email).then((data) => {
-                 cryptor.compare(userData.password, data.attributes.password, (error, data)=>{
-                     return resolve(data);
-                 });
+                 return resolve(data);
+                 // cryptor.compare(userData.password, data.attributes.password, (error, result)=>{
+                 //     if(error) {
+                 //         return reject(error);
+                 //     }
+                 //     return resolve(data);
+                 // });
              }).catch( error =>
                  {return reject(error);}
              );

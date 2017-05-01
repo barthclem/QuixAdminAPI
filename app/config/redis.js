@@ -11,11 +11,11 @@ let redisStore = require('connect-redis')(session);
 let client = redis.createClient();
 let config = require('./config');
 
-module.exports = function () {
+module.exports =  (()=> {
     return session({secret: config.database.redis.redis_secret,
         store : new redisStore({ host: config.database.redis.redis_host,
             port : config.database.redis.redis_port,
             client : client, ttl:260}),
         cookie : { maxAge:config.session.cookie.duration, secure : false},
         resave:false, saveUninitialized : true})
-};
+})();
