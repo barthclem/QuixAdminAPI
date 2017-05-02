@@ -51,12 +51,16 @@ let config = require('../config/config');
      */
      getUser (id) {
         return new Promise((resolve, reject) => {
-            return this.users.forge({id: id}).fetch().then(
-                data => {return resolve(data);})
-                .catch(
-                    error => {
-                        return reject(error);
-                    }
+            return this.users.forge({id}).fetch().then(
+                data => {
+                    let sendData = data ? Object.assign({}, data.attributes) : {};
+                    console.log(`Data Received => ${JSON.stringify(sendData)}`);
+                    return resolve(sendData);}
+                    )
+                .catch(error => {
+                        console.log(`Error Message => ${error}`);
+                    return reject(error);
+                }
                 );
         });
      }

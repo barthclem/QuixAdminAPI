@@ -23,7 +23,7 @@ let invalidSchema = {
 };
 
 
-describe('when the request has a missing item in payload', function () {
+describe('when the request has a missing item in create user payload', function () {
   it('should return a 400 ok response and a single error', function(done){
 
     let login = {

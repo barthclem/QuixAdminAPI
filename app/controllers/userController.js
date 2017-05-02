@@ -33,8 +33,6 @@ class UserController {
         this.roleUserService = roleUserService;
     }
 
-
-
     /**
     *@description ENDPOINT  GET /user/ - Retrieves the list of all Users
     *
@@ -68,10 +66,12 @@ class UserController {
       then(
           data => {
               this.emailService.createEmailAuth(data.attributes.email, data.attributes.username);
-              return res.send(responseFormatter(HttpStatus.OK, data));
+              return res.status(HttpStatus.OK).
+              send(responseFormatter(HttpStatus.OK, data));
           }
       ).catch( error => {
-          return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+          return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
       })
     };
 
@@ -109,15 +109,17 @@ class UserController {
       *@return {callback}
       */
       getUser (req, res, next) {
-        let id = req.param('id');
+        let id = req.params.id;
         this.userService.getUser(id).then(
           data => {
-              return res.send(responseFormatter(HttpStatus.OK, data));
+              return res.status(HttpStatus.OK)
+              .send(responseFormatter(HttpStatus.OK, data));
+
           }).catch( error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+              return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed to get a user'})).end();
           });
 
-          next();
       }
 
       /**
@@ -129,16 +131,18 @@ class UserController {
       *@return {callback}
       */
       getUserByUsername (req, res, next) {
-        let username = req.param('username');
+        let username = req.params.username;
         this.userService.getUserByUsername(username).then(
           data => {
               console.log(` GET USER => ${data}`);
-              return res.send(responseFormatter(HttpStatus.OK, data));
+              return res.status(HttpStatus.OK)
+                  .send(responseFormatter(HttpStatus.OK, data));
           }).catch( error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
           });
 
-          next();
+          //next();
       }
 
       /**
@@ -150,16 +154,18 @@ class UserController {
       *@return {callback}
       */
       updateUser (req, res, next) {
-        let id = req.param('id');
+        let id = req.params.id;
         let body = req.body;
         this.userService.updateUser(id, body).then(
             data => {
-              return res.send(responseFormatter(HttpStatus.OK, data));
+              return res.status(HttpStatus.OK)
+                  .send(responseFormatter(HttpStatus.OK, data));
             }
         ).catch(error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed to update'}));
         });
-        next();
+
       }
 
       /**
@@ -171,15 +177,17 @@ class UserController {
       *@return {callback}
       */
       deleteUser (req, res, next) {
-        let id = req.param('id');
+        let id = req.params.id;
         this.userService.deleteUser(id).then(
-            data => {return res.send(responseFormatter(HttpStatus.OK, data));}
-        ).catch(
-            error => {
-          return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            data => {
+                return res.status(HttpStatus.OK)
+                    .send(responseFormatter(HttpStatus.OK, data));})
+            .catch(error => {
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
             }
         )
-        next();
+
       }
 
     /**

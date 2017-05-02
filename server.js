@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 
 app.use(function(err, req, res, next){
     console.log(`Internal Server Error Message : ${err.message}`);
-    return res.status(400).send(responseFormatter(400, {message : "We have a little itch, we will soon be done"}));
+    return res.status(400).send(responseFormatter(400, {message : err}));
     //res.status(400).json(err);
 });
 
