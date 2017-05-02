@@ -36,8 +36,8 @@ class roleUserService{
                 })
                 .catch(error => {
                     return reject(error);
-                })
-        })
+                });
+        });
 
     }
 
@@ -56,8 +56,8 @@ class roleUserService{
                 })
                 .catch(error => {
                     return reject(error);
-                })
-        })
+                });
+        });
 
     }
 
@@ -78,7 +78,7 @@ class roleUserService{
                 .catch(error => {
                     return reject(error);
                 });
-        })
+        });
 
     }
 
@@ -100,7 +100,7 @@ class roleUserService{
                 .catch(error => {
                     return reject(error);
                 });
-        })
+        });
     }
 
     /**
@@ -122,7 +122,7 @@ class roleUserService{
                 .catch(error => {
                     return reject(error);
                 });
-        })
+        });
 
     }
 
@@ -145,7 +145,7 @@ class roleUserService{
                 .catch(error => {
                     return reject(error);
                 });
-        })
+        });
 
     }
 
@@ -165,7 +165,7 @@ class roleUserService{
                 .catch(error => {
                     return reject(error);
                 });
-        })
+        });
 
     }
 
@@ -186,7 +186,7 @@ class roleUserService{
                 .catch(error => {
                     return reject(error);
                 });
-        })
+        });
 
     }
 
@@ -202,7 +202,7 @@ class roleUserService{
     deleteRoleUser (roleUserId) {
         return new Promise((resolve, reject)=>{
 
-        })
+        });
 
     }
 
@@ -216,19 +216,19 @@ class roleUserService{
      */
     deleteRoleUserAtUser (userId) {
         return new Promise((resolve, reject)=>{
+            this.roleUser.forge()
+                .query( qb => {
+                    qb.where('userId', '=', userId);
+                })
+                .destroy()
+                .then(data => {
+                    return resolve({message : "role user data deleted successfully"});
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
 
-        })
-        this.roleUser.forge()
-            .query( qb => {
-                qb.where('userId', '=', userId)
-            })
-            .destroy()
-            .then(data => {
-                return {message : "role user data deleted successfully"};
-            })
-            .catch(error => {
-                throw error;
-            });
     }
 }
 

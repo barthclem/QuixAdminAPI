@@ -1,18 +1,17 @@
 'use strict';
-let Express = require('express');
-let app = Express();
+let express = require('express');
+let app = express();
 let redis = require('./app/config/redis');
 let router = require('./app/config/router');
 let bodyParser = require('body-parser');
 let morgan = require('morgan');
-let path = require('path');
 let ServiceLocator = require('./app/config/serviceLocator');
 let responseFormatter = require('./app/lib/responseFormatter');
 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended : true }));
-app.use(Express.static(__dirname + '/public/')); // switch for angular -- comment out to switch angular off
+app.use(express.static(__dirname + '/public/')); // switch for angular -- comment out to switch angular off
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(morgan('dev'));
 app.use(redis);
@@ -20,18 +19,15 @@ app.use(redis);
  router.setUp(app, ServiceLocator);
 
  //Send files to be displayed
-app.get('*', (req, res) => {
-    res.sendFile(__dirname + '/public/index.html');
-});
-app.get('/', (req, res) => {
+app.get('/*', (req, res) => {
     res.sendFile(__dirname + 'index.html');
 });
 
 
-
 app.use(function(err, req, res, next){
     console.log(`Internal Server Error Message : ${err.message}`);
-    return res.status(400).send(responseFormatter(400, {message : err}));
+    return res.status(err.status || 500)
+        .send(responseFormatter(err.status || 500, {message : err.message}));
     //res.status(400).json(err);
 });
 

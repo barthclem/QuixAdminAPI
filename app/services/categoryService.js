@@ -32,7 +32,7 @@ class CategoryService {
             })
             .catch(error => {
                 throw error;
-            })
+            });
     }
 
     /**

@@ -1,4 +1,6 @@
 'use strict';
+let HttpStatus = require('http-status-codes');
+let responseFormatter = require('../lib/responseFormatter');
 
 class EventAdminAdminController {
     /**
@@ -23,15 +25,15 @@ class EventAdminAdminController {
     createEventAdmin (req, res, next) {
         let EventAdminData = req.body;
         this.eventAdminService.createEventAdmin(EventAdminData)
-        then(
-            data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
-            }
-        ).catch( error => {
-            console.log(`POST ERROR => ${error}`);
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-        })
-    };
+            .then(
+                data => {
+                    return res.send(responseFormatter(HttpStatus.OK, data));
+                })
+            .catch( error => {
+                console.log(`POST ERROR => ${error}`);
+                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+        });
+    }
 
     /**
      *@description ENDPOINT  GET /EventAdmin/ - Retrieves the list of all EventAdmins
@@ -112,8 +114,7 @@ class EventAdminAdminController {
         ).catch(
             error => {
                 return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-            }
-        )
+            });
         next();
     }
 }

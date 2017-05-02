@@ -33,7 +33,7 @@ class EventAdminService {
             })
             .catch(error => {
                 throw error;
-            })
+            });
     }
 
     /**

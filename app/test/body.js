@@ -32,7 +32,7 @@ let userSchema = {
         email: joi.string().email().required(),
         created_at: joi.date().timestamp().optional()
     }
-}
+};
 
 
 describe('when the request has a missing item in create user payload', function () {
@@ -72,5 +72,5 @@ describe('when the request body wants to create a new user', function () {
             })
             .end(done);
 
-    })
-})
+    });
+});

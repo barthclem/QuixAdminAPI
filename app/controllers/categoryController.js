@@ -2,6 +2,8 @@
  * Created by barthclem on 4/25/17.
  */
 'use strict';
+let HttpStatus = require('http-status-codes');
+let responseFormatter = require('../lib/responseFormatter');
 
 class CategoryController {
 
@@ -24,18 +26,17 @@ class CategoryController {
      *@param {function} next express routing callback
      *@return {callback}
      */
-    createCategory (req, res, next) {
+    createCategory (req, res) {
         let categoryData = req.body;
         this.categoryService.createCategory(categoryData)
-        then(
-            data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
-            }
-        ).catch( error => {
+            .then(
+                data => {
+                    return res.send(responseFormatter(HttpStatus.OK, data));
+                }).catch( error => {
             console.log(`POST ERROR => ${error}`);
             return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-        })
-    };
+        });
+    }
 
     /**
      *@description ENDPOINT  GET /Category/ - Retrieves the list of all Categorys
@@ -116,8 +117,7 @@ class CategoryController {
         ).catch(
             error => {
                 return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-            }
-        )
+            });
         next();
     }
 }

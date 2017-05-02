@@ -11,7 +11,7 @@ let participant = bookshelf.Model.extend({
     tableName : 'participant',
 
     event : () => {
-        return this.belongsToMany('event')
+        return this.belongsToMany('event');
     }
 });
 

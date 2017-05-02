@@ -97,7 +97,7 @@ class ParticipantService {
     deleteParticipant (userId, eventId) {
         this.participant.forge({userId : userId})
             .query( qb=> {
-                qb.where('eventId', '=', eventId)
+                qb.where('eventId', '=', eventId);
             })
             .destroy()
             .then(data => {
@@ -137,8 +137,8 @@ class ParticipantService {
     allParticipantEvents (userId) {
         this.participant.forge()
             .query( qb=> {
-                qb.innerJoin('events', 'participant.event_id', 'event.id')
-                qb.where('participant.user_id', '=', userId)
+                qb.innerJoin('events', 'participant.event_id', 'event.id');
+                qb.where('participant.user_id', '=', userId);
             })
             .fetchAll()
             .then(data => {

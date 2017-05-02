@@ -2,3 +2,5 @@
 Log =>  time : Fri Apr 28 2017 18:51:56 GMT+0100 (WAT) : mailSender : Error => Error: Invalid login: 535-5.7.8 Username and Password not accepted. Learn more at
 535 5.7.8  https://support.google.com/mail/?p=BadCredentials 23sm8434268wrx.26 - gsmtp
 Log =>  time : Tue May 02 2017 11:15:39 GMT+0100 (WAT) : mailSender : Error => Error: getaddrinfo ENOTFOUND smtp.gmail.com smtp.gmail.com:465
+Log =>  time : Tue May 02 2017 12:18:37 GMT+0100 (WAT) : mailSender : Error => Error: Invalid login: 535-5.7.8 Username and Password not accepted. Learn more at
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials z14sm769151wmz.2 - gsmtp

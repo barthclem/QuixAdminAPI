@@ -3,6 +3,8 @@
  */
 
 'use strict';
+let HttpStatus = require('http-status-codes');
+let responseFormatter = require('../lib/responseFormatter');
 
 class RoleUserController {
 
@@ -28,15 +30,15 @@ class RoleUserController {
     createRoleUser (req, res, next) {
         let roleUserData = req.body;
         this.roleUserService.createRoleUser(roleUserData)
-        then(
-            data => {
+            .then(
+                data => {
                 return res.send(responseFormatter(HttpStatus.OK, data));
-            }
-        ).catch( error => {
-            console.log(`POST ERROR => ${error}`);
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-        })
-    };
+            })
+            .catch( error => {
+                console.log(`POST ERROR => ${error}`);
+                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+        });
+    }
 
     /**
      *@description ENDPOINT  GET /RoleUser/ - Retrieves the list of all RoleUsers
@@ -158,8 +160,7 @@ class RoleUserController {
         ).catch(
             error => {
                 return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-            }
-        )
+            });
         next();
     }
 
@@ -171,15 +172,14 @@ class RoleUserController {
      *@param {function} next express routing callback
      *@return {callback}
      */
-    deleteRoleUser (req, res, next) {
+    deleteRoleUserWithId (req, res, next) {
         let userId = Number(req.param('id'));
-        this.roleUserService.deleteRoleUserAtUser(userId).then(
+        this.roleUserService.deleteRoleUserWithId(userId).then(
             data => {return res.send(responseFormatter(HttpStatus.OK, data));}
         ).catch(
             error => {
                 return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-            }
-        )
+            });
         next();
     }
 }

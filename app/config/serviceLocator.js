@@ -9,7 +9,7 @@
 let serviceLocator = require('../../lib/serviceLocator');
 
 let Logger = require('../../lib/logger');
-let knex = require ('./database');
+//let knex = require ('./database');
 
 //Controllers
 let CategoryEntryController = require('../controllers/categoryEntryController');
@@ -78,7 +78,7 @@ module.exports = (()=> {
             connection: config.database.mysql.connection,
             pool: config.database.mysql.pool
         };
-        return knex;
+        return databaseConfig;
     });
 
     /**

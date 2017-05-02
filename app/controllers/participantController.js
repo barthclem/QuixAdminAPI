@@ -1,4 +1,6 @@
 'use strict';
+let HttpStatus = require('http-status-codes');
+let responseFormatter = require('../lib/responseFormatter');
 
 class ParticipantController {
 
@@ -24,15 +26,15 @@ class ParticipantController {
     createParticipant (req, res, next) {
         let participantData = req.body;
         this.participantService.createParticipant(participantData)
-        then(
-            data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
-            }
-        ).catch( error => {
-            console.log(`POST ERROR => ${error}`);
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-        })
-    };
+            .then(
+                data => {
+                    return res.send(responseFormatter(HttpStatus.OK, data));
+            })
+            .catch( error => {
+                console.log(`POST ERROR => ${error}`);
+                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+        });
+    }
 
     /**
      *@description ENDPOINT  GET /participant/ - Retrieves the list of all participants
@@ -111,8 +113,7 @@ class ParticipantController {
         ).catch(
             error => {
                 return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-            }
-        )
+            });
         next();
     }
 
@@ -131,8 +132,7 @@ class ParticipantController {
         ).catch(
             error => {
                 return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-            }
-        )
+            });
         next();
     }
 
@@ -152,8 +152,7 @@ class ParticipantController {
         ).catch(
             error => {
                 return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-            }
-        )
+            });
         next();
     }
 }

@@ -32,7 +32,7 @@ class OrganizerService {
             })
             .catch(error => {
                 throw error;
-            })
+            });
     }
 
     /**

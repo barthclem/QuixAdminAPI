@@ -38,9 +38,9 @@ let config = require('../config/config');
             )
                 .catch(error => {
                     return reject(error);
-                })
+                });
         });
-     };
+     }
 
     /**
      *
@@ -53,7 +53,6 @@ let config = require('../config/config');
         return new Promise((resolve, reject) => {
             return this.users.forge({id}).fetch().then(
                 data => {
-                    let sendData = data ? Object.assign({}, data.attributes) : {};
                     console.log(`Data Received => ${JSON.stringify(data)}`);
                     return resolve(data);}
                     )
@@ -164,7 +163,7 @@ let config = require('../config/config');
                  )
                  .catch(error => {
                      return reject(error);
-                 })
+                 });
          });
      }
 
@@ -180,12 +179,13 @@ let config = require('../config/config');
         return new Promise((resolve, reject) => {
             return this.users.forge({id: id}).destroy().then(
                 data => {
+                    console.log(`DELETE USER ERROR => ${data}`);
                     return resolve(` User ${id} deleted successfully`);
-                }
-            )
-                .catch(error => {
-                    return  reject(` unable to delete user with  id ${id}`);
                 })
+                .catch(error => {
+                    console.log(`DELETE USER ERROR => ${error}`);
+                    return  reject(` unable to delete user with  id ${id}`);
+                });
         });
      }
 

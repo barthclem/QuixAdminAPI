@@ -3,7 +3,6 @@
  */
 'use strict';
 
-let mailer = require('../../lib/mailer')();
 let authCodeGenerator = require('node-uuid');
 
 class EmailAuth {
@@ -30,33 +29,36 @@ class EmailAuth {
     return this.userService.getUserByEmail(email)
         .then( user => {
             //after the email auth is saved in the database ... send the auth to user
-            user.related('emailAuth').create(data).then( (result) => {
-                this.sendAuthMail(email, username, authCode).then(
-                ).catch( error => {console.log(`Email Failure Message => ${error}`)});
+            user.related('emailAuth').create(data).then( () => {
+                this.sendAuthMail(email, username, authCode)
+                    .then()
+                    .catch( error => {
+                        console.log(`Email Failure Message => ${error}`);
+                    });
                 return data;
             })
                 .catch(
                     error => {
                         console.log(`Unable to fetch user => ${error}`);
-                    })
+                    });
               })
         .catch(error => {
             console.log(`Email Saved Error => ${error}`);
-            return error });
+            return error; });
     }
 
     getEmailAuth ( email ) {
     return this.userService.getUserByEmail(email).related('emailAuth').fetch()
-        .then( data => { return data})
-        .catch(error => { return error});
+        .then( data => { return data;})
+        .catch(error => { return error;});
     }
 
     updateEmailAuth ( email ) {
     let authCode = authCodeGenerator.v4();
     return this.userService.getUserByEmail(email).related('emailAuth').save(
         { email : email , email_auth_code : authCode})
-        .then( data => { return data})
-        .catch(error => { return error});
+        .then( data => { return data;})
+        .catch(error => { return error;});
     }
 }
 

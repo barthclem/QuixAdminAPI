@@ -1,0 +1,13 @@
+/**
+ * Created by aanu.oyeyemi on 02/05/2017.
+ */
+{
+    "preset" : "airbnb",
+    "maxErrors" : null,
+    "excludeFiles" : ["node_modules/**", "coverage/**", "bower_components/**"],
+    "validateIndentation" : 4,
+    "requireTrailingComma" : false,
+    "requireCamelCaseOrUpperCaseIdentifiers" : "ignoreProperties",
+    "requireSpacesInsideObjectBrackets": "all"
+
+}

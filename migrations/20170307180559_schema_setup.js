@@ -94,7 +94,7 @@ exports.up = function(knex) {
           table.string('role_title').notNullable().references('role.title');
           table.integer('itemId').unsigned().notNullable();
           table.integer('data_group_id').unsigned().notNullable().references('data_group.id');
-      })
+      });
 };
 
 exports.down = function(knex) {

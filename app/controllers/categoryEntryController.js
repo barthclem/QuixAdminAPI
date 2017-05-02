@@ -2,6 +2,8 @@
  * Created by barthclem on 4/19/17.
  */
 'use strict';
+let HttpStatus = require('http-status-codes');
+let responseFormatter = require('../lib/responseFormatter');
 
 class CategoryEntryEntryController {
     /**
@@ -26,15 +28,15 @@ class CategoryEntryEntryController {
     createCategoryEntry (req, res, next) {
         let categoryEntryData = req.body;
         this.categoryEntryService.createCategoryEntry(categoryEntryData)
-        then(
-            data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
-            }
-        ).catch( error => {
-            console.log(`POST ERROR => ${error}`);
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-        })
-    };
+            .then(
+                data => {
+                    return res.send(responseFormatter(HttpStatus.OK, data));
+                })
+            .catch( error => {
+                console.log(`POST ERROR => ${error}`);
+                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+        });
+    }
 
     /**
      *@description ENDPOINT  GET /CategoryEntry/ - Retrieves the list of all CategoryEntrys
@@ -115,8 +117,7 @@ class CategoryEntryEntryController {
         ).catch(
             error => {
                 return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-            }
-        )
+            });
         next();
     }
 }

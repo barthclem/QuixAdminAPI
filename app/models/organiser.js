@@ -13,10 +13,9 @@ let organizer = bookshelf.Model.extend({
 
     user : function () {
         return this.belongsTo('user');
-    }
-    ,
+    },
     eventAdmin : () => {
-        return this.hasMany('eventAdmin')
+        return this.hasMany('eventAdmin');
     },
 
     event : () => {

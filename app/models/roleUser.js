@@ -17,7 +17,7 @@ let roleUser = bookshelf.Model.extend({
         return this.hasOne('event');
     },
     role : () => {
-        return this.hasOne('role')
+        return this.hasOne('role');
     }
 
 });

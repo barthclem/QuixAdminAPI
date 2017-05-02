@@ -1,4 +1,6 @@
 'use strict';
+let HttpStatus = require('http-status-codes');
+let responseFormatter = require('../lib/responseFormatter');
 
 class OrganizerController {
     /**
@@ -23,15 +25,15 @@ class OrganizerController {
     createOrganizer (req, res, next) {
         let organizerData = req.body;
         this.organizerService.createOrganizer(organizerData)
-        then(
-            data => {
+            .then(
+                data => {
                 return res.send(responseFormatter(HttpStatus.OK, data));
-            }
-        ).catch( error => {
-            console.log(`POST ERROR => ${error}`);
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-        })
-    };
+            })
+            .catch( error => {
+                console.log(`POST ERROR => ${error}`);
+                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+        });
+    }
 
     /**
      *@description ENDPOINT  GET /organizer/ - Retrieves the list of all organizers
@@ -112,8 +114,7 @@ class OrganizerController {
         ).catch(
             error => {
                 return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-            }
-        )
+            });
         next();
     }
 }

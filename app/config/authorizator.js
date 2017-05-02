@@ -16,7 +16,7 @@ let participant = new Role(authorizor, constants.ROLES.PARTICIPANT);
 let organiser = new Role(authorizor, constants.ROLES.ORGANIZER);
 let eventAdmin = new Role(authorizor, constants.ROLES.EVENT_ADMIN);
 let categoryAdmin = new Role(authorizor, constants.ROLES.CATEGORY_ADMIN);
-let systemAdmin = new Role(authorizor, constants.ROLES.APP_ADMIN);
+//let systemAdmin = new Role(authorizor, constants.ROLES.APP_ADMIN);
 let superAdmin = new Role(authorizor, constants.ROLES.SUPERADMIN);
 
 module.exports = (()=>{
@@ -62,6 +62,7 @@ organiser.inherit(eventAdmin.role);
 superAdmin.canDo(
     PERMISSIONS.USER.GET_A_USER,
     PERMISSIONS.USER.UPDATE_A_USER,
+    PERMISSIONS.USER.DELETE_A_USER,
     PERMISSIONS.EVENT.VIEW_ALL_EVENTS,
     PERMISSIONS.EVENT.REGISTER_FOR_EVENT,
     PERMISSIONS.EVENT.DEREGISTER_AN_EVENT,

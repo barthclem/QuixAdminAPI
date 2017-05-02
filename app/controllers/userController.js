@@ -5,10 +5,11 @@
 let HttpStatus = require('http-status-codes');
 let responseFormatter = require('../lib/responseFormatter');
 let multer = require('multer');
+let moment = require('moment');
 
 let storage = multer.diskStorage({
-    destination : (req, file, callback) => { callback(null, './uploads') },
-    filename : (req, file, callback) => { callback(null, file.fieldname + '-' + Date.now())}
+    destination : (req, file, callback) => { callback(null, './uploads'); },
+    filename : (req, file, callback) => { callback(null, file.fieldname + '-' + Date.now());}
 });
 
 let upload = multer({ storage : storage}).single('upload');
@@ -62,6 +63,7 @@ class UserController {
     */
     createUser (req, res, next) {
       let body = req.body;
+      body.created_at = moment().format('YYYY-MM-DDTHH:mm:ss');
       this.userService.createUser(body).
       then(
           data => {
@@ -73,8 +75,8 @@ class UserController {
           console.log(error);
           return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
               .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed to create new user'}));
-      })
-    };
+      });
+    }
 
       /**
       *@description ENDPOINT  POST /login/ - login user
@@ -185,9 +187,8 @@ class UserController {
                     .send(responseFormatter(HttpStatus.OK, data));})
             .catch(error => {
                 return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-            }
-        )
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed to delete'}));
+            });
 
       }
 
@@ -206,7 +207,7 @@ class UserController {
             if(err){
                 return res.send(responseFormatter(HttpStatus.UNSUPPORTED_MEDIA_TYPE, {status : 'failed'}));
             }
-            return res.send(responseFormatter(HttpStatus.OK, {message : 'file uploaded successfully'}))
+            return res.send(responseFormatter(HttpStatus.OK, {message : 'file uploaded successfully'}));
         });
         next();
     }

@@ -32,7 +32,7 @@ class EventService {
             })
             .catch(error => {
                 throw error;
-            })
+            });
     }
 
     /**

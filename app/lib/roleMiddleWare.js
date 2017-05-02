@@ -13,19 +13,19 @@ function loadRole (dataGroupId, itemId) {
                 .then(role => {
                     sessionData.role = role;
                     next();
-                })
+                });
         }
         else{
             getRole(sessionData, rolesData, dataGroupId)
                 .then(role => {
                     sessionData.role = role;
                     next();
-                })
+                });
         }
-    }
+    };
 }
 function getRoleWithItemId (sessionData, data, dataGroupId, itemId, next){
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         let role = roleConstants.GUEST;
         for(let i = 0; i< data.length; i++){
             if(data[i].role_title === roleConstants.SUPERADMIN){
@@ -39,13 +39,13 @@ function getRoleWithItemId (sessionData, data, dataGroupId, itemId, next){
             }
         }
         return resolve(role);
-    })
+    });
 
 
 }
 
 function getRole (sessionData, data, dataGroupId) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         let role = roleConstants.GUEST;
         for(let i = 0; i< data.length; i++){
             if(data[i].role_title === roleConstants.SUPERADMIN){
@@ -59,7 +59,7 @@ function getRole (sessionData, data, dataGroupId) {
             }
         }
         return resolve(role);
-    })
+    });
 
 }
 module.exports =  loadRole;

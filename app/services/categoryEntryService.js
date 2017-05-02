@@ -35,7 +35,7 @@ class CategoryEntryService {
             })
             .catch(error => {
                 throw error;
-            })
+            });
     }
 
     /**

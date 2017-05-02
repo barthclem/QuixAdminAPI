@@ -10,7 +10,7 @@ authorizor.use('redisPolicy', rolePolicy);
 function Role(authorizor, roleName) {
     authorizor.addRole(roleName);
     this.role = authorizor.getRole(roleName);
-};
+}
 
 Role.prototype.canDo = function can () {
 
@@ -26,7 +26,7 @@ Role.prototype.canDo = function can () {
 
 Role.prototype.inherit = function inherit (roleEntry) {
   this.role.inherits(roleEntry);
-}
+};
 
 
 module.exports = Role;

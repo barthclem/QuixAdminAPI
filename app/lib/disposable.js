@@ -11,7 +11,7 @@ module.exports = function anony(inputString, inputArray) {
     stringElems.forEach(elem => {
         let temp = elem.split(/:/);
         console.log("Temp =>"+ temp);
-        result.push({id : index++, title : (()=>{return temp[1].replace(/'/g, '').trim()})() })
+        result.push({id : index++, title : (()=>{return temp[1].replace(/'/g, '').trim();})() });
     });
 
     return result;
