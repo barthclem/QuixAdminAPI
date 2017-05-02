@@ -54,8 +54,8 @@ let config = require('../config/config');
             return this.users.forge({id}).fetch().then(
                 data => {
                     let sendData = data ? Object.assign({}, data.attributes) : {};
-                    console.log(`Data Received => ${JSON.stringify(sendData)}`);
-                    return resolve(sendData);}
+                    console.log(`Data Received => ${JSON.stringify(data)}`);
+                    return resolve(data);}
                     )
                 .catch(error => {
                         console.log(`Error Message => ${error}`);
@@ -115,12 +115,11 @@ let config = require('../config/config');
              return this.users.forge().save(userData).then(
                  data => {
                      //this sends authorization email to the newly reg member
-                     return data;
-                 }
-             )
+                     return resolve(data);
+                 })
                  .catch(error => {
                      console.log(` Error creating user ${error}`);
-                     throw error;
+                     return reject(error);
                  });
          });
      }

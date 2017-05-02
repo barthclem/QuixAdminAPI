@@ -60,18 +60,19 @@ class UserController {
     *@param {function} next express routing callback
     *@return {callback}
     */
-    createUser (data) {
+    createUser (req, res, next) {
       let body = req.body;
       this.userService.createUser(body).
       then(
           data => {
-              this.emailService.createEmailAuth(data.attributes.email, data.attributes.username);
+              this.emailAuthService.createEmailAuth(data.attributes.email, data.attributes.username);
               return res.status(HttpStatus.OK).
               send(responseFormatter(HttpStatus.OK, data));
           }
       ).catch( error => {
+          console.log(error);
           return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+              .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed to create new user'}));
       })
     };
 

@@ -41,3 +41,5 @@ let server = app.listen(8000, function () {
     let host = server.address().address;
     console.log( 'Server started on '+ host + ' on port : '+port);
 });
+
+module.exports = server;

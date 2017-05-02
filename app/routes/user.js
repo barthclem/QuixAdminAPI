@@ -37,7 +37,7 @@ module.exports =  (serviceLocator) => {
     })
         .post (validate(userValidation.signUp), (req, res, next)=> {
             userController.createUser(req, res, next);
-            next();
+
         });
 
     router.post('/login',  validate(userValidation.login), (req, res, next) => {
