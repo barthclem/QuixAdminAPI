@@ -25,7 +25,7 @@
             url : '/listMyEvent',
             templateUrl : 'partials/listEvent.html',
             controller : 'EventController'
-        })
+        });
     $locationProvider.html5Mode(true);
 
 });

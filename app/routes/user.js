@@ -30,7 +30,7 @@ module.exports =  (serviceLocator) => {
     });
 
     router.route('/').get(
-        [authMiddleware, loadRoleMiddleWare(userGroup), authorizer.wants(constants.GET_ALL_USERS)],
+       // [authMiddleware, loadRoleMiddleWare(userGroup), authorizer.wants(constants.GET_ALL_USERS)],
         (req, res, next) => {
         userController.listAll(req, res, next);
         //next();
@@ -45,25 +45,40 @@ module.exports =  (serviceLocator) => {
     });
 
     router.route('/:id([0-9]+)')
-        .get([authMiddleware,  validate(userValidation.getUser), loadRoleMiddleWare(userGroup),
-            authorizer.wants(constants.GET_A_USER)], (req, res, next) => {
+        .get([
+            //authMiddleware,
+            validate(userValidation.getUser)
+           // , loadRoleMiddleWare(userGroup),
+           // authorizer.wants(constants.GET_A_USER)
+        ], (req, res, next) => {
             userController.getUser(req, res, next);
             //next();
         })
 
-        .put([authMiddleware,  validate(userValidation.editUser), loadRoleMiddleWare(userGroup),
-            authorizer.wants(constants.UPDATE_A_USER)], (req, res, next) => {
+        .put([
+            //authMiddleware,
+            validate(userValidation.editUser)
+          //  , loadRoleMiddleWare(userGroup),
+            //authorizer.wants(constants.UPDATE_A_USER)
+        ], (req, res, next) => {
             userController.updateUser(req, res ,next);
         })
 
-        .delete ([authMiddleware,  validate(userValidation.getUser),  loadRoleMiddleWare(userGroup),
-            authorizer.wants(constants.DELETE_A_USER)], (req, res, next) => {
+        .delete ([
+            //authMiddleware
+            validate(userValidation.getUser),
+            //loadRoleMiddleWare(userGroup),
+          //  authorizer.wants(constants.DELETE_A_USER)
+        ], (req, res, next) => {
             userController.deleteUser(req, res, next);
         });
 
 //get user wi
-    router.get('/:username([a-zA-Z0-9]+)', [authMiddleware, validate(userValidation.getUser),
-        loadRoleMiddleWare(userGroup), authorizer.wants(constants.GET_A_USER)], (req, res, next) => {
+    router.get('/:username([a-zA-Z0-9_\.]+)', [
+       // authMiddleware,
+        validate(userValidation.getUser)
+        //, loadRoleMiddleWare(userGroup), authorizer.wants(constants.GET_A_USER)
+    ], (req, res, next) => {
         userController.getUserByUsername(req, res, next);
         //next();
     });

@@ -24,7 +24,7 @@ module.exports = {
     getUser : {
         params : {
             id : Joi.number().integer().optional(),
-            username : Joi.string().regex(/^([a-zA-Z]{3,})([0-9]*)$/).optional()
+            username : Joi.string().regex(/^([a-zA-Z]{3,})([[a-zA-Z0-9_\.]*)$/).optional()
         }
     },
     editUser : {

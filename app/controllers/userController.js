@@ -5,7 +5,7 @@
 let HttpStatus = require('http-status-codes');
 let responseFormatter = require('../lib/responseFormatter');
 let multer = require('multer');
-let moment = require('moment');
+
 
 let storage = multer.diskStorage({
     destination : (req, file, callback) => { callback(null, './uploads'); },
@@ -63,7 +63,6 @@ class UserController {
     */
     createUser (req, res, next) {
       let body = req.body;
-      body.created_at = moment().format('YYYY-MM-DDTHH:mm:ss');
       this.userService.createUser(body).
       then(
           data => {
@@ -74,7 +73,7 @@ class UserController {
       ).catch( error => {
           console.log(error);
           return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed to create new user'}));
+              .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {message : 'failed to create new user'}));
       });
     }
 
@@ -116,11 +115,13 @@ class UserController {
         this.userService.getUser(id).then(
           data => {
               return res.status(HttpStatus.OK)
-              .send(responseFormatter(HttpStatus.OK, data));
+              .send(responseFormatter(HttpStatus.OK, data ? data : {}));
 
           }).catch( error => {
+              console.log(`GET USER Error => ${error}`);
               return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed to get a user'})).end();
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR,
+                    {message : `failed to get a user with id ${id}`})).end();
           });
 
       }
@@ -139,10 +140,11 @@ class UserController {
           data => {
               console.log(` GET USER => ${data}`);
               return res.status(HttpStatus.OK)
-                  .send(responseFormatter(HttpStatus.OK, data));
+                  .send(responseFormatter(HttpStatus.OK, data ? data : {}));
           }).catch( error => {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR,
+                    {message : 'failed to a user with username ${username}'}));
           });
 
           //next();
@@ -165,8 +167,10 @@ class UserController {
                   .send(responseFormatter(HttpStatus.OK, data));
             }
         ).catch(error => {
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed to update'}));
+            console.log(`UPDATE ERROR => ${error}`);
+            return res.status(HttpStatus.BAD_REQUEST)
+                .send(responseFormatter(HttpStatus.BAD_REQUEST,
+                    {message : 'failed to update a user with a id ${id}'}));
         });
 
       }
@@ -182,12 +186,14 @@ class UserController {
       deleteUser (req, res, next) {
         let id = req.params.id;
         this.userService.deleteUser(id).then(
-            data => {
+            () => {
                 return res.status(HttpStatus.OK)
-                    .send(responseFormatter(HttpStatus.OK, data));})
+                    .send(responseFormatter(HttpStatus.OK,
+                        {message : `deleted a user with id ${id}`}));})
             .catch(error => {
-                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed to delete'}));
+                return res.status(HttpStatus.BAD_REQUEST)
+                    .send(responseFormatter(HttpStatus.BAD_REQUEST,
+                        {message : `failed to delete a user with id ${id}`}));
             });
 
       }

@@ -26,8 +26,11 @@ app.get('/*', (req, res) => {
 
 app.use(function(err, req, res, next){
     console.log(`Internal Server Error Message : ${err.message}`);
+    console.log(`Internal Server Error  : ${JSON.stringify(err)}`);
+    console.log(`Internal Server Error Status : ${err.status}`);
+    let errorMessage = err.status === 500 ?err.message : err;
     return res.status(err.status || 500)
-        .send(responseFormatter(err.status || 500, {message : err.message}));
+        .send(responseFormatter(err.status || 500, {message : errorMessage}));
     //res.status(400).json(err);
 });
 

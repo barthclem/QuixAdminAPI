@@ -7,7 +7,6 @@ let bookshelf = require ('../bookshelf');
 
 let category = bookshelf.Model.extend({
     idAttribute : 'id',
-
     tableName : 'category',
 
     event : () => {

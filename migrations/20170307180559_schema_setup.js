@@ -9,7 +9,8 @@ exports.up = function(knex) {
           table.enum('status', ['notVerified', 'verified','active', 'banned']);
           table.string('username').unique().notNullable();
           table.string('email');
-          table.timestamps();
+          table.timestamp('created_at', true).defaultTo(knex.raw('now()')).notNullable();
+          table.timestamp('updated_at', true).defaultTo(knex.raw('now()')).notNullable();
       })
       .createTableIfNotExists('organizer', (table) => {
           table.increments('id').primary();
@@ -21,13 +22,18 @@ exports.up = function(knex) {
           table.integer('user_id').unsigned().notNullable().references('user.id');
           table.string('email').notNullable();
           table.string('email_auth_code');
-          table.timestamps();
+          table.timestamp('created_at', true).defaultTo(knex.raw('now()')).notNullable();
+          table.timestamp('updated_at', true).defaultTo(knex.raw('now()')).notNullable();
       })
       //Permissions and Roles
       .createTableIfNotExists('role', (table) => {
-          table.increments('id').primary();
-          table.string('title').primary();
+          table.primary(['id','title']);
+          table.integer('id').unsigned();
+          table.string('title').unique();
       })
+      //add a primary key to the role table
+      .raw('Alter Table role modify id int unsigned auto_increment')
+
       .createTableIfNotExists('permission', (table) => {
           table.increments('id').primary();
           table.string('title').notNullable();
@@ -44,13 +50,15 @@ exports.up = function(knex) {
           table.string('link').unique();
           table.date('scheduled_at');
           table.integer('organizer_id').unsigned().references('id').inTable('organizer');
-          table.timestamps();
+          table.timestamp('created_at', true).defaultTo(knex.raw('now()')).notNullable();
+          table.timestamp('updated_at', true).defaultTo(knex.raw('now()')).notNullable();
       })
       .createTableIfNotExists('eventAdmin', (table) => {
           table.increments('id').primary();
           table.integer('event_id').unsigned().references('event.id');
           table.integer('user_id').unsigned().references('user.id');
-          table.timestamps();
+          table.timestamp('created_at', true).defaultTo(knex.raw('now()')).notNullable();
+          table.timestamp('updated_at', true).defaultTo(knex.raw('now()')).notNullable();
       })
       .createTableIfNotExists('participant', (table) => {
           table.increments('id').primary();
@@ -67,7 +75,8 @@ exports.up = function(knex) {
           table.integer('bonus_time').unsigned();
           table.float('question_grade');
           table.float('bonus_grade');
-          table.timestamps();
+          table.timestamp('created_at', true).defaultTo(knex.raw('now()')).notNullable();
+          table.timestamp('updated_at', true).defaultTo(knex.raw('now()')).notNullable();
       })
       .createTableIfNotExists('category_entry', (table) => {
           table.increments('id').primary();
@@ -81,7 +90,8 @@ exports.up = function(knex) {
           table.string('optionE');
           table.string('answer').notNullable();
           table.float('time_allowed');
-          table.timestamps();
+          table.timestamp('created_at', true).defaultTo(knex.raw('now()')).notNullable();
+          table.timestamp('updated_at', true).defaultTo(knex.raw('now()')).notNullable();
       })
       .createTableIfNotExists('data_group', (table) => {
           table.increments('id').primary();
@@ -94,6 +104,8 @@ exports.up = function(knex) {
           table.string('role_title').notNullable().references('role.title');
           table.integer('itemId').unsigned().notNullable();
           table.integer('data_group_id').unsigned().notNullable().references('data_group.id');
+          table.timestamp('created_at', true).defaultTo(knex.raw('now()')).notNullable();
+          table.timestamp('updated_at', true).defaultTo(knex.raw('now()')).notNullable();
       });
 };
 

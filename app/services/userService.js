@@ -134,13 +134,12 @@ let config = require('../config/config');
      loginUser (userData) {
          return new Promise((resolve, reject) => {
              this.getUserByEmail(userData.email).then((data) => {
-                 return resolve(data);
-                 // cryptor.compare(userData.password, data.attributes.password, (error, result)=>{
-                 //     if(error) {
-                 //         return reject(error);
-                 //     }
-                 //     return resolve(data);
-                 // });
+                 cryptor.compare(userData.password, data.attributes.password, (error, result)=>{
+                     if(error) {
+                         return reject(error);
+                     }
+                     return resolve(data);
+                 });
              }).catch( error =>
                  {return reject(error);}
              );
