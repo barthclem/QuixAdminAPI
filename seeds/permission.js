@@ -36,7 +36,11 @@ exports.seed = function(knex, Promise) {
        EDIT_ALL_CATEGORIES : 'edit_all_categories',
        DELETE_A_CATEGORY : 'delete_a_category',
        DELETE_ALL_CATEGORIES : 'delete_all_categories',
-       DELETE_A_CATEGORY_ADMIN : 'delete_a_category_admin'`);
+       DELETE_A_CATEGORY_ADMIN : 'delete_a_category_admin',
+       CREATE_ROLE_USER : 'create_a_role_user',
+       DELETE_USER_ROLE: 'delete_a_role_user',
+       EDIT_USER_ROLE : 'edit_a_role_user',
+       GET_ROLE_USER : 'get_role_user'`);
       // Inserts seed entries
       return knex('permission').insert(inputArray);
     });

@@ -2,19 +2,22 @@
 /**
  *@description this is class handles all action that can be performed by a participant
  */
+let BookShelf = require('../bookshelf');
+let constants = require('../config/constants');
 class ParticipantService {
 
     /**
      *
      *@description Participant Service Constructor
-     *
+     *@param  {object} roleUserService - roleUserService  instance
      *@param  {object} participant - participant model instance
      *@param {object}  event - event model instance
      *
      */
-    constructor (participant ,event) {
+    constructor (participant ,event, roleUserService) {
         this.participant = participant;
         this.event = event;
+        this.roleUserService = roleUserService
     }
 
     /**
@@ -26,13 +29,34 @@ class ParticipantService {
      * @return {object} a newly created participant object
      */
     createParticipant (participantData) {
-        this.participant.forge().save(participantData)
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
+        return new Promise((resolve, reject)=>{
+            BookShelf.transaction((t) => {
+                this.participant.forge().save(participantData, {transacting : t})
+                    .tap((participant) => {
+                       console.log(`Participant here => ${JSON.stringify(participant)}`);
+                       let roleUser = {
+                           user_id: participant.user_id,
+                           role_title : constants.ROLES.PARTICIPANT,
+                           itemId : participant.id,
+                           data_group_id: constants.DATA_GROUP.PARTICIPANT
+                       };
+                      this.roleUserService.createTransactionRoleUser(roleUser)
+                          .then(data => {
+                              console.log(`Saved Role User Transaction => ${JSON.stringify(data)}`);
+                          })
+                          .catch(error => {
+                              console.log(`Saved Role User Transaction Error=> ${JSON.stringify(error)}`);
+                          });
+                    })
+                    .then(newParticipant => {
+                        return resolve(newParticipant);
+                    })
+                    .catch(error => {
+                        throw reject(error);
+                    });
             });
+        });
+
     }
 
      /**
@@ -44,13 +68,16 @@ class ParticipantService {
      * @return {object} a newly created participant object
      */
     editParticipant (userId, participantData) {
-        this.participant.forge({userId : userId}).save(participantData)
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+         return new Promise((resolve, reject)=>{
+             this.participant.forge({userId : userId}).save(participantData)
+                 .then(data => {
+                     return resolve(data);
+                 })
+                 .catch(error => {
+                     return reject(error);
+                 });
+         });
+
     }
 
     /**
@@ -61,13 +88,16 @@ class ParticipantService {
      * @return {object} participant - a participant object
      */
     getParticipant (id) {
-        this.participant.forge({id: id}).fetch()
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.participant.forge({id: id}).fetch()
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
+
     }
 
     /**
@@ -77,13 +107,16 @@ class ParticipantService {
      * @return {object} participant - get all participants object
      */
     getAllParticipants () {
-        this.participant.forge().fetchAll()
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.participant.forge().fetchAll()
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
+
     }
 
     /**
@@ -95,17 +128,19 @@ class ParticipantService {
      * @return {object} object - an object containing message/error
      */
     deleteParticipant (userId, eventId) {
-        this.participant.forge({userId : userId})
-            .query( qb=> {
-                qb.where('eventId', '=', eventId);
-            })
-            .destroy()
-            .then(data => {
-                return {message : "deleted successfully"};
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.participant.forge({userId : userId})
+                .query( qb=> {
+                    qb.where('eventId', '=', eventId);
+                })
+                .destroy()
+                .then(data => {
+                    return {message : "deleted successfully"};
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
     /**
@@ -116,14 +151,16 @@ class ParticipantService {
      * @return {object} object - an object containing all events for a user/error
      */
     allUserEventsData (userId) {
-        this.participant.forge({userId : userId})
-            .fetchAll()
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                throw  error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.participant.forge({userId : userId})
+                .fetchAll()
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
 
@@ -135,21 +172,21 @@ class ParticipantService {
      * @return {object} object - an object containing all events for a participant/error
      */
     allParticipantEvents (userId) {
-        this.participant.forge()
-            .query( qb=> {
-                qb.innerJoin('events', 'participant.event_id', 'event.id');
-                qb.where('participant.user_id', '=', userId);
-            })
-            .fetchAll()
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.participant.forge()
+                .query( qb=> {
+                    qb.innerJoin('events', 'participant.event_id', 'event.id');
+                    qb.where('participant.user_id', '=', userId);
+                })
+                .fetchAll()
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
-
-
 }
 
 module.exports = ParticipantService;

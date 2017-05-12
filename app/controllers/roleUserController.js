@@ -12,7 +12,7 @@ class RoleUserController {
      *
      *@description RoleUser Controller
      *
-     *@param  {object} RoleUserService - RoleUser service instance
+     *@param  {object} roleUserService - RoleUser service instance
      *
      */
     constructor(roleUserService){
@@ -89,16 +89,16 @@ class RoleUserController {
      *@return {callback}
      */
     getRoleUser (req, res, next) {
-        let roleUserId = Number(req.param('id'));
+        let roleUserId = Number(req.params.id);
         this.roleUserService.getRoleUser(roleUserId).then(
             data => {
                 console.log(` GET RoleUser => ${data}`);
                 return res.send(responseFormatter(HttpStatus.OK, data));
             }).catch( error => {
+                console.log(`GET RoleUser Error => ${error}`);
             return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
 
-        next();
     }
 
     /**
@@ -110,7 +110,7 @@ class RoleUserController {
      *@return {callback}
      */
     getRoleUserByUserId (req, res, next) {
-        let userId = Number(req.param('id'));
+        let userId = Number(req.params.user_id);
         this.roleUserService.getRoleUserByUserId(userId).then(
             data => {
                 console.log(` GET RoleUser => ${data}`);
@@ -131,7 +131,7 @@ class RoleUserController {
      *@return {callback}
      */
     updateRoleUser (req, res, next) {
-        let id = req.param('id');
+        let id = Number(req.params.id);
         let body = req.body;
         this.roleUserService.updateRoleUser(id, body).then(
             data => {
@@ -140,7 +140,6 @@ class RoleUserController {
         ).catch(error => {
             return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-        next();
     }
 
 
@@ -154,7 +153,7 @@ class RoleUserController {
      *@return {callback}
      */
     deleteRoleUser (req, res, next) {
-        let roleUserServiceId = Number(req.param('id'));
+        let roleUserServiceId = Number(req.params.id);
         this.roleUserService.deleteRoleUser(roleUserServiceId).then(
             data => {return res.send(responseFormatter(HttpStatus.OK, data));}
         ).catch(
@@ -173,7 +172,7 @@ class RoleUserController {
      *@return {callback}
      */
     deleteRoleUserWithId (req, res, next) {
-        let userId = Number(req.param('id'));
+        let userId = Number(req.params.user_id);
         this.roleUserService.deleteRoleUserWithId(userId).then(
             data => {return res.send(responseFormatter(HttpStatus.OK, data));}
         ).catch(

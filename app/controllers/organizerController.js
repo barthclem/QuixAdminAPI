@@ -47,7 +47,6 @@ class OrganizerController {
         this.organizerService.getAllOrganizers().then(
             data => {
                 return res.send(responseFormatter(HttpStatus.OK, data));
-
             }
         ).catch( error => {
             return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));

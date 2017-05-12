@@ -44,11 +44,10 @@ class ParticipantController {
      *@param {function} next express routing callback
      *@return {callback}
      */
-    listAll (req, res, next ) {
-        this.participant.getAllParticipants().then(
+    listAllParticipants (req, res, next ) {
+        this.participantService.getAllParticipants().then(
             data => {
                 return res.send(responseFormatter(HttpStatus.OK, data));
-
             }
         ).catch( error => {
             return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
@@ -65,7 +64,7 @@ class ParticipantController {
      *@return {callback}
      */
     getParticipant (req, res, next) {
-        let id = Number(req.param('id'));
+        let id = Number(req.param.id);
         this.participantService.getParticipant(id).then(
             data => {
                 console.log(` GET Participant => ${data}`);
@@ -107,7 +106,7 @@ class ParticipantController {
      *@return {callback}
      */
     getParticipantDataByUserId (req, res, next) {
-        let userId = Number(req.param('id'));
+        let userId = Number(req.param.user_id);
         this.participantService.allUserEventsData(userId).then(
             data => {return res.send(responseFormatter(HttpStatus.OK, data));}
         ).catch(
@@ -126,7 +125,7 @@ class ParticipantController {
      *@return {callback}
      */
     getParticipantEventsByUserId (req, res, next) {
-        let userId = Number(req.param('id'));
+        let userId = Number(req.param.user_id);
         this.participantService.allParticipantEvents(userId).then(
             data => {return res.send(responseFormatter(HttpStatus.OK, data));}
         ).catch(
@@ -146,7 +145,7 @@ class ParticipantController {
      *@return {callback}
      */
     deleteParticipant (req, res, next) {
-        let id = Number(req.param('id'));
+        let id = Number(req.param.id);
         this.participantService.deleteParticipant(id).then(
             data => {return res.send(responseFormatter(HttpStatus.OK, data));}
         ).catch(

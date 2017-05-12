@@ -6,7 +6,7 @@ exports.up = function(knex) {
           table.increments('id').primary();
           table.string('name').notNullable();
           table.string('password').notNullable();
-          table.enum('status', ['notVerified', 'verified','active', 'banned']);
+          table.enum('status', ['notVerified', 'verified','active', 'banned']).default('notVerified');
           table.string('username').unique().notNullable();
           table.string('email');
           table.timestamp('created_at', true).defaultTo(knex.raw('now()')).notNullable();
@@ -64,6 +64,7 @@ exports.up = function(knex) {
           table.increments('id').primary();
           table.integer('event_id').unsigned().references('event.id');
           table.integer('user_id').unsigned().references('user.id');
+          table.enum('status', ['suspended', 'inactive','active', 'banned']).default('active');
           table.integer('score').unsigned().default(0);
       })
       .createTableIfNotExists('category', (table) => {

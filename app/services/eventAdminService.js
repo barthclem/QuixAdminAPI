@@ -16,8 +16,6 @@ class EventAdminService {
         this.eventAdmin = eventAdmin;
     }
 
-
-
     /**
      *
      *@description Create an eventAdmin
@@ -27,13 +25,15 @@ class EventAdminService {
      * @return {object} a newly created organizer object
      */
     createEventAdmin (eventAdminData) {
-        this.eventAdmin.forge().save(eventAdminData)
-            .then( data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.eventAdmin.forge().save(eventAdminData)
+                .then( data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
     /**
@@ -46,13 +46,15 @@ class EventAdminService {
      * @return {object} object - A modified Organizer Object / error
      */
     editEventAdmin (eventAdminId, eventAdminData) {
-        this.eventAdmin.forge({id : eventAdminId}).save(eventAdminData)
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.eventAdmin.forge({id : eventAdminId}).save(eventAdminData)
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
     /**
@@ -64,13 +66,15 @@ class EventAdminService {
      * @return {object} object -  EventAdmin  Object / error {include all events attached to admin}
      */
     getEventAdmin (eventAdminId) {
-        this.eventAdmin.forge({id : eventAdminId}).fetch({ withRelated : [ ]})
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.eventAdmin.forge({id : eventAdminId}).fetch({ withRelated : [ ]})
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
     /**
@@ -81,13 +85,15 @@ class EventAdminService {
      * @return {object} object -  Object containing all eventAdmins / error
      */
     getAllEventAdmins () {
-        this.eventAdmin.forge().fetchAll()
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.eventAdmin.forge().fetchAll()
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
 
@@ -100,14 +106,16 @@ class EventAdminService {
      * @return {object} object - an object containing message/error
      */
     deleteEventAdmin (eventAdminId) {
-        this.eventAdmin.forge({id : eventAdminId})
-            .destroy()
-            .then(data => {
-                return {message : "eventAdmin deleted successfully"};
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.eventAdmin.forge({id : eventAdminId})
+                .destroy()
+                .then(data => {
+                    return {message : "eventAdmin deleted successfully"};
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
 }

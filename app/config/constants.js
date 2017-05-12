@@ -26,32 +26,47 @@ module.exports = {
        REGISTER_AN_EVENT : 'register_event',
        START_AN_EVENT : 'start_an_event',
        CANCEL_AN_EVENT : 'cancel_an_event',
+       VIEW_AN_EVENT : 'view_an_event',
        VIEW_ALL_EVENTS : 'view_all_events'
      },
 
      ORGANIZER : {
        ADD_ORGANIZER : 'add_organizer',
+       GET_AN_ORGANIZER : 'get_an_organizer',
+       VIEW_ALL_ORGANIZERS: 'get_organizer',
        EDIT_ORGANIZER : 'edit_organizer',
        DELETE_ORGANIZER : 'delete_organizer'
      },
      PARTICIPANT : {
-       ADD_A_PARTICIPANTS : 'add_a_participant',
-       DELETE_A_PARTICIPATE : 'delete_a_participant',
-       SUSPEND_A_PARTICIPANT : 'suspend_a_participant',
-       SEND_MESSAGE_TO_PARTICIPANT : 'send_a_message_participant',
-       VIEW_ALL_PARTICIPANTS : 'view_all_participants'
+         ADD_A_PARTICIPANTS : 'add_a_participant',
+         DELETE_A_PARTICIPANT : 'delete_a_participant',
+         EDIT_A_PARTICIPANT : 'edit_a_participant',
+         SEND_MESSAGE_TO_PARTICIPANT : 'send_a_message_participant',
+         VIEW_ALL_PARTICIPANTS : 'view_all_participants',
+         VIEW_A_PARTICIPANT : 'view_a_participant'
      },
 
      CATEGORY : {
        CREATE_A_CATEGORY : 'create_a_category',
        ADD_A_CATEGORY_ADMIN : 'add_category_admin',
+       VIEW_A_CATEGORY : 'view_a_category',
+         VIEW_CATEGORY_ADMIN : 'view_category_admin',
+         VIEW_ALL_CATEGORIES : 'view_all_categories',
+         VIEW_ALL_CATEGORY_ADMINS : 'view_all_category_admina',
        EDIT_A_CATEGORY_ADMIN : 'edit_category_admin',
-       EDIT_A_CATEGORY : 'edit_category_configuration',
+       EDIT_A_CATEGORY : 'edit_a_category',
        EDIT_ALL_CATEGORIES : 'edit_all_categories',
        DELETE_A_CATEGORY : 'delete_a_category',
        DELETE_ALL_CATEGORIES : 'delete_all_categories',
        DELETE_A_CATEGORY_ADMIN : 'delete_a_category_admin'
      },
+
+      ROLE_USER : {
+          CREATE_ROLE_USER : 'create_a_role_user',
+          DELETE_USER_ROLE: 'delete_a_role_user',
+          EDIT_USER_ROLE : 'edit_a_role_user',
+          GET_ROLE_USER : 'get_role_user'
+      }
 
   },
 
@@ -74,7 +89,7 @@ module.exports = {
       ORGANIZER : 'organizer',
       PARTICIPANT : 'participant',
       ROLE : 'role',
-      ROLEUSER : 'roleUser',
+      ROLE_USER : 'roleUser',
       USER : 'user'
   }
 };

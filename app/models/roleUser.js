@@ -10,14 +10,14 @@ let roleUser = bookshelf.Model.extend({
     tableName : 'user_role',
     hidden : ['id'],
 
-    user : () => {
+    user : function () {
         return this.hasOne('user');
     },
-    event : () => {
+    event : function ()  {
         return this.hasOne('event');
     },
-    role : () => {
-        return this.hasOne('role');
+    role : function ()  {
+        return this.hasOne('role','title', 'role_title');
     }
 
 });

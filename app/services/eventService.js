@@ -26,13 +26,15 @@ class EventService {
      * @return {object} a newly created organizer object
      */
     createEvent (eventData) {
-        this.event.forge().save(eventData)
-            .then( data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.event.forge().save(eventData)
+                .then( data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
     /**
@@ -45,13 +47,15 @@ class EventService {
      * @return {object} object - A modified Organizer Object / error
      */
     editEvent (eventId, eventData) {
-        this.event.forge({id : eventId}).save(eventData)
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.event.forge({id : eventId}).save(eventData)
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
     /**
@@ -63,13 +67,15 @@ class EventService {
      * @return {object} object -  Event  Object / error
      */
     getEvent (eventId) {
-        this.event.forge({id : eventId}).fetch({ withRelated : ['organizer', 'event', 'category']})
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.event.forge({id : eventId}).fetch({ withRelated : ['organizer', 'event', 'category']})
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
     /**
@@ -80,13 +86,15 @@ class EventService {
      * @return {object} object -  Object containing all events / error
      */
     getAllEvents () {
-        this.event.forge().fetchAll()
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.event.forge().fetchAll()
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
 
@@ -99,14 +107,16 @@ class EventService {
      * @return {object} object - an object containing message/error
      */
     deleteEvent (eventId) {
-        this.event.forge({id : eventId})
-            .destroy()
-            .then(data => {
-                return {message : "event deleted successfully"};
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.event.forge({id : eventId})
+                .destroy()
+                .then(data => {
+                    return {message : "event deleted successfully"};
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
 }

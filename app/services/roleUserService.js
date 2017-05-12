@@ -43,7 +43,7 @@ class roleUserService{
 
     /**
      *
-     *@description Get all roles from darabase
+     *@description Get all roles from database
      *
      * @return {object} object - an object containing the list of roles
      */
@@ -65,7 +65,7 @@ class roleUserService{
      *
      *@description Create a role user
      *
-     *@param  {object} roleUseData - Object containing eventId, roleId and userId
+     *@param  {object} roleUserData - Object containing eventId, roleId and userId
      *
      * @return {object} a newly created roleUser object
      */
@@ -79,8 +79,26 @@ class roleUserService{
                     return reject(error);
                 });
         });
-
     }
+
+    /**
+     *
+     * @param roleUserData
+     * @param transaction
+     * @return {Promise}
+     */
+    createTransactionRoleUser (roleUserData, transaction) {
+        return new Promise((resolve, reject)=>{
+            this.roleUser.forge().save(roleUserData, {transaction: transaction})
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
+    }
+
 
     /**
      *

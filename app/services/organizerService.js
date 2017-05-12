@@ -26,13 +26,15 @@ class OrganizerService {
      * @return {object} a newly created organizer object
      */
     createOrganizer (organizerData) {
-        this.organizer.forge().save(organizerData)
-            .then( data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.organizer.forge().save(organizerData)
+                .then( data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
     /**
@@ -45,13 +47,15 @@ class OrganizerService {
      * @return {object} object - A modified Organizer Object / error
      */
     editOrganizer (organizerId, organizerData) {
-        this.organizer.forge({id : organizerId}).save(organizerData)
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.organizer.forge({id : organizerId}).save(organizerData)
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
     /**
@@ -63,14 +67,16 @@ class OrganizerService {
      * @return {object} object -  Organizer Object / error
      */
     getOrganizer (organizerId) {
-        this.organizer.forge({id : organizerId})
-            .fetch({ withRelated : ['event']})
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.organizer.forge({id : organizerId})
+                .fetch({ withRelated : ['event']})
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
     /**
@@ -81,13 +87,15 @@ class OrganizerService {
      * @return {object} object -  Object containing all organizers / error
      */
     getAllOrganizers () {
-        this.organizer.forge().fetchAll()
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.organizer.forge().fetchAll()
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
 
@@ -100,14 +108,16 @@ class OrganizerService {
      * @return {object} object - an object containing message/error
      */
     deleteOrganizer (organizerId) {
-        this.organizer.forge({id : organizerId})
-            .destroy()
-            .then(data => {
-                return {message : "organizer deleted successfully"};
-            })
-            .catch(error => {
-                throw error;
-            });
+        return new Promise((resolve, reject)=>{
+            this.organizer.forge({id : organizerId})
+                .destroy()
+                .then(data => {
+                    return {message : "organizer deleted successfully"};
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
     }
 
 
