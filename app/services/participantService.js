@@ -35,24 +35,25 @@ class ParticipantService {
                     .tap((participant) => {
                        console.log(`Participant here => ${JSON.stringify(participant)}`);
                        let roleUser = {
-                           user_id: participant.user_id,
+                           user_id: participant.attributes.user_id,
                            role_title : constants.ROLES.PARTICIPANT,
-                           itemId : participant.id,
-                           data_group_id: constants.DATA_GROUP.PARTICIPANT
+                           itemId : participant.attributes.id,
+                           data_group_id: constants.DATA_GROUP.PARTICIPANT.id
                        };
-                      this.roleUserService.createTransactionRoleUser(roleUser)
+                      this.roleUserService.createRoleUserTransaction(roleUser, t)
                           .then(data => {
                               console.log(`Saved Role User Transaction => ${JSON.stringify(data)}`);
                           })
                           .catch(error => {
                               console.log(`Saved Role User Transaction Error=> ${JSON.stringify(error)}`);
+                              throw error;
                           });
                     })
                     .then(newParticipant => {
                         return resolve(newParticipant);
                     })
                     .catch(error => {
-                        throw reject(error);
+                        return reject(error);
                     });
             });
         });

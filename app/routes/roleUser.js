@@ -3,13 +3,14 @@
  */
 'use strict';
 let express = require('express');
-let router = require('./routes');
+//let router = require('./routes');
+let router = express.Router();
 let validate = require('express-validation');
 let responseFormatter = require('../lib/responseFormatter');
 let authMiddleware = require('../lib/authMiddleWare');
 let authorizer = require('../config/authorizator');
 let constants = require('../config/constants').PERMISSIONS.ROLE_USER;
-let userGroup = require('../config/constants').DATA_GROUP.ROLE_USER;
+let userGroup = require('../config/constants').DATA_GROUP.ROLE_USER.title;
 let loadRoleMiddleWare = require('../lib/roleMiddleWare');
 let roleUserValidation = require('../validation/roleUserValidation');
 
@@ -63,7 +64,6 @@ module.exports = (serviceLocator) => {
             authorizer.wants(constants.DELETE_USER_ROLE)], (req, res, next) => {
             roleUserController.deleteRoleUserWithId(req, res, next);
         });
-
 
     return router;
 };

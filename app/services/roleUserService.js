@@ -87,13 +87,14 @@ class roleUserService{
      * @param transaction
      * @return {Promise}
      */
-    createTransactionRoleUser (roleUserData, transaction) {
+    createRoleUserTransaction (roleUserData, transaction) {
         return new Promise((resolve, reject)=>{
             this.roleUser.forge().save(roleUserData, {transaction: transaction})
                 .then(data => {
                     return resolve(data);
                 })
                 .catch(error => {
+                    console.log(`Role User Transaction Error => ${error}`);
                     return reject(error);
                 });
         });

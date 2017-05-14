@@ -85,7 +85,7 @@ class ParticipantController {
      *@return {callback}
      */
     updateParticipant (req, res, next) {
-        let id = req.param('id');
+        let id = Number(req.param.id);
         let body = req.body;
         this.participantService.editParticipant(id, body).then(
             data => {

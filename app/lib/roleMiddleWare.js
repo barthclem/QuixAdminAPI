@@ -15,7 +15,8 @@ function loadRole (dataGroupId, itemId) {
         let rolesData = sessionData.roleData;
         //check if a user is a superAdmin
         if(itemId){
-            getRoleWithItemId( rolesData,dataGroupId, itemId)
+             let item_id = req.params.id;
+            getRoleWithItemId( rolesData,dataGroupId, item_id)
                 .then(role => {
                     sessionData.role = role;
                     next();
@@ -47,7 +48,7 @@ function getRoleWithItemId (data, dataGroupId, itemId){
                 break;
             }
             else  //check if a user has a role for an instance of dataGroupId e.g if a user can edit an event with id 7
-                if(data[i].data_group_id === dataGroupId && data[i].itemId === itemId){
+                if(data[i].data_group_id === dataGroupId && Number(data[i].itemId) === itemId){
 
                 role = data[i].role_title;
                 break;

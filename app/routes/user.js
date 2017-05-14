@@ -10,7 +10,7 @@ let responseFormatter = require('../lib/responseFormatter');
 let authMiddleware = require('../lib/authMiddleWare');
 let authorizer = require('../config/authorizator');
 let constants = require('../config/constants').PERMISSIONS.USER;
-let userGroup = require('../config/constants').DATA_GROUP.USER;
+let userGroup = require('../config/constants').DATA_GROUP.USER.title;
 let loadRoleMiddleWare = require('../lib/roleMiddleWare');
 let userValidation = require('../validation/userValidation');
 

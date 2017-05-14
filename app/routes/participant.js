@@ -3,13 +3,14 @@
  */
 'use strict';
 let express = require('express');
-let router = require('./routes');
+//let router = require('./routes');
+let router = express.Router();
 let validate = require('express-validation');
 let responseFormatter = require('../lib/responseFormatter');
 let authMiddleware = require('../lib/authMiddleWare');
 let authorizer = require('../config/authorizator');
 let constants = require('../config/constants').PERMISSIONS.PARTICIPANT;
-let userGroup = require('../config/constants').DATA_GROUP.PARTICIPANT;
+let userGroup = require('../config/constants').DATA_GROUP.PARTICIPANT.id;
 let loadRoleMiddleWare = require('../lib/roleMiddleWare');
 let participantValidation = require('../validation/participantValidation');
 
@@ -31,18 +32,19 @@ module.exports = (serviceLocator) => {
             participantController.listAllParticipants(req, res, next);
             //next();
         })
-        .post (validate(participantValidation.createParticipant), (req, res, next)=> {
+        .post ([authMiddleware,  validate(participantValidation.createParticipant)],
+            (req, res, next)=> {
             participantController.createParticipant(req, res, next);
         });
 
     router.route('/:id([0-9]+)')
-        .get([authMiddleware, validate(participantValidation.getParticipant), loadRoleMiddleWare(userGroup),
+        .get([authMiddleware, validate(participantValidation.getParticipant), loadRoleMiddleWare(userGroup, true),
             authorizer.wants(constants.VIEW_A_PARTICIPANT)], (req, res, next) => {
             participantController.getParticipant(req, res, next);
             //next();
         })
 
-        .put([authMiddleware, validate(participantValidation.updateParticipant), loadRoleMiddleWare(userGroup),
+        .put([authMiddleware, validate(participantValidation.updateParticipant), loadRoleMiddleWare(userGroup, true),
             authorizer.wants(constants.EDIT_A_PARTICIPANT)], (req, res, next) => {
             participantController.updateParticipant(req, res ,next);
         })

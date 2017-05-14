@@ -82,14 +82,14 @@ module.exports = {
   },
 
   DATA_GROUP :{
-      CATEGORY : 'category',
-      CATEGORYADMIN : 'categoryAdmin',
-      EVENT : 'event',
-      EVENTADMIN : 'eventAdmin',
-      ORGANIZER : 'organizer',
-      PARTICIPANT : 'participant',
-      ROLE : 'role',
-      ROLE_USER : 'roleUser',
-      USER : 'user'
+      CATEGORY : {title :'category', id: 1 },
+      CATEGORYADMIN : {title :'categoryAdmin', id: 2 } ,
+      EVENT : {title : 'event', id: 3 },
+      EVENTADMIN : {title : 'eventAdmin', id: 4},
+      ORGANIZER : {title : 'organizer', id: 5},
+      PARTICIPANT : {title :'participant' , id: 6},
+      ROLE_USER : {title :'roleUser' , id: 8},
+      USER : {title : 'user', id: 7},
+      ROLE : {title :'role' , id: 9},
   }
 };
