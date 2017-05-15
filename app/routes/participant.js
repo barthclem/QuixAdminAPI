@@ -37,19 +37,16 @@ module.exports = (serviceLocator) => {
             participantController.createParticipant(req, res, next);
         });
 
-    router.route('/:id([0-9]+)')
-        .get([authMiddleware, validate(participantValidation.getParticipant), loadRoleMiddleWare(userGroup, true),
+    router.route('/:id([0-9]+)').get(
+        [authMiddleware, validate(participantValidation.getParticipant), loadRoleMiddleWare(userGroup, true),
             authorizer.wants(constants.VIEW_A_PARTICIPANT)], (req, res, next) => {
             participantController.getParticipant(req, res, next);
-            //next();
         })
-
         .put([authMiddleware, validate(participantValidation.updateParticipant), loadRoleMiddleWare(userGroup, true),
             authorizer.wants(constants.EDIT_A_PARTICIPANT)], (req, res, next) => {
             participantController.updateParticipant(req, res ,next);
         })
-
-        .delete ([authMiddleware, validate(participantValidation.getParticipant), loadRoleMiddleWare(userGroup),
+        .delete([authMiddleware, validate(participantValidation.getParticipant), loadRoleMiddleWare(userGroup, true),
             authorizer.wants(constants.DELETE_A_PARTICIPANT)], (req, res, next) => {
             participantController.deleteParticipant(req, res, next);
         });

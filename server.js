@@ -20,7 +20,7 @@ app.use(redis);
 
  //Send files to be displayed
 app.get('/*', (req, res) => {
-    res.sendFile(__dirname + 'index.html');
+    res.sendFile(__dirname + '/public/index.html');
 });
 
 

@@ -9,18 +9,18 @@ let event = bookshelf.Model.extend({
     hidden : ['id'],
     tableName : 'event',
 
-    category : ()=>{
+    category : function (){
         return this.hasMany('category');
     },
-    participant : ()=>{
-        return this.hasMany('participant');
+    participant : function (){
+        return this.belongsToMany('participant', 'participant_event', 'event_id', 'participant_id');
     },
 
-    organizer : ()=>{
+    organizer : function (){
         return this.belongsTo('organizer');
     },
 
-    eventAdmin : ()=>{
+    eventAdmin : function (){
         return this.hasMany('eventAdmin');
     }
 

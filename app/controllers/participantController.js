@@ -28,11 +28,11 @@ class ParticipantController {
         this.participantService.createParticipant(participantData)
             .then(
                 data => {
-                    return res.send(responseFormatter(HttpStatus.OK, data));
+                    return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             })
             .catch( error => {
                 console.log(`POST ERROR => ${error}`);
-                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
     }
 
@@ -47,10 +47,11 @@ class ParticipantController {
     listAllParticipants (req, res, next ) {
         this.participantService.getAllParticipants().then(
             data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             }
         ).catch( error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
         });
 
     }
@@ -64,13 +65,15 @@ class ParticipantController {
      *@return {callback}
      */
     getParticipant (req, res, next) {
-        let id = Number(req.param.id);
+        let id = Number(req.params.id);
         this.participantService.getParticipant(id).then(
             data => {
                 console.log(` GET Participant => ${data}`);
-                return res.send(responseFormatter(HttpStatus.OK, data));
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             }).catch( error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                console.log(`Error Message => ${error}`);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
 
         next();
@@ -85,16 +88,17 @@ class ParticipantController {
      *@return {callback}
      */
     updateParticipant (req, res, next) {
-        let id = Number(req.param.id);
+        let id = Number(req.params.id);
         let body = req.body;
         this.participantService.editParticipant(id, body).then(
             data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             }
         ).catch(error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            console.log(`Participant Update Error => ${error}`);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-        next();
     }
 
     /**
@@ -106,12 +110,13 @@ class ParticipantController {
      *@return {callback}
      */
     getParticipantDataByUserId (req, res, next) {
-        let userId = Number(req.param.user_id);
+        let userId = Number(req.params.user_id);
         this.participantService.allUserEventsData(userId).then(
-            data => {return res.send(responseFormatter(HttpStatus.OK, data));}
+            data => {return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));}
         ).catch(
             error => {
-                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
             });
         next();
     }
@@ -125,14 +130,15 @@ class ParticipantController {
      *@return {callback}
      */
     getParticipantEventsByUserId (req, res, next) {
-        let userId = Number(req.param.user_id);
+        let userId = Number(req.params.user_id);
         this.participantService.allParticipantEvents(userId).then(
-            data => {return res.send(responseFormatter(HttpStatus.OK, data));}
+            data => {return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));}
         ).catch(
             error => {
-                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                console.log(`Get Participant Events Error => ${error}`);
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
             });
-        next();
     }
 
 
@@ -145,14 +151,19 @@ class ParticipantController {
      *@return {callback}
      */
     deleteParticipant (req, res, next) {
-        let id = Number(req.param.id);
-        this.participantService.deleteParticipant(id).then(
-            data => {return res.send(responseFormatter(HttpStatus.OK, data));}
+        let id = Number(req.params.id);
+        let user_id  = req.session.userId;
+        console.log(`Started Deleting participant model`);
+        this.participantService.deleteParticipant(user_id, id).then(
+            data => {
+                console.log(`Delete Participant Data => ${data}`);
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));}
         ).catch(
             error => {
-                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                console.log(`Delete Participant Error => ${error}`);
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
             });
-        next();
     }
 }
 

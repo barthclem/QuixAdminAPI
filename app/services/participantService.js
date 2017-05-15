@@ -30,21 +30,27 @@ class ParticipantService {
      */
     createParticipant (participantData) {
         return new Promise((resolve, reject)=>{
-            BookShelf.transaction((t) => {
-                this.participant.forge().save(participantData, {transacting : t})
+            BookShelf.transaction((transaction) => {
+                this.participant.forge().save(participantData, {transacting : transaction})
                     .tap((participant) => {
-                       console.log(`Participant here => ${JSON.stringify(participant)}`);
                        let roleUser = {
                            user_id: participant.attributes.user_id,
                            role_title : constants.ROLES.PARTICIPANT,
                            itemId : participant.attributes.id,
                            data_group_id: constants.DATA_GROUP.PARTICIPANT.id
                        };
-                      this.roleUserService.createRoleUserTransaction(roleUser, t)
+                      this.roleUserService.createRoleUserTransaction(roleUser, transaction)
                           .then(data => {
-                              console.log(`Saved Role User Transaction => ${JSON.stringify(data)}`);
+                              participant.event().attach(participant.attributes.event_id,participant.id)
+                                  .then((relation) => {
+                                      transaction.commit(participant);
+                              })
+                                  .catch(error => {
+                                     throw error;
+                                  });
                           })
                           .catch(error => {
+                              transaction.rollback(error);
                               console.log(`Saved Role User Transaction Error=> ${JSON.stringify(error)}`);
                               throw error;
                           });
@@ -65,12 +71,12 @@ class ParticipantService {
      *@description Edit a Participant
      *
      *@param  {object} participantData - Object containing userId, ParticipantId and score
-     *@param {Integer}  userId - Integer containing user identification
+     *@param {Number}  participantId - Number containing user identification
      * @return {object} a newly created participant object
      */
-    editParticipant (userId, participantData) {
+    editParticipant (participantId, participantData) {
          return new Promise((resolve, reject)=>{
-             this.participant.forge({userId : userId}).save(participantData)
+             this.participant.forge({id : participantId}).save(participantData)
                  .then(data => {
                      return resolve(data);
                  })
@@ -85,7 +91,7 @@ class ParticipantService {
      *
      *@description Get a Participant
      *
-     *@param {Integer}  id - participant Id
+     *@param {Number}  id - participant Id
      * @return {object} participant - a participant object
      */
     getParticipant (id) {
@@ -124,19 +130,16 @@ class ParticipantService {
      *
      *@description Delete a participant - unregister a participant
      *
-     *@param  {Integer} userId - the ID of user
-     *@param {Integer}  eventId - the ID of eventId
+     *@param  {Number} userId - the ID of user
+     *@param {Number}  participantId - the ID of Participant
      * @return {object} object - an object containing message/error
      */
-    deleteParticipant (userId, eventId) {
+    deleteParticipant (userId, participantId) {
         return new Promise((resolve, reject)=>{
-            this.participant.forge({userId : userId})
-                .query( qb=> {
-                    qb.where('eventId', '=', eventId);
-                })
+            this.participant.forge({id: participantId ,userId : userId})
                 .destroy()
                 .then(data => {
-                    return {message : "deleted successfully"};
+                    return resolve({message : "deleted successfully"});
                 })
                 .catch(error => {
                     return reject(error);
@@ -148,7 +151,7 @@ class ParticipantService {
      *
      *@description Get Events For a User
      *
-     *@param  {Integer} userId - the ID of user
+     *@param  {Number} userId - the ID of user
      * @return {object} object - an object containing all events for a user/error
      */
     allUserEventsData (userId) {
@@ -169,17 +172,15 @@ class ParticipantService {
      *
      *@description Get All Events for a Participant
      *
-     *@param  {Integer} userId - the ID of user
+     *@param  {Number} userId - the ID of user
      * @return {object} object - an object containing all events for a participant/error
      */
-    allParticipantEvents (userId) {
+    allParticipantEvents (userId)   {
         return new Promise((resolve, reject)=>{
-            this.participant.forge()
-                .query( qb=> {
-                    qb.innerJoin('events', 'participant.event_id', 'event.id');
-                    qb.where('participant.user_id', '=', userId);
-                })
-                .fetchAll()
+            this.participant.forge({user_id : userId})
+                .fetchAll({ withRelated : [{ 'event': (qb) => {
+                 qb.columns('title', 'link', 'scheduled_at', 'organizer_id');
+                }}]})
                 .then(data => {
                     return resolve(data);
                 })

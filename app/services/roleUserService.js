@@ -88,8 +88,9 @@ class roleUserService{
      * @return {Promise}
      */
     createRoleUserTransaction (roleUserData, transaction) {
+        console.log(`Transaction => ${JSON.stringify(transaction)}`);
         return new Promise((resolve, reject)=>{
-            this.roleUser.forge().save(roleUserData, {transaction: transaction})
+            this.roleUser.forge().save(roleUserData, {transacting: transaction})
                 .then(data => {
                     return resolve(data);
                 })
