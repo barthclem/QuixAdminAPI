@@ -52,14 +52,22 @@ module.exports = (serviceLocator) => {
         });
 
     router.get('/data/:user_id([0-9]+)', [authMiddleware, validate(participantValidation.getParticipant),
-            authorizer.wants(constants.VIEW_A_PARTICIPANT)], (req, res, next) => {
+            loadRoleMiddleWare(userGroup, true),authorizer.wants(constants.VIEW_A_PARTICIPANT)],
+        (req, res, next) => {
             participantController.getParticipantDataByUserId(req, res, next);
         });
 
     router.get('/events/:user_id([0-9]+)', [authMiddleware, validate(participantValidation.getParticipant),
-            authorizer.wants(constants.VIEW_A_PARTICIPANT)], (req, res, next) => {
+            loadRoleMiddleWare(userGroup, true),authorizer.wants(constants.VIEW_A_PARTICIPANT)],
+        (req, res, next) => {
             participantController.getParticipantEventsByUserId(req, res, next);
         });
+
+    router.get('/event/:event_id([0-9]+)', [authMiddleware, validate(participantValidation.getParticipantByEvent),
+            loadRoleMiddleWare(userGroup, true), authorizer.wants(constants.VIEW_ALL_PARTICIPANTS)],
+        (req, res, next) => {
+        participantController.getParticipantsByEventId(req, res, next);
+    });
 
 
 

@@ -127,6 +127,26 @@ class ParticipantService {
     }
 
     /**
+     * @description this function get all participants registered for a particular event
+     * @param eventId
+     * @return {Promise}
+     */
+    getAllParticipantsByEventId (eventId) {
+        return new Promise((resolve, reject) => {
+         this.participant.forge()
+             .query(qb => {
+                 qb.where('event_id', '=', eventId);
+             })
+             .fetchAll({withRelated : ['event']})
+             .then(participantData => {
+                 return resolve(participantData);
+             })
+             .catch(error => {
+                 return reject(error);
+             })
+        });
+    }
+    /**
      *
      *@description Delete a participant - unregister a participant
      *

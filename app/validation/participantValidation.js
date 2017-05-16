@@ -29,5 +29,11 @@ module.exports = {
             id: joi.number().integer().optional(),
             user_id: joi.number().integer().optional()
         }
+    },
+
+    getParticipantByEvent: {
+        query: {
+            event_id : joi.number().integer().optional()
+        }
     }
 };

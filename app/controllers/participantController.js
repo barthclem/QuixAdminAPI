@@ -141,6 +141,25 @@ class ParticipantController {
             });
     }
 
+    /**
+     *@description ENDPOINT  GET /:/eventId - get a participant list of events using eventId
+     *
+     *@param  {object} req express request object
+     *@param {object}  res express response object
+     *@param {function} next express routing callback
+     *@return {callback}
+     */
+    getParticipantsByEventId (req, res, next) {
+        let eventId = Number(req.params.event_id);
+        this.participantService.getAllParticipantsByEventId(eventId)
+            .then(data => {
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
+            })
+            .catch(error => {
+                res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR,{status: 'we will soon fix the problem'}));
+            })
+    }
 
     /**
      *@description ENDPOINT  DELETE /:/id - delete a participant
