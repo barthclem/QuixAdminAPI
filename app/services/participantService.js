@@ -136,14 +136,38 @@ class ParticipantService {
      */
     deleteParticipant (userId, participantId) {
         return new Promise((resolve, reject)=>{
-            this.participant.forge({id: participantId ,userId : userId})
-                .destroy()
-                .then(data => {
-                    return resolve({message : "deleted successfully"});
-                })
-                .catch(error => {
-                    return reject(error);
-                });
+            BookShelf.transaction(transaction => {
+               this.getParticipant(participantId)
+                   .then(participant => {
+                       participant.event().detach([participant.attributes.event_id, participant.id],
+                           {transacting: transaction})
+                           .then(()=> {
+                            this.participant.forge({id: participantId, userId: userId})
+                                .destroy({transacting: transaction})
+                                .then(() => {
+                                    let dataGroupId = constants.DATA_GROUP.PARTICIPANT.id;
+                                    this.roleUserService.deleteRoleUserAtUser(userId, participantId, dataGroupId,
+                                        transaction).then(()=> {
+                                        transaction.commit();
+                                        console.log(`participant deleted successfully`);
+                                        return resolve({message : "deleted successfully"});
+                                    })
+                                })
+                                .catch(error => {
+                                    console.log(`User Transaction Error => ${error}`);
+                                    throw error;
+                                })
+                           })
+                           .catch(error => {
+                               throw error;
+                           })
+                   })
+                   .catch(error => {
+                       transaction.rollback();
+                       console.log("error deleting participant => ${JSON.stringify(error)}");
+                       return reject(error);
+                   });
+            });
         });
     }
 
