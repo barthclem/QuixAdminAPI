@@ -2,6 +2,8 @@
 /**
  *@description this is class handles all action that can be performed by a participant
  */
+let BookShelf = require('../bookshelf');
+let constants = require('../config/constants');
 class OrganizerService {
 
     /**
@@ -10,11 +12,13 @@ class OrganizerService {
      *
      *@param  {object} organizer - organizer model instance
      *@param {object}  event - event model instance
+     * @param {object}  roleService - role service instance
      *
      */
-    constructor (organizer, event) {
+    constructor (organizer, event, roleService) {
         this.organizer = organizer;
         this.event = event;
+        this.roleService = roleService;
     }
 
     /**
@@ -27,13 +31,32 @@ class OrganizerService {
      */
     createOrganizer (organizerData) {
         return new Promise((resolve, reject)=>{
-            this.organizer.forge().save(organizerData)
-                .then( data => {
-                    return resolve(data);
-                })
-                .catch(error => {
-                    return reject(error);
-                });
+            BookShelf.transaction((transaction) => {
+                this.organizer.forge().save(organizerData, {transacting : transaction})
+                    .tap(organizer => {
+                        let roleUser = {
+                            user_id: organizer.attributes.user_id,
+                            role_title : constants.ROLES.ORGANIZER,
+                            itemId : organizer.attributes.id,
+                            data_group_id: constants.DATA_GROUP.ORGANIZER.id
+                        };
+                       this.roleService.createRoleUserTransaction(roleUser, transaction)
+                           .then(roleData => {
+                               transaction.commit(organizer);
+                               return resolve(organizer);
+                           })
+                           .catch(error => {
+                               return reject(error);
+                           })
+                    })
+                    .then(data => {
+                        console.log(`Organizer data Transaction Successful => ${data}`);
+                    })
+                    .catch(error => {
+                        console.log(`Organizer Transaction error => ${error}`);
+                        return reject(error);
+                    });
+            });
         });
     }
 
@@ -41,7 +64,7 @@ class OrganizerService {
      *
      *@description Edit an organizer
      *
-     * @param {Integer}  organizerId- Integer identifying an Organizer
+     * @param {Integer}  organizerId - Integer identifying an Organizer
      * @param  {object} organizerData - Object containing new organizer data
      *
      * @return {object} object - A modified Organizer Object / error
@@ -62,7 +85,7 @@ class OrganizerService {
      *
      *@description Get  an organizer
      *
-     * @param {Integer}  organizerId- Integer identifying an Organizer
+     * @param {Integer}  organizerId - Integer identifying an Organizer
      *
      * @return {object} object -  Organizer Object / error
      */
@@ -82,7 +105,6 @@ class OrganizerService {
     /**
      *
      *@description Get  all organizers
-     *
      *
      * @return {object} object -  Object containing all organizers / error
      */
@@ -109,14 +131,35 @@ class OrganizerService {
      */
     deleteOrganizer (organizerId) {
         return new Promise((resolve, reject)=>{
-            this.organizer.forge({id : organizerId})
-                .destroy()
-                .then(data => {
-                    return {message : "organizer deleted successfully"};
-                })
-                .catch(error => {
-                    return reject(error);
-                });
+            BookShelf.transaction((transaction) => {
+                this.organizer.forge({id : organizerId})
+                    .destroy({transacting: transaction})
+                    .tap(() => {
+                        this.getOrganizer(organizerId)
+                            .then(data => {
+                                let userId = data.attributes.user_id;
+                                let itemId = data.attributes.id;
+                                let dataGroupId = constants.DATA_GROUP.ORGANIZER.id;
+                                this.roleService.deleteRoleUserAtUser(userId, itemId, dataGroupId, transaction)
+                                    .then( () => {
+                                        transaction.commit();
+                                        console.log(`"organizer deleted successfully" `);
+                                        return resolve({message : "organizer deleted successfully"});
+                                    })
+                            })
+                            .catch(error => {
+                                throw error;
+                            });
+                    })
+                    .then(() => {
+                        return resolve({message : "organizer deleted successfully"});
+                    })
+                    .catch(error => {
+                        transaction.rollback();
+                        console.log(`Unable to delete organizer due to => ${error}`);
+                        return reject(error);
+                    });
+            });
         });
     }
 

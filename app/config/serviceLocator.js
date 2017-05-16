@@ -256,7 +256,8 @@ module.exports = (()=> {
     serviceLocator.register('organizerService', (serviceLocator) => {
         let organizerModel = serviceLocator.get('organizerModel');
         let eventModel = serviceLocator.get('eventModel');
-        return new OrganizerService(organizerModel, eventModel);
+        let roleUserService = serviceLocator.get('roleUserService');
+        return new OrganizerService(organizerModel, eventModel, roleUserService);
     });
 
     /**

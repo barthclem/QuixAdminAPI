@@ -111,7 +111,7 @@ class EventService {
             this.event.forge({id : eventId})
                 .destroy()
                 .then(data => {
-                    return {message : "event deleted successfully"};
+                    return resolve({message : "event deleted successfully"});
                 })
                 .catch(error => {
                     return reject(error);

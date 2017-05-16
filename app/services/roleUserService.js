@@ -215,13 +215,20 @@ class roleUserService{
      *
      *@description Delete a roleUser
      *
-     *@param {Integer}  roleUserId - Role User Id
+     *@param {Number}  roleUserId - Role User Id
      *
      *@return {object}/ Error
      */
     deleteRoleUser (roleUserId) {
         return new Promise((resolve, reject)=>{
-
+            this.roleUser.forge({id : roleUserId})
+                .destroy()
+                .then( data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                })
         });
 
     }
@@ -230,21 +237,27 @@ class roleUserService{
      *
      *@description Delete all role user entries belonging to a user
      *
-     *@param {Integer}  userId - User Id
-     *
+     *@param {Number}  userId - User Id
+     * @param {Number} itemId - the id of the item to be deleted
+     * @param {Number} dataGroupId - the id of the dataGroup of the item to be deleted
+     *@param {Object} transaction - knex transaction object
      *@return {object}/ Error
      */
-    deleteRoleUserAtUser (userId) {
+    deleteRoleUserAtUser (userId, itemId, dataGroupId, transaction) {
         return new Promise((resolve, reject)=>{
             this.roleUser.forge()
                 .query( qb => {
-                    qb.where('userId', '=', userId);
+                    qb.where('user_id', '=', userId);
+                    qb.andWhere('itemId', '=', itemId);
+                    qb.andWhere('data_group_id', '=', dataGroupId)
                 })
-                .destroy()
+                .destroy({transacting: transaction})
                 .then(data => {
+                    console.log(`Message is => "role user data deleted successfully" `);
                     return resolve({message : "role user data deleted successfully"});
                 })
                 .catch(error => {
+                    console.log(`Error Message is => "role user data deleted error ": ${error} `);
                     return reject(error);
                 });
         });

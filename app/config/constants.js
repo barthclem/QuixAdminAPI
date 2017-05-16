@@ -33,7 +33,7 @@ module.exports = {
      ORGANIZER : {
        ADD_ORGANIZER : 'add_organizer',
        GET_AN_ORGANIZER : 'get_an_organizer',
-       VIEW_ALL_ORGANIZERS: 'get_organizer',
+       VIEW_ALL_ORGANIZERS: 'get_all_organizer',
        EDIT_ORGANIZER : 'edit_organizer',
        DELETE_ORGANIZER : 'delete_organizer'
      },

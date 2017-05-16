@@ -27,11 +27,12 @@ class OrganizerController {
         this.organizerService.createOrganizer(organizerData)
             .then(
                 data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             })
             .catch( error => {
                 console.log(`POST ERROR => ${error}`);
-                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
     }
 
@@ -43,15 +44,15 @@ class OrganizerController {
      *@param {function} next express routing callback
      *@return {callback}
      */
-    listAll (req, res, next ) {
+    listAllOrganizers (req, res, next ) {
         this.organizerService.getAllOrganizers().then(
             data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
-            }
-        ).catch( error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
+            })
+            .catch( error => {
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
         });
-
     }
 
     /**
@@ -63,16 +64,16 @@ class OrganizerController {
      *@return {callback}
      */
     getOrganizer (req, res, next) {
-        let id = Number(req.param('id'));
+        let id = Number(req.params.id);
         this.organizerService.getOrganizer(id).then(
             data => {
                 console.log(` GET organizer => ${data}`);
-                return res.send(responseFormatter(HttpStatus.OK, data));
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             }).catch( error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                console.log(`GET Organizer Error => ${error}`);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-
-        next();
     }
 
     /**
@@ -84,16 +85,16 @@ class OrganizerController {
      *@return {callback}
      */
     updateOrganizer (req, res, next) {
-        let id = req.param('id');
+        let id = req.params.id;
         let body = req.body;
         this.organizerService.editOrganizer(id, body).then(
             data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
-            }
-        ).catch(error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
+            })
+            .catch(error => {
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-        next();
     }
 
 
@@ -107,14 +108,15 @@ class OrganizerController {
      *@return {callback}
      */
     deleteOrganizer (req, res, next) {
-        let id = Number(req.param('id'));
+        let id = Number(req.params.id);
         this.organizerService.deleteOrganizer(id).then(
-            data => {return res.send(responseFormatter(HttpStatus.OK, data));}
-        ).catch(
-            error => {
-                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            data => {return res.status(HttpStatus.OK)
+                .send(responseFormatter(HttpStatus.OK, data));})
+            .catch(error => {
+                console.log(`Delete Organizer Error => ${error}`);
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
             });
-        next();
     }
 }
 
