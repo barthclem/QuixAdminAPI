@@ -15,7 +15,7 @@ exports.up = function(knex) {
       .createTableIfNotExists('organizer', (table) => {
           table.increments('id').primary();
           table.string('organizername').default('');
-          table.integer('user_id').unsigned().references('id').inTable('user');
+          table.integer('user_id').unsigned().unique().references('id').inTable('user');
       })
       .createTableIfNotExists('emailAuth', table => {
           table.increments('id').primary();
@@ -48,6 +48,7 @@ exports.up = function(knex) {
           table.increments('id').primary();
           table.string('title').notNullable().unique();
           table.string('link').unique();
+          table.enum('status', ['open', 'closed', 'banned']).default('open');
           table.date('scheduled_at');
           table.integer('organizer_id').unsigned().references('id').inTable('organizer');
           table.timestamp('created_at', true).defaultTo(knex.raw('now()')).notNullable();

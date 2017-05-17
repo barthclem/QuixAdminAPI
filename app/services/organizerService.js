@@ -104,6 +104,27 @@ class OrganizerService {
 
     /**
      *
+     *@description Get  an organizer using Id of the user
+     *
+     * @param {Number}  userId - Integer identifying an Organizer
+     *
+     * @return {object} object -  Organizer Object / error
+     */
+    getOrganizerWithUserId (userId) {
+        return new Promise((resolve, reject)=>{
+            this.organizer.forge({userId : userId})
+                .fetch()
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
+    }
+
+    /**
+     *
      *@description Get  all organizers
      *
      * @return {object} object -  Object containing all organizers / error

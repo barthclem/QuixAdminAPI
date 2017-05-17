@@ -27,7 +27,9 @@ module.exports = {
        START_AN_EVENT : 'start_an_event',
        CANCEL_AN_EVENT : 'cancel_an_event',
        VIEW_AN_EVENT : 'view_an_event',
-       VIEW_ALL_EVENTS : 'view_all_events'
+         VIEW_AN_EVENT_ADMIN : 'view_an_event_admin',
+       VIEW_ALL_EVENTS : 'view_all_events',
+         VIEW_ALL_EVENT_ADMINS : 'view_all_event_admins'
      },
 
      ORGANIZER : {

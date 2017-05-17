@@ -186,8 +186,9 @@ class roleUserService{
                     return reject(error);
                 });
         });
-
     }
+
+
 
     /**
      *

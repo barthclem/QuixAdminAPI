@@ -7,7 +7,7 @@ class EventAdminAdminController {
      *
      *@description EventAdmin Controller
      *
-     *@param  {object} EventAdminService - EventAdmin service instance
+     *@param  {object} eventAdminService - EventAdmin service instance
      *
      */
     constructor(eventAdminService){
@@ -66,6 +66,48 @@ class EventAdminAdminController {
     getEventAdmin (req, res, next) {
         let id = Number(req.param('id'));
         this.eventAdminService.getEventAdmin(id).then(
+            data => {
+                console.log(` GET EventAdmin => ${data}`);
+                return res.send(responseFormatter(HttpStatus.OK, data));
+            }).catch( error => {
+            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+        });
+
+        next();
+    }
+
+    /**
+     *@description ENDPOINT  GET /:/userId - get a EventAdmin by userId
+     *
+     *@param  {object} req express request object
+     *@param {object}  res express response object
+     *@param {function} next express routing callback
+     *@return {callback}
+     */
+    getEventAdminByUserId (req, res, next) {
+        let userId = Number(req.params.userId);
+        this.eventAdminService.getEventAdminByUserId(userId).then(
+            data => {
+                console.log(` GET EventAdmin => ${data}`);
+                return res.send(responseFormatter(HttpStatus.OK, data));
+            }).catch( error => {
+            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+        });
+
+        next();
+    }
+
+    /**
+     *@description ENDPOINT  GET /:/eventId - get a EventAdmin by eventId
+     *
+     *@param  {object} req express request object
+     *@param {object}  res express response object
+     *@param {function} next express routing callback
+     *@return {callback}
+     */
+    getEventAdminByEventId (req, res, next) {
+        let eventId = Number(req.params.eventId);
+        this.eventAdminService.getEventAdminByEventId(eventId).then(
             data => {
                 console.log(` GET EventAdmin => ${data}`);
                 return res.send(responseFormatter(HttpStatus.OK, data));

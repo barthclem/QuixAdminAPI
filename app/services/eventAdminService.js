@@ -2,18 +2,20 @@
 /**
  *@description this is class handles all action that can be performed by a eventAdmin
  */
+let BookShelf = require('../bookshelf');
+let constants = require('../config/constants');
 class EventAdminService {
 
     /**
-     *
      *@description EventAdmin Service Constructor
      *
      *@param  {object} eventAdmin - eventAdmin model instance
-     *@param {object}  event - event model instance
+     *@param {object}  roleUserService - roleUser service instance
      *
      */
-    constructor (eventAdmin) {
+    constructor (eventAdmin, roleUserService) {
         this.eventAdmin = eventAdmin;
+        this.roleUserService = roleUserService;
     }
 
     /**
@@ -26,13 +28,36 @@ class EventAdminService {
      */
     createEventAdmin (eventAdminData) {
         return new Promise((resolve, reject)=>{
-            this.eventAdmin.forge().save(eventAdminData)
-                .then( data => {
-                    return resolve(data);
-                })
-                .catch(error => {
-                    return reject(error);
-                });
+            BookShelf.transaction((transaction) => {
+                this.eventAdmin.forge().save(eventAdminData, transaction)
+                    .tap((eventAdmin) => {
+                        let roleData = {
+                            user_id: eventAdmin.attributes.user_id,
+                            role_title : constants.ROLES.EVENT_ADMIN,
+                            itemId : eventAdmin.attributes.id,
+                        };
+                        let eventAdminRole=Object.assign({data_group_id: constants.DATA_GROUP.EVENTADMIN.id}, roleData);
+                        let eventRole = Object.assign({data_group_id: constants.DATA_GROUP.EVENT.id}, roleData);
+
+                        Object.assign(eventRole, roleData);
+                        Promise.all([this.roleUserService.createRoleUserTransaction(eventAdminRole, transaction),
+                        this.roleUserService.createRoleUserTransaction(eventRole, transaction)])
+                            .then(()=> {
+                                transaction.commit(eventAdmin);
+                                return resolve(eventAdmin);
+                            })
+                            .catch(error => {
+                                console.log(`Event Admin Transaction Failed due to => ${error}`);
+                                throw error;
+                            })
+                    })
+                    .then(() => {
+                        console.log(`EventAdmin successfully created (-_-)`);
+                    })
+                    .catch((error) => {
+                      return reject(error);
+                    })
+            });
         });
     }
 
@@ -40,7 +65,7 @@ class EventAdminService {
      *
      *@description Edit eventAdmin
      *
-     * @param {integer}  eventAdminId- Integer identifying an eventAdmin
+     * @param {integer}  eventAdminId - Integer identifying an eventAdmin
      * @param  {object} eventAdminData - Object containing new eventAdmin data
      *
      * @return {object} object - A modified Organizer Object / error
@@ -67,7 +92,49 @@ class EventAdminService {
      */
     getEventAdmin (eventAdminId) {
         return new Promise((resolve, reject)=>{
-            this.eventAdmin.forge({id : eventAdminId}).fetch({ withRelated : [ ]})
+            this.eventAdmin.forge({id : eventAdminId}).fetch()
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
+    }
+
+    /**
+     *
+     *@description Get  an eventAdmin
+     *
+     * @param {integer}  userId - Integer identifying an eventAdmin
+     *
+     * @return {object} object -  EventAdmin  Object / error {include all events attached to admin}
+     */
+    getEventAdminByUserId (userId) {
+        return new Promise((resolve, reject)=>{
+            this.eventAdmin.forge({userId : userId})
+                .fetch()
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
+    }
+
+    /**
+     *
+     *@description Get  an eventAdmin
+     *
+     * @param {integer}  eventId - Integer identifying an eventAdmin
+     *
+     * @return {object} object -  EventAdmin  Object / error {include all events attached to admin}
+     */
+    getEventAdminByEventId (eventId) {
+        return new Promise((resolve, reject)=>{
+            this.eventAdmin.forge({eventId : eventId})
+                .fetch({ withRelated : [ ]})
                 .then(data => {
                     return resolve(data);
                 })
@@ -80,7 +147,6 @@ class EventAdminService {
     /**
      *
      *@description Get  all eventAdmins
-     *
      *
      * @return {object} object -  Object containing all eventAdmins / error
      */
@@ -107,13 +173,36 @@ class EventAdminService {
      */
     deleteEventAdmin (eventAdminId) {
         return new Promise((resolve, reject)=>{
-            this.eventAdmin.forge({id : eventAdminId})
-                .destroy()
-                .then(data => {
-                    return {message : "eventAdmin deleted successfully"};
+            this.eventAdmin.getEventAdmin(eventAdminId)
+                .then((eventAdmin) => {
+                   BookShelf.transaction((transaction) => {
+                       this.eventAdmin.forge({id : eventAdmin.id})
+                           .destroy({transacting: transaction})
+                           .then(() => {
+                               let userId = eventAdmin.attributes.user_id;
+                               let itemId = eventAdmin.attributes.id;
+                               let eventGroupId = constants.DATA_GROUP.EVENT.id;
+                               let eventAdminGroupId = constants.DATA_GROUP.EVENTADMIN.id;
+                               Promise.all([this.roleUserService.deleteRoleUserAtUser(userId, itemId, eventGroupId,
+                                   transaction), this.roleUserService.deleteRoleUserAtUser(userId, itemId, eventAdminGroupId,
+                                   transaction)]).then(()=> {
+                                   transaction.commit();
+                                   console.log(`"eventAdmin deleted successfully" `);
+                                   return resolve({message : "eventAdmin deleted successfully"});
+                               })
+                                   .catch((error) => {
+                                        console.log(`Transaction Error deleting EventAdmin => ${error}`);
+                                        throw error;
+                                   })
+                           })
+                           .catch((error) => {
+                               console.log(`Transaction Error deleting EventAdmin => ${error}`);
+                                throw error;
+                           });
+                   })
                 })
-                .catch(error => {
-                    return reject(error);
+                .catch((error) => {
+                    reject(error);
                 });
         });
     }

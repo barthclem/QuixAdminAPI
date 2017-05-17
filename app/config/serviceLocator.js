@@ -165,14 +165,6 @@ module.exports = (()=> {
     });
 
     /**
-     * @description Creates an instance of Event Controller
-     */
-    serviceLocator.register('eventController', (serviceLocator) => {
-        let EventService = serviceLocator.get('eventService');
-        return new EventController(EventService);
-    });
-
-    /**
      * @description Creates an instance of CategoryEntry model
      */
     serviceLocator.register('categoryEntryModel', () => {
@@ -258,6 +250,15 @@ module.exports = (()=> {
         let eventModel = serviceLocator.get('eventModel');
         let roleUserService = serviceLocator.get('roleUserService');
         return new OrganizerService(organizerModel, eventModel, roleUserService);
+    });
+
+    /**
+     * @description Creates an instance of Event Controller
+     */
+    serviceLocator.register('eventController', (serviceLocator) => {
+        let EventService = serviceLocator.get('eventService');
+        let OrganizerService = serviceLocator.get('organizerService');
+        return new EventController(EventService, OrganizerService);
     });
 
     /**
