@@ -27,7 +27,7 @@ module.exports = (serviceLocator) => {
     router.route('/').get(
         [authMiddleware, loadRoleMiddleWare(userGroup), authorizer.wants(constants.VIEW_ALL_EVENT_ADMINS)],
         (req, res, next) => {
-            eventAdminController.listAllEvents(req, res, next);
+            eventAdminController.listAllEventAdmin(req, res, next);
             //next();
         })
         .post ([authMiddleware,  validate(eventAdminValidation.createEventAdmin)],

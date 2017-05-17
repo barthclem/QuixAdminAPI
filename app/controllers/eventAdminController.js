@@ -27,11 +27,12 @@ class EventAdminAdminController {
         this.eventAdminService.createEventAdmin(EventAdminData)
             .then(
                 data => {
-                    return res.send(responseFormatter(HttpStatus.OK, data));
+                    return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
                 })
             .catch( error => {
                 console.log(`POST ERROR => ${error}`);
-                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
     }
 
@@ -43,14 +44,15 @@ class EventAdminAdminController {
      *@param {function} next express routing callback
      *@return {callback}
      */
-    listAll (req, res, next ) {
-        this.eventAdminService.getAllEventAdmins().then(
+    listAllEventAdmin (req, res, next ) {
+        this.eventAdminService.getAllEventAdmin().then(
             data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
-
+                return res.status(HttpStatus.OK)
+                    .send(responseFormatter(HttpStatus.OK, data));
             }
         ).catch( error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
         });
 
     }
@@ -68,12 +70,11 @@ class EventAdminAdminController {
         this.eventAdminService.getEventAdmin(id).then(
             data => {
                 console.log(` GET EventAdmin => ${data}`);
-                return res.send(responseFormatter(HttpStatus.OK, data));
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             }).catch( error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-
-        next();
     }
 
     /**
@@ -89,12 +90,11 @@ class EventAdminAdminController {
         this.eventAdminService.getEventAdminByUserId(userId).then(
             data => {
                 console.log(` GET EventAdmin => ${data}`);
-                return res.send(responseFormatter(HttpStatus.OK, data));
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             }).catch( error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-
-        next();
     }
 
     /**
@@ -110,12 +110,11 @@ class EventAdminAdminController {
         this.eventAdminService.getEventAdminByEventId(eventId).then(
             data => {
                 console.log(` GET EventAdmin => ${data}`);
-                return res.send(responseFormatter(HttpStatus.OK, data));
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             }).catch( error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-
-        next();
     }
 
     /**
@@ -127,16 +126,17 @@ class EventAdminAdminController {
      *@return {callback}
      */
     updateEventAdmin (req, res, next) {
-        let id = req.param('id');
+        let id = req.params.id;
         let body = req.body;
         this.eventAdminService.editEventAdmin(id, body).then(
             data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
+                return res.status(HttpStatus.OK)
+                    .send(responseFormatter(HttpStatus.OK, data));
             }
         ).catch(error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-        next();
     }
 
 
@@ -150,14 +150,15 @@ class EventAdminAdminController {
      *@return {callback}
      */
     deleteEventAdmin (req, res, next) {
-        let id = Number(req.param('id'));
+        let id = Number(req.params.id);
         this.eventAdminService.deleteEventAdmin(id).then(
-            data => {return res.send(responseFormatter(HttpStatus.OK, data));}
+            data => {return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));}
         ).catch(
             error => {
-                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                console.log(`Deleting Event Admin due to this => ${error}`);
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
             });
-        next();
     }
 }
 

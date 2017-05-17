@@ -150,13 +150,14 @@ class EventAdminService {
      *
      * @return {object} object -  Object containing all eventAdmins / error
      */
-    getAllEventAdmins () {
+    getAllEventAdmin () {
         return new Promise((resolve, reject)=>{
             this.eventAdmin.forge().fetchAll()
                 .then(data => {
                     return resolve(data);
                 })
                 .catch(error => {
+                    console.log( `GET ALL EVENT ADMIN ERROR => ${error}`)
                     return reject(error);
                 });
         });
@@ -173,7 +174,7 @@ class EventAdminService {
      */
     deleteEventAdmin (eventAdminId) {
         return new Promise((resolve, reject)=>{
-            this.eventAdmin.getEventAdmin(eventAdminId)
+            this.getEventAdmin(eventAdminId)
                 .then((eventAdmin) => {
                    BookShelf.transaction((transaction) => {
                        this.eventAdmin.forge({id : eventAdmin.id})
@@ -202,11 +203,11 @@ class EventAdminService {
                    })
                 })
                 .catch((error) => {
+                    console.log(`GEt Transaction Error deleting EventAdmin => ${error}`);
                     reject(error);
                 });
         });
     }
-
 }
 
 module.exports = EventAdminService;

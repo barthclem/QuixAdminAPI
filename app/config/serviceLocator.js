@@ -224,7 +224,8 @@ module.exports = (()=> {
      */
     serviceLocator.register('eventAdminService', (serviceLocator) => {
         let eventAdminModel = serviceLocator.get('eventAdminModel');
-        return new EventAdminService(eventAdminModel);
+        let roleUserService = serviceLocator.get('roleUserService');
+        return new EventAdminService(eventAdminModel, roleUserService);
     });
 
     /**
