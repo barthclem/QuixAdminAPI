@@ -1,0 +1,11 @@
+{
+  "esversion": 6,
+  "node": true,
+  "newcap": true,
+  "undef": true,
+  "unused": "vars",
+  "predef": ["Promise", "resolve", "reject", "describe", "it"],
+  "globals": {
+    "MY_GLOBAL": true
+  }
+}

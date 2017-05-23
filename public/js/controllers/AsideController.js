@@ -8,5 +8,5 @@ angular.module('messageApp').controller('AsideController', ['$location', AsideCo
 function AsideController ($location) {
     let vm = this;
 
-    vm.navLogin = () => { lo};
+    vm.navLogin = () => { };
 }

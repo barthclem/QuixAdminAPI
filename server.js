@@ -1,44 +1,37 @@
 'use strict';
-let Express = require('express');
-let app = Express();
+let express = require('express');
+let app = express();
 let redis = require('./app/config/redis');
-let router = require('./app/routes/routes');
+let router = require('./app/config/router');
 let bodyParser = require('body-parser');
 let morgan = require('morgan');
-let path = require('path');
 let ServiceLocator = require('./app/config/serviceLocator');
+let responseFormatter = require('./app/lib/responseFormatter');
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended : true }));
-app.use(Express.static(__dirname + '/public/')); // switch for angular -- comment out to switch angular off
+app.use(express.static(__dirname + '/public/')); // switch for angular -- comment out to switch angular off
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(morgan('dev'));
+app.use(redis);
+ //Set Up the router
+ router.setUp(app, ServiceLocator);
 
-
- //Email Authorisation code part
-app.use('/users', router.setup(ServiceLocator));
-
-app.get('*', (req, res) => {
+ //Send files to be displayed
+app.get('/*', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');
 });
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + 'index.html');
-});
 
-app.use(redis);
-
-app.use(function (req, res, next) {
-    // Website you wish to allow to connect
-    // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    next();
-});
 
 app.use(function(err, req, res, next){
-    console.log(JSON.stringify(err));
-    res.status(400).json(err);
+    console.log(`Internal Server Error Message : ${err.message}`);
+    console.log(`Internal Server Error  : ${JSON.stringify(err)}`);
+    console.log(`Internal Server Error Status : ${err.status}`);
+    let errorMessage = err.status === 500 ?err.message : err;
+    return res.status(err.status || 500)
+        .send(responseFormatter(err.status || 500, {message : errorMessage}));
+    //res.status(400).json(err);
 });
 
 
@@ -46,4 +39,6 @@ let server = app.listen(8000, function () {
     let port = server.address().port;
     let host = server.address().address;
     console.log( 'Server started on '+ host + ' on port : '+port);
-})
+});
+
+module.exports = server;

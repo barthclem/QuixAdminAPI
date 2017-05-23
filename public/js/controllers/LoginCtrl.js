@@ -38,10 +38,10 @@ function LoginController($location, $scope, $rootScope, cookieService, loginServ
         cookieService.deleteCookie('authentication');
         $location.path('login');
         $scope.$emit('loggedInEvent', { loggedIn: false });
-    }
+    };
 
     vm.signUp = function () {
         $location.path('registration');
-    }
+    };
 
 }

@@ -2,10 +2,8 @@
 
 module.exports =  function (req, res, next) {
    let sessionData = req.session;
-   console.log(`Moment Aggravated `);
-   if(!sessionData.sessionId){
-    return  res.status(401).send({status : 'failed', message : 'UnAuthorized Access'})
+   if(!sessionData.roleData){
+    return  res.status(401).send({status : 'failed', message : 'UnAuthenticated Access'});
    }
    next();
   };
-

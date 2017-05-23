@@ -1,4 +1,4 @@
-<form name = "regForm" class="login-form" id="register_form" method="get" action="">
+<form name = "regForm" class="login-form" id="register_form" method="post" action="">
     <div class="login-wrap">
         <div class="input-group " ng-class="{ 'has-error': regForm.fullname.$touched && regForm.fullname.$invalid }">
             <span class="input-group-addon"><i class="icon_profile"></i></span>
@@ -89,6 +89,3 @@
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="regForm.$invalid" ng-click="$rctrl.registerData()">Sign Up</button>
     </div>
 </form>
-
-
-
