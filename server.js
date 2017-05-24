@@ -7,7 +7,8 @@ let bodyParser = require('body-parser');
 let morgan = require('morgan');
 let ServiceLocator = require('./app/config/serviceLocator');
 let responseFormatter = require('./app/lib/responseFormatter');
-
+let redisTree = require('./app/lib/redisTree');
+redisTree.initialize();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended : true }));

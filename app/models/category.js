@@ -9,11 +9,11 @@ let category = bookshelf.Model.extend({
     idAttribute : 'id',
     tableName : 'category',
 
-    event : () => {
+    event : function () {
         return this.belongsTo('event');
     },
 
-    categoryEntry : () => {
+    categoryEntry : function () {
         return this.hasMany('categoryEntry');
     }
 

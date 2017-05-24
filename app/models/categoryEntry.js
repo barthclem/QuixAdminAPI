@@ -7,10 +7,10 @@ let bookshelf = require ('../bookshelf');
 
 let categoryEntry = bookshelf.Model.extend({
     idAttribute : 'id',
-    hidden : ['id'],
+    //hidden : ['id'],
     tableName : 'category_entry',
 
-    category : () => {
+    category : function () {
         return this.belongsTo('category');
     }
 });

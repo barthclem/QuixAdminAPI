@@ -6,7 +6,7 @@
 let bookshelf = require ('../bookshelf');
 let event = bookshelf.Model.extend({
     idAttribute : 'id',
-    hidden : ['id'],
+    //hidden : ['id'],
     tableName : 'event',
 
     category : function (){

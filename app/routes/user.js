@@ -30,7 +30,7 @@ module.exports =  (serviceLocator) => {
     });
 
     router.route('/').get(
-       // [authMiddleware, loadRoleMiddleWare(userGroup), authorizer.wants(constants.GET_ALL_USERS)],
+       [authMiddleware, loadRoleMiddleWare(userGroup), authorizer.wants(constants.GET_ALL_USERS)],
         (req, res, next) => {
         userController.listAll(req, res, next);
         //next();
@@ -46,10 +46,10 @@ module.exports =  (serviceLocator) => {
 
     router.route('/:id([0-9]+)')
         .get([
-            //authMiddleware,
+            authMiddleware,
             validate(userValidation.getUser)
-           // , loadRoleMiddleWare(userGroup),
-           // authorizer.wants(constants.GET_A_USER)
+           , loadRoleMiddleWare(userGroup),
+           authorizer.wants(constants.GET_A_USER)
         ], (req, res, next) => {
             userController.getUser(req, res, next);
             //next();

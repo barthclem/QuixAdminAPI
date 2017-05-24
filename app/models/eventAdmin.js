@@ -7,7 +7,7 @@ let bookshelf = require ('../bookshelf');
 
 let eventAdmin = bookshelf.Model.extend({
     idAttribute : 'id',
-    hidden : ['id'],
+    //hidden : ['id'],
     tableName : 'eventAdmin',
 
     event : function () {

@@ -25,8 +25,8 @@ class UserController {
   *@description User Controller
   *
   *@param  {object} userService - user service instance
-  *@param {object}  EmailAuthService email service instance
-  *
+  *@param {object}  emailAuthService email service instance
+  *@param {object}  roleUserService roleUser service instance
   */
     constructor(userService, emailAuthService, roleUserService){
         this.userService = userService;

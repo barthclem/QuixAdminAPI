@@ -1,7 +1,7 @@
 /**
  * Created by barthclem on 5/11/17.
  */
-let joi = require('joi');;
+let joi = require('joi');
 
 module.exports = {
     createParticipant: {
