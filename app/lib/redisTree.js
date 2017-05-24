@@ -122,6 +122,9 @@ module.exports = {
         redis.tdestroy(tree, event);
     },
 
+    /**
+     * @description this function forms a tree structure model of existing data in the database
+     */
     loadData : function () {
         event.forge().fetchAll()
             .then(data => {
