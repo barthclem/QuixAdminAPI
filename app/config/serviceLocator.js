@@ -161,7 +161,8 @@ module.exports = (()=> {
      */
     serviceLocator.register('eventService', (serviceLocator) => {
         let eventModel = serviceLocator.get('eventModel');
-        return new EventService(eventModel);
+        let roleUserService = serviceLocator.get('roleUserService');
+        return new EventService(eventModel, roleUserService);
     });
 
     /**

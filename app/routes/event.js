@@ -11,7 +11,7 @@ let authorizer = require('../config/authorizator');
 let constants = require('../config/constants').PERMISSIONS.EVENT;
 let userGroup = require('../config/constants').DATA_GROUP.EVENT.id;
 let loadRoleMiddleWare = require('../lib/roleMiddleWare');
-let organizerValidation = require('../validation/organizerValidation');
+let eventValidation = require('../validation/eventValidation');
 
 module.exports = (serviceLocator) => {
     let eventController = serviceLocator.get('eventController');
@@ -30,22 +30,23 @@ module.exports = (serviceLocator) => {
             eventController.listAllEvents(req, res, next);
             //next();
         })
-        .post ([authMiddleware,  validate(organizerValidation.createOrganizer)],
+        .post ([authMiddleware,  validate(eventValidation.createEvent), loadRoleMiddleWare(userGroup),
+                authorizer.wants(constants.REGISTER_AN_EVENT)],
             (req, res, next)=> {
                 eventController.createEvent(req, res, next);
             });
 
     router.route('/:id([0-9]+)').get(
-        [authMiddleware, validate(organizerValidation.getOrganizer), loadRoleMiddleWare(userGroup, true),
+        [authMiddleware, validate(eventValidation.getEvent), loadRoleMiddleWare(userGroup, true),
             authorizer.wants(constants.VIEW_AN_EVENT)], (req, res, next) => {
             eventController.getEvent(req, res, next);
         })
-        .put([authMiddleware, validate(organizerValidation.updateOrganizer), loadRoleMiddleWare(userGroup, true),
-            authorizer.wants(constants.VIEW_AN_EVENT)], (req, res, next) => {
+        .put([authMiddleware, validate(eventValidation.editEvent), loadRoleMiddleWare(userGroup, true),
+            authorizer.wants(constants.EDIT_AN_EVENT)], (req, res, next) => {
             eventController.updateEvent(req, res ,next);
         })
-        .delete([authMiddleware, validate(organizerValidation.getOrganizer), loadRoleMiddleWare(userGroup, true),
-            authorizer.wants(constants.DELETE_EVENT_ADMIN)], (req, res, next) => {
+        .delete([authMiddleware, validate(eventValidation.getEvent), loadRoleMiddleWare(userGroup, true),
+            authorizer.wants(constants.CANCEL_AN_EVENT)], (req, res, next) => {
             eventController.deleteEvent(req, res, next);
         });
 

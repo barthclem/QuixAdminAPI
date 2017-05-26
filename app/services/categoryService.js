@@ -48,8 +48,10 @@ class CategoryService {
      */
     editCategory (categoryId, categoryData) {
         return new Promise((resolve, reject)=>{
+		console.log(`Edit Category => ${JSON.stringify(categoryData)}`);
             this.category.forge({id : categoryId}).save(categoryData)
                 .then(data => {
+                    console.log(` Edit category Service Data => ${JSON.stringify(data)}`);
                     return resolve(data);
                 })
                 .catch(error => {

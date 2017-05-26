@@ -50,8 +50,8 @@ class EventService {
                         console.log(`Event Service Created =>${data}`);
                     })
                     .catch(error => {
+                        console.log(`Event Service Created Error =>${error}`);
                         return reject(error)
-
                     });
             });
         });

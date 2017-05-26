@@ -11,7 +11,7 @@ class CategoryController {
      *
      *@description Category Controller
      *
-     *@param  {object} CategoryService - Category service instance
+     *@param  {object} categoryService - Category service instance
      *
      */
     constructor(categoryService){
@@ -46,7 +46,7 @@ class CategoryController {
      *@param {function} next express routing callback
      *@return {callback}
      */
-    listAll (req, res, next ) {
+    listAllCategories (req, res, next ) {
         this.categoryService.getAllCategories().then(
             data => {
                 return res.send(responseFormatter(HttpStatus.OK, data));
@@ -67,7 +67,7 @@ class CategoryController {
      *@return {callback}
      */
     getCategory (req, res, next) {
-        let id = Number(req.param('id'));
+        let id = Number(req.params.id);
         this.categoryService.getCategory(id).then(
             data => {
                 console.log(` GET Category => ${data}`);
@@ -75,8 +75,6 @@ class CategoryController {
             }).catch( error => {
             return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-
-        next();
     }
 
     /**
@@ -88,16 +86,17 @@ class CategoryController {
      *@return {callback}
      */
     updateCategory (req, res, next) {
-        let id = req.param('id');
+        let id = Number(req.params.id);
         let body = req.body;
         this.categoryService.editCategory(id, body).then(
             data => {
+            console.log(` UPdate Data => ${data}`);
                 return res.send(responseFormatter(HttpStatus.OK, data));
             }
         ).catch(error => {
+            console.log(` UPdate Error => ${error}`);
             return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-        next();
     }
 
 
@@ -111,14 +110,13 @@ class CategoryController {
      *@return {callback}
      */
     deleteCategory (req, res, next) {
-        let id = Number(req.param('id'));
+        let id = Number(req.params.id);
         this.categoryService.deleteCategory(id).then(
             data => {return res.send(responseFormatter(HttpStatus.OK, data));}
         ).catch(
             error => {
                 return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
             });
-        next();
     }
 }
 

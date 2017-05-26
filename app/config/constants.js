@@ -27,6 +27,7 @@ module.exports = {
        START_AN_EVENT : 'start_an_event',
        CANCEL_AN_EVENT : 'cancel_an_event',
        VIEW_AN_EVENT : 'view_an_event',
+         EDIT_AN_EVENT : 'edit_an_event',
          VIEW_AN_EVENT_ADMIN : 'view_an_event_admin',
        VIEW_ALL_EVENTS : 'view_all_events',
          VIEW_ALL_EVENT_ADMINS : 'view_all_event_admins'
@@ -54,7 +55,7 @@ module.exports = {
        VIEW_A_CATEGORY : 'view_a_category',
          VIEW_CATEGORY_ADMIN : 'view_category_admin',
          VIEW_ALL_CATEGORIES : 'view_all_categories',
-         VIEW_ALL_CATEGORY_ADMINS : 'view_all_category_admina',
+         VIEW_ALL_CATEGORY_ADMINS : 'view_all_category_admin',
        EDIT_A_CATEGORY_ADMIN : 'edit_category_admin',
        EDIT_A_CATEGORY : 'edit_a_category',
        EDIT_ALL_CATEGORIES : 'edit_all_categories',
@@ -85,7 +86,8 @@ module.exports = {
 
   DATA_GROUP :{
       CATEGORY : {title :'category', id: 1 },
-      CATEGORYADMIN : {title :'categoryAdmin', id: 2 } ,
+      CATEGORYADMIN : {title :'categoryAdmin', id: 2 },
+      CATEGORY_ENTRY : {title : 'categoryEntry', id: 10},
       EVENT : {title : 'event', id: 3 },
       EVENTADMIN : {title : 'eventAdmin', id: 4},
       ORGANIZER : {title : 'organizer', id: 5},

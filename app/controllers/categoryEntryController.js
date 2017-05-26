@@ -46,7 +46,7 @@ class CategoryEntryEntryController {
      *@param {function} next express routing callback
      *@return {callback}
      */
-    listAll (req, res, next ) {
+    listAllCategoryEntries (req, res, next ) {
         this.categoryEntryService.getAllCategories().then(
             data => {
                 return res.send(responseFormatter(HttpStatus.OK, data));

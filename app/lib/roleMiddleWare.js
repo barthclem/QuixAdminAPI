@@ -3,6 +3,9 @@
  */
 'use strict';
 let roleConstants = require('../config/constants').ROLES;
+let dataGroupConstants = require('../config/constants').DATA_GROUP;
+let authTree = require('./redisTree');
+
 /**
  * @description this middleware loads the role a user has for a roleGroup such as event, user and others
  * @param dataGroupId this defines a roleGroup such as event using its defined id
@@ -38,22 +41,36 @@ function loadRole (dataGroupId, itemId) {
  * @param itemId this ensure that dataGroupId roles is for only an instance e.g an eventAdmin can edit his/her event
  * @return {Promise}
  */
-function getRoleWithItemId (data, dataGroupId, itemId){
-    return new Promise((resolve) => {
+async function getRoleWithItemId (data, dataGroupId, itemId){
+    return new Promise(function* (resolve) {
         let role = roleConstants.GUEST;
         for(let i = 0; i< data.length; i++){
             if(data[i].role_title === roleConstants.SUPERADMIN){
                 //if the user is a superAdmin
                 role = data[i].role_title;
-                break;
             }
-            else  //check if a user has a role for an instance of dataGroupId e.g if a user can edit an event with id 7
-                if(data[i].data_group_id === dataGroupId && Number(data[i].itemId) === itemId){
-
+            else  if(data[i].data_group_id === dataGroupId && Number(data[i].itemId) === itemId){
+                //check if a user has a role for an instance of dataGroupId e.g if a user can edit an event with id 7
                 role = data[i].role_title;
-                break;
+            }
+            else if(dataGroupId === dataGroupConstants.CATEGORY.id &&
+                    data[i].data_group_id === dataGroupConstants.EVENT.id){
+                    let result = yield authTree.categoryBelongsToEvent(data[i].itemId, itemId);
+                    if(result){
+                        role = data[i].role_title;
+                        break;
+                    }
+            }
+            else if(dataGroupId === dataGroupConstants.CATEGORY_ENTRY.id &&
+                data[i].data_group_id === dataGroupConstants.EVENT.id){
+                let result = yield authTree.catEntBelongsToEvent(data[i].itemId, itemId);
+                if(result){
+                    role = data[i].role_title;
+                    break;
+                }
             }
         }
+
         return resolve(role);
     });
 
@@ -75,6 +92,12 @@ function getRole (data, dataGroupId) {
                 break;
             }
             else if(data[i].data_group_id === dataGroupId) {
+                role = data[i].role_title;
+                break;
+            }
+            else if((dataGroupId === dataGroupConstants.CATEGORY.id ||
+                dataGroupId === dataGroupConstants.CATEGORY_ENTRY.id) &&
+                data[i].data_group_id === dataGroupConstants.EVENT.id){
                 role = data[i].role_title;
                 break;
             }

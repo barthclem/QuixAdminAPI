@@ -46,6 +46,21 @@ module.exports = {
     },
 
     /**
+     * @description this checks if a category belongs to an event
+     * @param {integer} eventId - this is ID of the event
+     * @param {integer} categoryId - this is the ID of the category
+     * @return {boolean}
+     */
+    categoryBelongsToEvent : function (eventId, categoryId) {
+        let event = `E${eventId}`;
+        let category = `C${categoryId}`;
+        return redis.tparents(tree, category)
+            .then(parent => {
+                return parent[0] === event;
+            });
+    },
+
+    /**
      * @description this checks if a categoryEntry belongs to an Event
      * @param {integer} evtId - this is the ID of the event
      * @param {integer} catEntId - this is the ID of the categoryEntry
@@ -132,16 +147,18 @@ module.exports = {
                     let eventId = datum.id;
                     datum.load('category')
                         .then( cat => {
-                            let categoryId = cat.id;
-                            cat.related('category').fetch({withRelated:['categoryEntry']}).then(catEntry => {
-                                //console.log(`Event  => ${eventId}`);
-                                //console.log(`          category => ${categoryId}`);
+                            cat.related('category').fetch({withRelated:['categoryEntry']}).then(category => {
                                 this.createNewEvent(eventId);
-                                this.createNewCategory(eventId, categoryId);
-                                catEntry.each(entry => {
-                                    let catEntryid = entry.id;
-                                    //console.log(`                      categoryEntry => ${catEntryid}`);
-                                    this.createNewCategoryEntry(categoryId, catEntryid);
+                                category.each(categoryEntry => {
+                                    let categoryId = categoryEntry.id;
+                                    this.createNewCategory(eventId, categoryId);
+                                    categoryEntry.related('categoryEntry').each(
+                                        entry => {
+                                            let catEntryid = entry.id;
+                                            this.createNewCategoryEntry(categoryId, catEntryid);
+                                        }
+                                    );
+
                                 })
                             });
                         })
