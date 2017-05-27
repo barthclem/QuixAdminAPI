@@ -70,12 +70,15 @@ module.exports = {
         let event = `E${evtId}`;
         let categoryEntry = `CE${catEntId}`;
 
-        redis.tparents(tree, categoryEntry)
+        return redis.tparents(tree, categoryEntry)
             .then(parent => {
-                redis.tparents(tree, parent)
+                return redis.tparents(tree, parent)
                     .then(grandParent => {
-                        return grandParent === event;
+                       return grandParent[0] === event;
                     })
+            })
+            .catch(error => {
+                console.log(`CategoryEntry to Event Error => ${error}`)
             });
     },
 

@@ -65,8 +65,7 @@ async function getRoleWithItemId (data, dataGroupId, itemId) {
         }
         else if (dataGroupId === dataGroupConstants.CATEGORY_ENTRY.id &&
             data[i].data_group_id === dataGroupConstants.EVENT.id) {
-            let result = await
-            authTree.catEntBelongsToEvent(data[i].itemId, itemId);
+            let result = await authTree.catEntBelongsToEvent(data[i].itemId, itemId);
             if (result) {
                 role = data[i].role_title;
                 break;

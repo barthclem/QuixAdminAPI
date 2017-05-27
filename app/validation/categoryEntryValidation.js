@@ -14,7 +14,7 @@ module.exports = {
             optionD : Joi.string().required(),
             optionE : Joi.string().optional(),
             answer: Joi.string().required(),
-            time_allowed : Joi.string().required()
+            time_allowed : Joi.number().integer().required()
         }
     },
     editCategoryEntry : {
@@ -30,7 +30,7 @@ module.exports = {
             optionD : Joi.string().optional(),
             optionE : Joi.string().optional(),
             answer: Joi.string().optional(),
-            time_allowed : Joi.string().optional()
+            time_allowed : Joi.number().integer().optional()
         }
     },
     getCategoryEntry : {

@@ -10,7 +10,7 @@ class CategoryEntryEntryController {
      *
      *@description CategoryEntry Controller
      *
-     *@param  {object} CategoryEntryService - CategoryEntry service instance
+     *@param  {object} categoryEntryService - CategoryEntry service instance
      *
      */
     constructor(categoryEntryService){
@@ -47,10 +47,9 @@ class CategoryEntryEntryController {
      *@return {callback}
      */
     listAllCategoryEntries (req, res, next ) {
-        this.categoryEntryService.getAllCategories().then(
+        this.categoryEntryService.getAllCategoryEntries().then(
             data => {
                 return res.send(responseFormatter(HttpStatus.OK, data));
-
             }
         ).catch( error => {
             return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
@@ -67,16 +66,13 @@ class CategoryEntryEntryController {
      *@return {callback}
      */
     getCategoryEntry (req, res, next) {
-        let id = Number(req.param('id'));
+        let id = Number(req.params.id);
         this.categoryEntryService.getCategoryEntry(id).then(
             data => {
-                console.log(` GET CategoryEntry => ${data}`);
                 return res.send(responseFormatter(HttpStatus.OK, data));
             }).catch( error => {
             return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-
-        next();
     }
 
     /**
@@ -88,7 +84,7 @@ class CategoryEntryEntryController {
      *@return {callback}
      */
     updateCategoryEntry (req, res, next) {
-        let id = req.param('id');
+        let id = Number(req.params.id);
         let body = req.body;
         this.categoryEntryService.editCategoryEntry(id, body).then(
             data => {
@@ -97,7 +93,6 @@ class CategoryEntryEntryController {
         ).catch(error => {
             return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-        next();
     }
 
 
@@ -111,14 +106,13 @@ class CategoryEntryEntryController {
      *@return {callback}
      */
     deleteCategoryEntry (req, res, next) {
-        let id = Number(req.param('id'));
+        let id = Number(req.params.id);
         this.categoryEntryService.deleteCategoryEntry(id).then(
             data => {return res.send(responseFormatter(HttpStatus.OK, data));}
         ).catch(
             error => {
                 return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
             });
-        next();
     }
 }
 

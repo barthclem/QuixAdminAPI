@@ -8,7 +8,6 @@ let morgan = require('morgan');
 let ServiceLocator = require('./app/config/serviceLocator');
 let responseFormatter = require('./app/lib/responseFormatter');
 let redisTree = require('./app/lib/redisTree');
-let timeout = require('connect-timeout');
 redisTree.initialize();
 
 app.use(bodyParser.json());
@@ -24,13 +23,6 @@ app.use(redis);
 app.get('/*', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');
 });
-
-app.use(timeout(30000));
-app.use(haltOnTimedout);
-
-function haltOnTimedout(req, res, next){
-    if (!req.timedout) next();
-}
 
 
 app.use(function(err, req, res, next){

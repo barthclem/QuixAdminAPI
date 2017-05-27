@@ -29,11 +29,8 @@ module.exports = (serviceLocator) => {
             });
 
     router.route('/:id([0-9]+)').get(
-        [authMiddleware,
-            validate(categoryValidation.getCategory),
-            loadRoleMiddleWare(userGroup, true),
-           authorizer.wants(constants.VIEW_A_CATEGORY)
-        ],
+        [authMiddleware, validate(categoryValidation.getCategory), loadRoleMiddleWare(userGroup, true),
+           authorizer.wants(constants.VIEW_A_CATEGORY)],
         (req, res, next) => {
             categoryController.getCategory(req, res, next);
         })
