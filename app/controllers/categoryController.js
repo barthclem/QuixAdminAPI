@@ -70,7 +70,6 @@ class CategoryController {
         let id = Number(req.params.id);
         this.categoryService.getCategory(id).then(
             data => {
-                console.log(` GET Category => ${data}`);
                 return res.send(responseFormatter(HttpStatus.OK, data));
             }).catch( error => {
             return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));

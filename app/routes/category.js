@@ -29,8 +29,12 @@ module.exports = (serviceLocator) => {
             });
 
     router.route('/:id([0-9]+)').get(
-        [authMiddleware, validate(categoryValidation.getCategory), loadRoleMiddleWare(userGroup, true),
-            authorizer.wants(constants.VIEW_A_CATEGORY)], (req, res, next) => {
+        [authMiddleware,
+            validate(categoryValidation.getCategory),
+            loadRoleMiddleWare(userGroup, true),
+           authorizer.wants(constants.VIEW_A_CATEGORY)
+        ],
+        (req, res, next) => {
             categoryController.getCategory(req, res, next);
         })
         .put([authMiddleware, validate(categoryValidation.editCategory), loadRoleMiddleWare(userGroup, true),
@@ -41,6 +45,5 @@ module.exports = (serviceLocator) => {
             authorizer.wants(constants.DELETE_A_CATEGORY)], (req, res, next) => {
             categoryController.deleteCategory(req, res, next);
         });
-
     return router;
 };

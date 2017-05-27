@@ -20,6 +20,7 @@
     "cloudinary": "^1.8.0",
     "connect-ioredis": "^1.4.5",
     "connect-redis": "^3.2.0",
+    "connect-timeout": "^1.9.0",
     "dotenv": "^4.0.0",
     "express": "^4.15.0",
     "express-fileupload": "^0.1.1",
