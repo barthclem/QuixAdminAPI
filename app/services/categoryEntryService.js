@@ -13,11 +13,13 @@ class CategoryEntryService {
      *
      *@param  {object} categoryEntry - categoryEntry model instance
      *@param {object}  event - event model instance
+     *@param {object} rbacService - rbacService instance
      *
      */
-    constructor (categoryEntry, event) {
+    constructor (categoryEntry, event, rbacService) {
         this.categoryEntry = categoryEntry;
         this.event = event;
+        this.rbacService = rbacService;
     }
 
     /**
@@ -32,6 +34,7 @@ class CategoryEntryService {
         return new Promise((resolve, reject)=>{
             this.categoryEntry.forge().save(categoryEntryData)
                 .then( data => {
+                    this.rbacService.createNewCategoryEntry(categoryEntryData.category_id, data.id);
                     return resolve(data);
                 })
                 .catch(error => {
@@ -114,6 +117,7 @@ class CategoryEntryService {
             this.categoryEntry.forge({id : categoryEntryId})
                 .destroy()
                 .then(data => {
+                    this.rbacService.removeCategoryEntry(categoryEntryId);
                     return resolve({message : "categoryEntry deleted successfully"});
                 })
                 .catch(error => {

@@ -31,6 +31,7 @@ let EventService = require('../services/eventService');
 let OrganizerService = require('../services/organizerService');
 let ParticipantService = require('../services/participantService');
 let UserService = require('../services/userService');
+let RBACRedisService = require('../services/rbacRedisService');
 let RoleUserService = require('../services/roleUserService');
 
 //Models
@@ -88,6 +89,12 @@ module.exports = (()=> {
         return require('../models/emailAuth');
     });
 
+    /**
+     * @description Creates an instance of rbacRedisService
+     */
+    serviceLocator.register('rbacRedisService', () => {
+       return RBACRedisService;
+    });
 
     /**
      * @description Creates an instance of Role User model
@@ -162,7 +169,8 @@ module.exports = (()=> {
     serviceLocator.register('eventService', (serviceLocator) => {
         let eventModel = serviceLocator.get('eventModel');
         let roleUserService = serviceLocator.get('roleUserService');
-        return new EventService(eventModel, roleUserService);
+        let rbacRedisService = serviceLocator.get('rbacRedisService');
+        return new EventService(eventModel, roleUserService, rbacRedisService);
     });
 
     /**
@@ -178,7 +186,8 @@ module.exports = (()=> {
     serviceLocator.register('categoryEntryService', (serviceLocator) => {
         let categoryEntryModel = serviceLocator.get('categoryEntryModel');
         let eventModel = serviceLocator.get('eventModel');
-        return new CategoryEntryService(categoryEntryModel, eventModel);
+        let rbacRedisService = serviceLocator.get('rbacRedisService');
+        return new CategoryEntryService(categoryEntryModel, eventModel, rbacRedisService);
     });
 
     /**
@@ -202,7 +211,8 @@ module.exports = (()=> {
     serviceLocator.register('categoryService', (serviceLocator) => {
         let categoryModel = serviceLocator.get('categoryModel');
         let eventModel = serviceLocator.get('eventModel');
-        return new CategoryService(categoryModel, eventModel);
+        let rbacRedisService = serviceLocator.get('rbacRedisService');
+        return new CategoryService(categoryModel, eventModel, rbacRedisService);
     });
 
     /**

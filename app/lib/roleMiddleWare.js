@@ -4,7 +4,7 @@
 'use strict';
 let roleConstants = require('../config/constants').ROLES;
 let dataGroupConstants = require('../config/constants').DATA_GROUP;
-let authTree = require('./redisTree');
+let authTree = require('./../services/rbacRedisService');
 
 /**
  * @description this middleware loads the role a user has for a roleGroup such as event, user and others

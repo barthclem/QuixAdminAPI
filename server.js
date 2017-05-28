@@ -7,7 +7,7 @@ let bodyParser = require('body-parser');
 let morgan = require('morgan');
 let ServiceLocator = require('./app/config/serviceLocator');
 let responseFormatter = require('./app/lib/responseFormatter');
-let redisTree = require('./app/lib/redisTree');
+let redisTree = require('./app/services/rbacRedisService');
 redisTree.initialize();
 
 app.use(bodyParser.json());

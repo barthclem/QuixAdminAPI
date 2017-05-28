@@ -10,11 +10,12 @@ class EventService {
      *@description Event Service Constructor
      *@param  {object} event - event model instance
      *@param  {object} roleService - an instance of roleService
-     *
+     *@param  {integer} rbacService - an instance of rbacService
      */
-    constructor (event, roleService) {
+    constructor (event, roleService, rbacService) {
         this.event = event;
         this.roleService = roleService;
+        this.rbacService = rbacService;
     }
 
     /**
@@ -47,6 +48,7 @@ class EventService {
                             })
                     })
                     .then( data => {
+                        this.rbacService.createNewEvent(data.id);
                         console.log(`Event Service Created =>${data}`);
                     })
                     .catch(error => {
@@ -153,7 +155,9 @@ class EventService {
                             .then( () => {
                                 transaction.commit();
                                 console.log(`"event deleted successfully" `);
-                                return resolve({message : "event deleted successfully"});
+                                this.rbacService.removeEvent(eventId);
+
+                                    return resolve({message : "event deleted successfully"});
                             });
                     })
                     .catch(error => {
