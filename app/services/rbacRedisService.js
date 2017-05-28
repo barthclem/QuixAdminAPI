@@ -20,7 +20,6 @@ module.exports = {
     initialize :   function intialize() {
         //check if a relationship already exist
           redis.texists(tree, 'root').then(result => {
-              console.log(`Initialize result => ${result}`);
               if (result === 0) {
                   redis.tinsert(tree, 'root', quixRoot);
                   this.loadData();
@@ -145,12 +144,12 @@ module.exports = {
      */
     loadData : function () {
         event.forge().fetchAll()
-            .then(data => {
-                data.each(datum => {
-                    let eventId = datum.id;
-                    datum.load('category')
-                        .then( cat => {
-                            cat.related('category').fetch({withRelated:['categoryEntry']}).then(category => {
+            .then(eventsData => {
+                eventsData.each(eachEvent => {
+                    let eventId = eachEvent.id;
+                    eachEvent.load('category')
+                        .then( eventData => {
+                            eventData.related('category').fetch({withRelated:['categoryEntry']}).then(category => {
                                 this.createNewEvent(eventId);
                                 category.each(categoryEntry => {
                                     let categoryId = categoryEntry.id;
