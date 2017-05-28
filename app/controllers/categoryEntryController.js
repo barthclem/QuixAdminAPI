@@ -30,11 +30,12 @@ class CategoryEntryEntryController {
         this.categoryEntryService.createCategoryEntry(categoryEntryData)
             .then(
                 data => {
-                    return res.send(responseFormatter(HttpStatus.OK, data));
+                    return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
                 })
             .catch( error => {
                 console.log(`POST ERROR => ${error}`);
-                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
     }
 
@@ -49,10 +50,11 @@ class CategoryEntryEntryController {
     listAllCategoryEntries (req, res, next ) {
         this.categoryEntryService.getAllCategoryEntries().then(
             data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             }
         ).catch( error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
         });
 
     }
@@ -69,9 +71,11 @@ class CategoryEntryEntryController {
         let id = Number(req.params.id);
         this.categoryEntryService.getCategoryEntry(id).then(
             data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
+                return res.status(HttpStatus.OK)
+                    .send(responseFormatter(HttpStatus.OK, data));
             }).catch( error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
     }
 
@@ -88,10 +92,11 @@ class CategoryEntryEntryController {
         let body = req.body;
         this.categoryEntryService.editCategoryEntry(id, body).then(
             data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             }
         ).catch(error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
     }
 
@@ -108,10 +113,11 @@ class CategoryEntryEntryController {
     deleteCategoryEntry (req, res, next) {
         let id = Number(req.params.id);
         this.categoryEntryService.deleteCategoryEntry(id).then(
-            data => {return res.send(responseFormatter(HttpStatus.OK, data));}
+            data => {return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));}
         ).catch(
             error => {
-                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
             });
     }
 }
