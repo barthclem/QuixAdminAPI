@@ -5,13 +5,22 @@ let Joi = require('joi');
 
 module.exports = {
   createEvent: {
-      title: Joi.string().regex(/[A-Za-z]\s(\w)+/).required(),
-      scheduled_at: Joi.date().required(),
-      organizer_id: Joi.number().integer().required()
+      body: {
+          title: Joi.string().regex(/[A-Za-z]\s(\w)+/).required(),
+          scheduled_at: Joi.date().required(),
+          organizer_id: Joi.number().integer().required()
+      }
   },
     editEvent: {
-        title: Joi.string().regex(/[A-Za-z]\s(\w)+/).optional(),
-        scheduled_at: Joi.date().optional(),
-        organizer_id: Joi.number().integer().optional()
+      body: {
+          title: Joi.string().regex(/[A-Za-z]\s(\w)+/).optional(),
+          scheduled_at: Joi.date().optional(),
+          organizer_id: Joi.number().integer().optional()
+      }
+    },
+    getEvent: {
+      params: {
+          id: Joi.number().integer().optional()
+      }
     }
 };

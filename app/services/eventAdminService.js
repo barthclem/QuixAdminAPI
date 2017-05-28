@@ -157,7 +157,7 @@ class EventAdminService {
                     return resolve(data);
                 })
                 .catch(error => {
-                    console.log( `GET ALL EVENT ADMIN ERROR => ${error}`)
+                    console.log( `GET ALL EVENT ADMIN ERROR => ${error}`);
                     return reject(error);
                 });
         });

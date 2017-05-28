@@ -7,7 +7,7 @@ let express = require('express');
 let router = express.Router();
 let validate = require('express-validation');
 let responseFormatter = require('../lib/responseFormatter');
-let authMiddleware = require('../lib/authMiddleWare');
+let AuthMiddleware = require('../lib/authMiddleWare');
 let authorizer = require('../config/authorizator');
 let constants = require('../config/constants').PERMISSIONS.USER;
 let userGroup = require('../config/constants').DATA_GROUP.USER.title;
@@ -15,7 +15,8 @@ let loadRoleMiddleWare = require('../lib/roleMiddleWare');
 let userValidation = require('../validation/userValidation');
 
 
-module.exports =  (serviceLocator) => {
+module.exports =  (app, serviceLocator) => {
+    let authMiddleware = new AuthMiddleware(app);
     let userService = serviceLocator.get('userService');
     let userController = serviceLocator.get('userController');
 
@@ -30,7 +31,7 @@ module.exports =  (serviceLocator) => {
     });
 
     router.route('/').get(
-       // [authMiddleware, loadRoleMiddleWare(userGroup), authorizer.wants(constants.GET_ALL_USERS)],
+       [authMiddleware.authenticate(), loadRoleMiddleWare(userGroup), authorizer.wants(constants.GET_ALL_USERS)],
         (req, res, next) => {
         userController.listAll(req, res, next);
         //next();
@@ -41,44 +42,34 @@ module.exports =  (serviceLocator) => {
         });
 
     router.post('/login',  validate(userValidation.login), (req, res, next) => {
-        userController.userLogin(req, res, next);
+        userController.userLogin(authMiddleware, req, res, next);
     });
 
     router.route('/:id([0-9]+)')
         .get([
-            //authMiddleware,
+            authMiddleware.authenticate(),
             validate(userValidation.getUser)
-           // , loadRoleMiddleWare(userGroup),
-           // authorizer.wants(constants.GET_A_USER)
+           , loadRoleMiddleWare(userGroup),
+           authorizer.wants(constants.GET_A_USER)
         ], (req, res, next) => {
             userController.getUser(req, res, next);
             //next();
         })
 
         .put([
-            //authMiddleware,
-            validate(userValidation.editUser)
-          //  , loadRoleMiddleWare(userGroup),
-            //authorizer.wants(constants.UPDATE_A_USER)
-        ], (req, res, next) => {
+            authMiddleware.authenticate(), validate(userValidation.editUser), loadRoleMiddleWare(userGroup),
+            authorizer.wants(constants.UPDATE_A_USER)], (req, res, next) => {
             userController.updateUser(req, res ,next);
         })
 
-        .delete ([
-            //authMiddleware
-            validate(userValidation.getUser),
-            //loadRoleMiddleWare(userGroup),
-          //  authorizer.wants(constants.DELETE_A_USER)
-        ], (req, res, next) => {
+        .delete ([authMiddleware.authenticate(), validate(userValidation.getUser), loadRoleMiddleWare(userGroup),
+          authorizer.wants(constants.DELETE_A_USER)], (req, res, next) => {
             userController.deleteUser(req, res, next);
         });
 
 //get user wi
-    router.get('/:username([a-zA-Z0-9_\.]+)', [
-       // authMiddleware,
-        validate(userValidation.getUser)
-        //, loadRoleMiddleWare(userGroup), authorizer.wants(constants.GET_A_USER)
-    ], (req, res, next) => {
+    router.get('/:username([a-zA-Z0-9_\.]+)', [authMiddleware.authenticate(), validate(userValidation.getUser)
+        , loadRoleMiddleWare(userGroup), authorizer.wants(constants.GET_A_USER)], (req, res, next) => {
         userController.getUserByUsername(req, res, next);
         //next();
     });

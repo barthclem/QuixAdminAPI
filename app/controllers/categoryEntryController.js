@@ -10,7 +10,7 @@ class CategoryEntryEntryController {
      *
      *@description CategoryEntry Controller
      *
-     *@param  {object} CategoryEntryService - CategoryEntry service instance
+     *@param  {object} categoryEntryService - CategoryEntry service instance
      *
      */
     constructor(categoryEntryService){
@@ -30,11 +30,12 @@ class CategoryEntryEntryController {
         this.categoryEntryService.createCategoryEntry(categoryEntryData)
             .then(
                 data => {
-                    return res.send(responseFormatter(HttpStatus.OK, data));
+                    return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
                 })
             .catch( error => {
                 console.log(`POST ERROR => ${error}`);
-                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
     }
 
@@ -46,14 +47,14 @@ class CategoryEntryEntryController {
      *@param {function} next express routing callback
      *@return {callback}
      */
-    listAll (req, res, next ) {
-        this.categoryEntryService.getAllCategories().then(
+    listAllCategoryEntries (req, res, next ) {
+        this.categoryEntryService.getAllCategoryEntries().then(
             data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
-
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             }
         ).catch( error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
         });
 
     }
@@ -67,16 +68,15 @@ class CategoryEntryEntryController {
      *@return {callback}
      */
     getCategoryEntry (req, res, next) {
-        let id = Number(req.param('id'));
+        let id = Number(req.params.id);
         this.categoryEntryService.getCategoryEntry(id).then(
             data => {
-                console.log(` GET CategoryEntry => ${data}`);
-                return res.send(responseFormatter(HttpStatus.OK, data));
+                return res.status(HttpStatus.OK)
+                    .send(responseFormatter(HttpStatus.OK, data));
             }).catch( error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-
-        next();
     }
 
     /**
@@ -88,16 +88,16 @@ class CategoryEntryEntryController {
      *@return {callback}
      */
     updateCategoryEntry (req, res, next) {
-        let id = req.param('id');
+        let id = Number(req.params.id);
         let body = req.body;
         this.categoryEntryService.editCategoryEntry(id, body).then(
             data => {
-                return res.send(responseFormatter(HttpStatus.OK, data));
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             }
         ).catch(error => {
-            return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-        next();
     }
 
 
@@ -111,14 +111,14 @@ class CategoryEntryEntryController {
      *@return {callback}
      */
     deleteCategoryEntry (req, res, next) {
-        let id = Number(req.param('id'));
+        let id = Number(req.params.id);
         this.categoryEntryService.deleteCategoryEntry(id).then(
-            data => {return res.send(responseFormatter(HttpStatus.OK, data));}
+            data => {return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));}
         ).catch(
             error => {
-                return res.send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
             });
-        next();
     }
 }
 

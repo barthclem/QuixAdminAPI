@@ -25,8 +25,8 @@ class UserController {
   *@description User Controller
   *
   *@param  {object} userService - user service instance
-  *@param {object}  EmailAuthService email service instance
-  *
+  *@param {object}  emailAuthService email service instance
+  *@param {object}  roleUserService roleUser service instance
   */
     constructor(userService, emailAuthService, roleUserService){
         this.userService = userService;
@@ -85,7 +85,7 @@ class UserController {
       *@param {function} next express routing callback
       *@return {callback}
       */
-      userLogin (req, res, next) {
+      userLogin (authMiddleware, req, res, next) {
         let data = req.body;
         this.userService.loginUser(data).then( (loginData) => {
             if(loginData) {
@@ -96,10 +96,21 @@ class UserController {
                 sessionData.userId  = userData.id;
                 sessionData.roleData = roles;
                 sessionData.role = null; // set this to null because of rbac module
-                return res.send(responseFormatter(HttpStatus.OK, { isCorrect : true}));
+                let user = Object.assign({}, {id : loginData.id});
+                authMiddleware.login(user).then(token => {
+                    return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, { token : token}));
+                })
+                    .catch(error => {
+                        console.log(`AuthMiddleWare Token Gen Error => ${error}`)
+                    });
             }
-            return res.send(responseFormatter(HttpStatus.OK, { isCorrect : false}));
-        }).catch ( error => { return res.send(responseFormatter(HttpStatus.BAD_REQUEST,{ isCorrect : false}));});
+            else{
+                return res.send(responseFormatter(HttpStatus.OK, { isCorrect : false}));
+            }
+        }).catch ( error => {
+            console.log(`Login Error is => ${error}`);
+            return res.status(HttpStatus.BAD_REQUEST)
+            .send(responseFormatter(HttpStatus.BAD_REQUEST,{ isCorrect : false}));});
       }
 
       /**

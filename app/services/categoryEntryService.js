@@ -13,11 +13,13 @@ class CategoryEntryService {
      *
      *@param  {object} categoryEntry - categoryEntry model instance
      *@param {object}  event - event model instance
+     *@param {object} rbacService - rbacService instance
      *
      */
-    constructor (categoryEntry, event) {
+    constructor (categoryEntry, event, rbacService) {
         this.categoryEntry = categoryEntry;
         this.event = event;
+        this.rbacService = rbacService;
     }
 
     /**
@@ -32,6 +34,7 @@ class CategoryEntryService {
         return new Promise((resolve, reject)=>{
             this.categoryEntry.forge().save(categoryEntryData)
                 .then( data => {
+                    this.rbacService.createNewCategoryEntry(categoryEntryData.category_id, data.id);
                     return resolve(data);
                 })
                 .catch(error => {
@@ -44,12 +47,12 @@ class CategoryEntryService {
      *
      *@description Edit a categoryEntry
      *
-     * @param {Integer}  categoryEntryId- Integer identifying a CategoryEntry
+     * @param {integer}  categoryEntryId - Integer identifying a CategoryEntry
      * @param  {object} categoryEntryData - Object containing new CategoryEntry data
      *
      * @return {object} object - A modified categoryEntry Object / error
      */
-    editcategoryEntry (categoryEntryId, categoryEntryData) {
+    editCategoryEntry (categoryEntryId, categoryEntryData) {
         return new Promise((resolve, reject)=>{
             this.categoryEntry.forge({id : categoryEntryId}).save(categoryEntryData)
                 .then(data => {
@@ -65,7 +68,7 @@ class CategoryEntryService {
      *
      *@description Get  a categoryEntry
      *
-     * @param {Integer}  categoryEntryId- Integer identifying a categoryEntry
+     * @param {integer}  categoryEntryId - Integer identifying a categoryEntry
      *
      * @return {object} object -  categoryEntry Object / error
      */
@@ -105,7 +108,7 @@ class CategoryEntryService {
      *
      *@description Delete a CategoryEntry
      *
-     *@param  {Integer} CategoryEntryId - the ID of a CategoryEntry
+     *@param  {integer} categoryEntryId - the ID of a CategoryEntry
      *
      * @return {object} object - a object containing message/error
      */
@@ -114,7 +117,8 @@ class CategoryEntryService {
             this.categoryEntry.forge({id : categoryEntryId})
                 .destroy()
                 .then(data => {
-                    return {message : "categoryEntry deleted successfully"};
+                    this.rbacService.removeCategoryEntry(categoryEntryId);
+                    return resolve({message : "categoryEntry deleted successfully"});
                 })
                 .catch(error => {
                     return reject(error);

@@ -10,11 +10,12 @@ class CategoryService {
      *
      *@param  {object} category - category model instance
      *@param {object}  event - event model instance
-     *
+     *@param {object}  rbacService - rbac service instance
      */
-    constructor (category, event) {
+    constructor (category, event, rbacService) {
         this.category = category;
         this.event = event;
+        this.rbacService = rbacService;
     }
 
     /**
@@ -29,6 +30,7 @@ class CategoryService {
         return new Promise((resolve, reject)=>{
             this.category.forge().save(categoryData)
                 .then( data => {
+                    this.rbacService.createNewCategory(categoryData.event_id, data.id);
                     return resolve(data);
                 })
                 .catch(error => {
@@ -41,15 +43,17 @@ class CategoryService {
      *
      *@description Edit a category
      *
-     * @param {Integer}  categoryId- Integer identifying a category
+     * @param {integer}  categoryId - Integer identifying a category
      * @param  {object} categoryData - Object containing new category data
      *
      * @return {object} object - A modified category Object / error
      */
     editCategory (categoryId, categoryData) {
         return new Promise((resolve, reject)=>{
+		console.log(`Edit Category => ${JSON.stringify(categoryData)}`);
             this.category.forge({id : categoryId}).save(categoryData)
                 .then(data => {
+                    console.log(` Edit category Service Data => ${JSON.stringify(data)}`);
                     return resolve(data);
                 })
                 .catch(error => {
@@ -103,7 +107,7 @@ class CategoryService {
      *
      *@description Delete a Category
      *
-     *@param  {Integer} categoryId - the ID of a category
+     *@param  {integer} categoryId - the ID of a category
      *
      * @return {object} object - a object containing message/error
      */
@@ -112,6 +116,7 @@ class CategoryService {
             this.category.forge({id : categoryId})
                 .destroy()
                 .then(data => {
+                    this.rbacService.removeCategory(categoryId);
                     return {message : "category deleted successfully"};
                 })
                 .catch(error => {

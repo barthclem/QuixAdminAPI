@@ -27,24 +27,43 @@ class EventController {
     createEvent (req, res, next) {
         let eventData = req.body;
         let userId = req.session.userId;
-        this.organizerService.getOrganizerWithUserId(userId)
-            .then(organizer => {
-                eventData.organizer_id= organizer.id;
-                eventData.userId = userId;
-                eventData.link = simpleLinkGenerator(eventData.title);
-                this.eventService.createEvent(eventData)
-                    .then(data => {
-                        return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
-                    })
-                    .catch (error => {
-                        throw error;
-                    })
-            })
-            .catch(error => {
-                console.log(`POST ERROR => ${error}`);
-                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-            });
+        if(eventData.organizer_id) {
+            this.organizerService.getOrganizer(eventData.organizer_id)
+                .then(organizer => {
+                    eventData.userId = organizer.attributes.user_id;
+                    eventData.link = simpleLinkGenerator(eventData.title);
+                    this.eventService.createEvent(eventData)
+                        .then(data => {
+                            return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
+                        })
+                        .catch (error => {
+                            throw error;
+                        })
+                })
+                .catch(error => {
+
+                });
+        }
+        else {
+            this.organizerService.getOrganizerWithUserId(userId)
+                .then(organizer => {
+                    eventData.organizer_id= organizer.id;
+                    eventData.userId = userId;
+                    eventData.link = simpleLinkGenerator(eventData.title);
+                    this.eventService.createEvent(eventData)
+                        .then(data => {
+                            return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
+                        })
+                        .catch (error => {
+                            throw error;
+                        })
+                })
+                .catch(error => {
+                    console.log(`POST ERROR => ${error}`);
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                });
+        }
     }
 
     /**

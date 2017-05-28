@@ -112,7 +112,7 @@ class OrganizerService {
      */
     getOrganizerWithUserId (userId) {
         return new Promise((resolve, reject)=>{
-            this.organizer.forge({userId : userId})
+            this.organizer.forge({user_id : userId})
                 .fetch()
                 .then(data => {
                     return resolve(data);
