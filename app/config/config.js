@@ -43,7 +43,17 @@
          cookie : {
              duration : (process.env.COOKIE_DURATION) ? parseInt(process.env.COOKIE_DURATION) : 160000
          }
+     },
+
+     security: {
+         jwt: {
+             jwtSecret: process.env.JWT_SECRET_KEY,
+             jwtSession: {
+                 session: false
+             }
+         }
      }
+
  };
 
 
