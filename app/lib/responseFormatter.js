@@ -1,8 +1,9 @@
 'use strict';
 
 module.exports = function ( httpStatus, data) {
+   let success = /^[23][0-9]{2}$/.exec(httpStatus);
    return {
-       status : httpStatus,
-       data : data
+       status : success ? 'success': 'failed' ,
+       data : data ? data : []
    };
 };

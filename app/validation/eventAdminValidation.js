@@ -9,11 +9,11 @@ module.exports = {
         user_id : Joi.number().integer().required()
     },
     editEventAdmin: {
-        event_id : Joi.number().integer().optional(),
+        event_id : Joi.number().integer().required(),
         user_id : Joi.number().integer().optional()
     },
     getEventAdmin: {
-        id: Joi.number().integer().optional(),
+        id: Joi.number().integer().required(),
         event_id : Joi.number().integer().optional(),
         user_id : Joi.number().integer().optional(),
     }

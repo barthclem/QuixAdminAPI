@@ -36,7 +36,7 @@ module.exports = (app, serviceLocator) => {
                 eventAdminController.createEventAdmin(req, res, next);
             });
 
-    router.route('/:id([0-9]+)').get(
+    router.route('/:id').get(
         [authMiddleware.authenticate(), validate(eventAdminValidation.getEventAdmin), loadRoleMiddleWare(userGroup, true),
             authorizer.wants(constants.VIEW_AN_EVENT_ADMIN)], (req, res, next) => {
             eventAdminController.getEventAdmin(req, res, next);
@@ -50,13 +50,13 @@ module.exports = (app, serviceLocator) => {
             eventAdminController.deleteEventAdmin(req, res, next);
         });
     //TODO improve the loadMiddleWare to cater for more complicated route such as /user/
-    router.get('/user/:userId([0-9]+)', [authMiddleware.authenticate(), validate(eventAdminValidation.getEventAdmin),
+    router.get('/user/:userId', [authMiddleware.authenticate(), validate(eventAdminValidation.getEventAdmin),
         loadRoleMiddleWare(userGroup, true), authorizer.wants(constants.VIEW_AN_EVENT_ADMIN)],
         (req, res, next)=> {
             eventAdminController.getEventAdminByUserId(req, res, next);
         });
 
-    router.get('/event/:userId([0-9]+)', [authMiddleware.authenticate(), validate(eventAdminValidation.getEventAdmin),
+    router.get('/event/:userId', [authMiddleware.authenticate(), validate(eventAdminValidation.getEventAdmin),
         loadRoleMiddleWare(userGroup, true), authorizer.wants(constants.VIEW_AN_EVENT_ADMIN)],
         (req, res, next)=> {
             eventAdminController.getEventAdminByEventId(req, res, next);

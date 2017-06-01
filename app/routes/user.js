@@ -45,7 +45,7 @@ module.exports =  (app, serviceLocator) => {
         userController.userLogin(authMiddleware, req, res, next);
     });
 
-    router.route('/:id([0-9]+)')
+    router.route('/:id')
         .get([
             authMiddleware.authenticate(),
             validate(userValidation.getUser)
@@ -68,7 +68,7 @@ module.exports =  (app, serviceLocator) => {
         });
 
 //get user wi
-    router.get('/:username([a-zA-Z0-9_\.]+)', [authMiddleware.authenticate(), validate(userValidation.getUser)
+    router.get('/:username', [authMiddleware.authenticate(), validate(userValidation.getUser)
         , loadRoleMiddleWare(userGroup), authorizer.wants(constants.GET_A_USER)], (req, res, next) => {
         userController.getUserByUsername(req, res, next);
         //next();

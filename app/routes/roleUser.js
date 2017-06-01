@@ -38,7 +38,7 @@ module.exports = (app, serviceLocator) => {
 
         });
 
-    router.route('/:id([0-9]+)')
+    router.route('/:id')
         .get([authMiddleware.authenticate(), validate(roleUserValidation.getRoleUser), loadRoleMiddleWare(userGroup),
             authorizer.wants(constants.GET_ROLE_USER)], (req, res, next) => {
             roleUserController.getRoleUser(req, res, next);
@@ -54,7 +54,7 @@ module.exports = (app, serviceLocator) => {
             authorizer.wants(constants.DELETE_USER_ROLE)], (req, res, next) => {
             roleUserController.deleteRoleUser(req, res, next);
         });
-    router.route('/user_id/:user_id([0-9]+)')
+    router.route('/user_id/:user_id')
         .get([authMiddleware.authenticate(), validate(roleUserValidation.getRoleUserId), loadRoleMiddleWare(userGroup),
             authorizer.wants(constants.GET_ROLE_USER)], (req, res, next) => {
             roleUserController.getRoleUserByUserId(req, res, next);

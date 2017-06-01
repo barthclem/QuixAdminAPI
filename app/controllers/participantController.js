@@ -75,8 +75,6 @@ class ParticipantController {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-
-        next();
     }
 
     /**
@@ -118,7 +116,6 @@ class ParticipantController {
                 return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
             });
-        next();
     }
 
     /**

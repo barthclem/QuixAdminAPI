@@ -13,10 +13,8 @@ let params = {
 
 function AuthenticationMiddleWare(app) {
     let strategy = new Strategy(params, function (payload, done) {
-        console.log(`The received payload is => ${payload}`);
         user.forge({id: payload.id}).fetch()
             .then( data => {
-                console.log(` I have got the user => ${data}`);
                 done(null, data);
             })
             .catch(error => {
@@ -29,18 +27,12 @@ function AuthenticationMiddleWare(app) {
 AuthenticationMiddleWare.prototype.login = function (user) {
     return new Promise((resolve, reject) => {
         let token = jwt.sign(user, params.secretOrKey);
-        console.log(`The Signed token is => {token}`);
         return resolve(token);
     });
 };
 
 AuthenticationMiddleWare.prototype.authenticate = function () {
     return passport.authenticate('jwt',{session: false});
-   // let sessionData = req.session;
-   // if(!sessionData.roleData){
-   //  return  res.status(401).send({status : 'failed', message : 'UnAuthenticated Access'});
-   // }
-   // next();
   };
 
 module.exports = AuthenticationMiddleWare;

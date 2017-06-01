@@ -29,7 +29,7 @@ module.exports = (app, serviceLocator) => {
                 categoryController.createCategory(req, res);
             });
 
-    router.route('/:id([0-9]+)').get(
+    router.route('/:id').get(
         [authMiddleware.authenticate(), validate(categoryValidation.getCategory), loadRoleMiddleWare(userGroup, true),
            authorizer.wants(constants.VIEW_A_CATEGORY)],
         (req, res, next) => {

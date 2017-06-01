@@ -37,7 +37,7 @@ module.exports = (app, serviceLocator) => {
                 eventController.createEvent(req, res, next);
             });
 
-    router.route('/:id([0-9]+)').get(
+    router.route('/:id').get(
         [authMiddleware.authenticate(), validate(eventValidation.getEvent), loadRoleMiddleWare(userGroup, true),
             authorizer.wants(constants.VIEW_AN_EVENT)], (req, res, next) => {
             eventController.getEvent(req, res, next);
