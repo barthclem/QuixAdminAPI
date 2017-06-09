@@ -4,8 +4,9 @@
 'use strict';
 let HttpStatus = require('http-status-codes');
 let responseFormatter = require('../lib/responseFormatter');
+let tokenGenerator = require('../lib/simpleLinkGenerator');
 let multer = require('multer');
-
+let constant = require('../config/constants').UTILITY;
 
 let storage = multer.diskStorage({
     destination : (req, file, callback) => { callback(null, './uploads'); },
@@ -64,11 +65,13 @@ class UserController {
     createUser (req, res, next) {
       let body = req.body;
       this.userService.createUser(body).
-      then(
-          data => {
-              this.emailAuthService.createEmailAuth(data.attributes.email, data.attributes.username);
-              return res.status(HttpStatus.OK).
-              send(responseFormatter(HttpStatus.OK, data));
+      then(data => {
+              this.emailAuthService.createEmailAuth(data.attributes.email)
+                  .then(() => {
+                  let message = 'click on the link sent to your email to verify it';
+                      return res.status(HttpStatus.OK).
+                      send(responseFormatter(HttpStatus.OK, {message}));
+                  });
           }
       ).catch( error => {
           console.log(error);
@@ -90,6 +93,11 @@ class UserController {
         this.userService.loginUser(data).then( (loginData) => {
             if(loginData) {
                 let userData = loginData.attributes;
+                if(userData.status === constant.UNVERIFIED){
+                    return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, {
+                        message: 'your email has been not verified, please click the link sent to your mail'
+                    }));
+                }
                 let roles = loginData.related('roleUser');
                 let sessionData = req.session;
                 sessionData.email = userData.email;
@@ -227,6 +235,34 @@ class UserController {
             return res.send(responseFormatter(HttpStatus.OK, {message : 'file uploaded successfully'}));
         });
         next();
+    }
+
+    /**
+     *@description ENDPOINT  GET /user/verify - verify the email of a user
+     *
+     *@param  {object} req express request object
+     *@param {object}  res express response object
+     *@param {function} next express routing callback
+     *@return {callback}
+     */
+    verifyUserEmail (req, res, next) {
+        let authenticationToken = req.params.token;
+        this.emailAuthService.verifyUserEmail(authenticationToken)
+            .then( message => {
+                if(message === constant.VERIFIED) {
+                    return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, {
+                        message: 'your email has been verified, you can login'
+                    }));
+                }
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, {
+                    message: 'your email has been not verified as this link is expired, another link has been sent'
+                }));
+            })
+        .catch( error => {
+            console.log(error);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {message : 'failed to verify email'}));
+        });
     }
 
 }

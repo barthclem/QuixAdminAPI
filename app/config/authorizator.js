@@ -10,7 +10,7 @@ let PERMISSIONS = constants.PERMISSIONS;
 authorizor.initialize({path : 'session.role'});
 authorizor.use('redisPolicy', rolePolicy);
 
-
+//TODO keep this in an in-memory database
 let guest = new Role(authorizor, constants.ROLES.GUEST);
 let participant = new Role(authorizor, constants.ROLES.PARTICIPANT);
 let organiser = new Role(authorizor, constants.ROLES.ORGANIZER);

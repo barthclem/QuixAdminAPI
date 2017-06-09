@@ -23,10 +23,11 @@ function AuthenticationMiddleWare(app) {
     });
     passport.use(strategy);
     app.use(passport.initialize());
+    app.use(passport.session());
 }
 AuthenticationMiddleWare.prototype.login = function (user) {
     return new Promise((resolve, reject) => {
-        let token = jwt.sign(user, params.secretOrKey);
+        let token = jwt.sign(user, params.secretOrKey, {expiresIn: '14400m'});
         return resolve(token);
     });
 };

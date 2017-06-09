@@ -44,6 +44,7 @@ let ParticipantModel = require('../models/participant');
 let UserModel = require('../models/user');
 let Role = require('../models/role');
 let RoleUserModel = require('../models/roleUser');
+let userVerificationModel = require('../models/userVerification');
 
 module.exports = (()=> {
     /**
@@ -85,7 +86,7 @@ module.exports = (()=> {
     /**
      * @description Creates an instance of Email  Model
      */
-    serviceLocator.register('emailAuth', () => {
+    serviceLocator.register('emailAuthModel', () => {
         return require('../models/emailAuth');
     });
 
@@ -127,12 +128,19 @@ module.exports = (()=> {
     });
 
     /**
+     * @description Creates an instance of user model
+     */
+    serviceLocator.register('userVerificationModel', () => {
+        return userVerificationModel;
+    });
+
+    /**
      * @description Creates an instance of User Service
      */
     serviceLocator.register('userService', (serviceLocator) => {
         let userModel = serviceLocator.get('userModel');
-        let userService = new UserService(userModel);
-        return userService;
+         return new UserService(userModel);
+
     });
 
     /**
@@ -141,8 +149,8 @@ module.exports = (()=> {
     serviceLocator.register('emailAuthService', (serviceLocator) => {
         let userService = serviceLocator.get('userService');
         let emailModel = serviceLocator.get('mailer');
-
-        return new EmailAuthService(userService, emailModel);
+        let emailAuthModel = serviceLocator.get('emailAuthModel');
+        return new EmailAuthService(userService, emailModel, emailAuthModel);
     });
 
     /**
@@ -152,8 +160,8 @@ module.exports = (()=> {
         let userService = serviceLocator.get('userService');
         let emailAuthService = serviceLocator.get('emailAuthService');
         let roleUserService = serviceLocator.get('roleUserService');
-        let userController = new UserController(userService, emailAuthService, roleUserService);
-        return userController;
+        return new UserController(userService, emailAuthService, roleUserService);
+
     });
 
     /**
