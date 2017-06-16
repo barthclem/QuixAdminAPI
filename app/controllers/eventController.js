@@ -33,12 +33,13 @@ class EventController {
                 .then(organizer => {
                     eventData.userId = organizer.attributes.user_id;
                     eventData.link = simpleLinkGenerator(eventData.title);
+                    let organizerEmail = organizer.related('user').attributes.email;
                     this.eventService.createEvent(eventData)
                         .then(data => {
-                            this.emailAuthService
+                            this.emailAuthService.sendNewEventMail(organizerEmail, eventData.title, eventData.link);
                             return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, {
                                 message: `Event successfully registered`,
-                                eventLink: `/event/register/${eventData}`
+                                eventLink: `/event/register/${eventData.link}`
                             }));
                         })
                         .catch (error => {
@@ -55,9 +56,14 @@ class EventController {
                     eventData.organizer_id= organizer.id;
                     eventData.userId = userId;
                     eventData.link = simpleLinkGenerator(eventData.title);
+                    let organizerEmail = organizer.related('user').attributes.email;
                     this.eventService.createEvent(eventData)
                         .then(data => {
-                            return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
+                            this.emailAuthService.sendNewEventMail(organizerEmail, eventData.title, eventData.link);
+                            return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, {
+                                message: `Event successfully registered`,
+                                eventLink: `/event/register/${eventData.link}`
+                            }));
                         })
                         .catch (error => {
                             throw error;

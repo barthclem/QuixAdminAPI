@@ -85,14 +85,14 @@ class OrganizerService {
      *
      *@description Get  an organizer
      *
-     * @param {Integer}  organizerId - Integer identifying an Organizer
+     * @param {integer}  organizerId - Integer identifying an Organizer
      *
      * @return {object} object -  Organizer Object / error
      */
     getOrganizer (organizerId) {
         return new Promise((resolve, reject)=>{
             this.organizer.forge({id : organizerId})
-                .fetch({ withRelated : ['event']})
+                .fetch({ withRelated : ['event', 'user']})
                 .then(data => {
                     return resolve(data);
                 })
