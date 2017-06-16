@@ -37,6 +37,27 @@ class ParticipantController {
     }
 
     /**
+     *@description ENDPOINT  POST /participant/ - creates a new participant using the link of the registered event
+     *
+     *@param  {object} req express request object
+     *@param {object}  res express response object
+     *@param {function} next express routing callback
+     *@return {callback}
+     */
+    createParticipantWithLink (req, res, next) {
+        let eventLink = req.params.event_link;
+        let userId = req.body.user_id ? req.body.user_id : req.session.userId ;
+        this.participantService.createParticipantWithLink(userId, eventLink)
+            .then(data => {
+                    return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
+            })
+            .catch( error => {
+                console.log(`POST ERROR => ${error}`);
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+        });
+    }
+
+    /**
      *@description ENDPOINT  GET /participant/ - Retrieves the list of all participants
      *
      *@param  {object} req express request object

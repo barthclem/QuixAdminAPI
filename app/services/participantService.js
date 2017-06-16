@@ -11,12 +11,12 @@ class ParticipantService {
      *@description Participant Service Constructor
      *@param  {object} roleUserService - roleUserService  instance
      *@param  {object} participant - participant model instance
-     *@param {object}  event - event model instance
+     *@param {object}  eventService - event service instance
      *
      */
-    constructor (participant ,event, roleUserService) {
+    constructor (participant ,eventService, roleUserService) {
         this.participant = participant;
-        this.event = event;
+        this.eventService = eventService;
         this.roleUserService = roleUserService
     }
 
@@ -66,6 +66,28 @@ class ParticipantService {
 
     }
 
+    /**
+     * @description Create a participant using eventLink Data
+     * @param {integer} userId - the id of the user to become participant
+     * @param {string} eventLink - the link of the event that a user wants to register for.
+     * @return {Promise}
+     */
+    createParticipantWithLink (userId, eventLink) {
+        return new Promise((resolve, reject)=>{
+            this.eventService.getEventWithLink(eventLink)
+                .then(event => {
+                   let eventId = event.id;
+                   let userData = {
+                       event_id: eventId,
+                       user_id : userId
+                   };
+                   this.createParticipant(userData);
+                })
+                .catch(error => {
+                    return reject(error);
+                })
+        });
+    }
      /**
      *
      *@description Edit a Participant

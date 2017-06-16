@@ -82,8 +82,8 @@ class UserController {
 
       /**
       *@description ENDPOINT  POST /login/ - login user
-      *
-      *@param  {object} req express request object
+      *@param {function} authMiddleware a function that makes jwt authentication for the login system
+      *@param {object} req express request object
       *@param {object}  res express response object
       *@param {function} next express routing callback
       *@return {callback}
@@ -94,9 +94,19 @@ class UserController {
             if(loginData) {
                 let userData = loginData.attributes;
                 if(userData.status === constant.UNVERIFIED){
-                    return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, {
-                        message: 'your email has been not verified, please click the link sent to your mail'
-                    }));
+                    this.emailAuthService.createEmailAuth(data.attributes.email)
+                        .then(() => {
+                            return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, {
+                                message: 'your email has been not verified, please click the link sent to your mail'
+                            }));
+                        })
+                        .catch(error => {
+                            console.log(`Email Verification error is => ${error}`);
+                            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {
+                                    message : 'pleaser try again later as our system is experiencing a failure'
+                                }))
+                        })
                 }
                 let roles = loginData.related('roleUser');
                 let sessionData = req.session;
@@ -254,6 +264,7 @@ class UserController {
                         message: 'your email has been verified, you can login'
                     }));
                 }
+
                 return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, {
                     message: 'your email has been not verified as this link is expired, another link has been sent'
                 }));

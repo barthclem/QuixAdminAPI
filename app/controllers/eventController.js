@@ -9,11 +9,12 @@ class EventController {
      *
      *@param  {object} eventService - Event service instance
      *@param  {object} organizerService - An instance of organizer service
-     *
+     *@param {object}  emailAuthService email service instance
      */
-    constructor(eventService, organizerService){
+    constructor(eventService, organizerService, emailAuthService){
         this.eventService = eventService;
         this.organizerService = organizerService;
+        this.emailAuthService = emailAuthService;
     }
 
     /**
@@ -34,7 +35,11 @@ class EventController {
                     eventData.link = simpleLinkGenerator(eventData.title);
                     this.eventService.createEvent(eventData)
                         .then(data => {
-                            return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
+                            this.emailAuthService
+                            return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, {
+                                message: `Event successfully registered`,
+                                eventLink: `/event/register/${eventData}`
+                            }));
                         })
                         .catch (error => {
                             throw error;

@@ -40,6 +40,26 @@ class EmailAuth {
 
     /**
      *
+     * @param {string} emailAddress - the email address of the organizer of the event
+     * @param {string} eventTitle - the title of the newly created event
+     * @param {string} eventLink - the link through which a new participant for the event
+     * @return {function} mailer - this function sends message to the recipient
+     */
+    sendNewEventMail ( emailAddress , eventTitle, eventLink) {
+        return this.mailer({
+            from: 'Event Platform',
+            to: emailAddress,
+            subject: 'New Event Creation Notice',
+            html: `<div><h2>Event ${eventTitle} Created</h2>
+            <br/><br/>
+            <p> Your event has been created<br/>
+            <a href="http://localhost:8000/api/event/verify/${authCode}">Click this link to activate your account </a>
+            </p></div>`
+        });
+    }
+
+    /**
+     *
      * @param {string} email - the email of a new user for who email verification is created
      * @return {Promise}
      */
