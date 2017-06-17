@@ -12,6 +12,9 @@ module.exports = {
       }
   },
     editEvent: {
+        params: {
+            id: Joi.number().integer().required()
+        },
       body: {
           title: Joi.string().regex(/[A-Za-z]\s(\w)+/).optional(),
           scheduled_at: Joi.date().optional(),
@@ -20,7 +23,7 @@ module.exports = {
     },
     getEvent: {
       params: {
-          id: Joi.number().integer().optional()
+          id: Joi.number().integer().required()
       }
     }
 };

@@ -38,7 +38,12 @@ module.exports = (app, serviceLocator) => {
             participantController.createParticipant(req, res, next);
         });
 
-    router.route('/:id([0-9]+)').get(
+    router.post('/:event_link',  [authMiddleware.authenticate(), validate(participantValidation.createParticipantWithLink),
+        loadRoleMiddleWare(userGroup, true)], (req, res, next) => {
+        participantController.createParticipantWithLink(req, res, next);
+    });
+
+    router.route('/:id').get(
         [authMiddleware.authenticate(), validate(participantValidation.getParticipant), loadRoleMiddleWare(userGroup, true),
             authorizer.wants(constants.VIEW_A_PARTICIPANT)], (req, res, next) => {
             participantController.getParticipant(req, res, next);

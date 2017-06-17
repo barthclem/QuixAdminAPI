@@ -16,11 +16,10 @@ let config = require('../config/config');
      *@description Organizer Service Constructor
      *
      *@param  {object} user - User model instance
-     *
      */
 
-     constructor(users){
-         this.users = users;
+     constructor(user){
+         this.users = user;
      }
 
     /**
@@ -46,7 +45,7 @@ let config = require('../config/config');
      *
      *@description Get A User
      *
-     *@param {Integer}  userId - Integer containing user identification
+     *@param {integer}  id - Integer containing user identification
      * @return {object} Error/Data
      */
      getUser (id) {
@@ -63,6 +62,7 @@ let config = require('../config/config');
                 );
         });
      }
+
     /**
      *
      *@description Get A User
@@ -152,14 +152,31 @@ let config = require('../config/config');
       *@description update a user data in the database
       *
       *@param  {object} userData - Object containing new user data
-      *@param {Integer}  Id - Integer containing user identification
+      *@param {integer}  id - Integer containing user identification
       * @return {object} a newly created participant object
       */
      updateUser (id, userData ) {
          return new Promise((resolve, reject) => {
              return this.users.forge({id : id}).save(userData).then(
-                 data => { return resolve(data);}
-                 )
+                 data => { return resolve(data);})
+                 .catch(error => {
+                     return reject(error);
+                 });
+         });
+     }
+
+     /**
+      *
+      *@description update a user data in the database
+      *
+      *@param  {string} email - email of the user
+      *@param {string}  status - the new status of the user
+      * @return {Promise} object containing a newly updated user
+      */
+     updateUserStatus (email, status ) {
+         return new Promise((resolve, reject) => {
+             return this.users.forge({email : email}).save({status : status}).then(
+                 data => { return resolve(data);})
                  .catch(error => {
                      return reject(error);
                  });
@@ -170,7 +187,7 @@ let config = require('../config/config');
      *
      *@description Delete a participant
      *
-     *@param  {Integer} userId - the ID of user
+     *@param  {integer} id - the ID of user
      *
      * @return {object} object - an object containing message/error
      */
@@ -187,8 +204,6 @@ let config = require('../config/config');
                 });
         });
      }
-
-
 }
 
 module.exports = UserService;

@@ -101,6 +101,26 @@ class EventService {
     }
 
     /**
+     *
+     * @description Get  an event
+     *
+     * @param {string}  eventLink - The link of a registered event
+     *
+     * @return {object} object -  Event  Object / error
+     */
+    getEventWithLink (eventLink) {
+        return new Promise((resolve, reject)=>{
+            this.event.forge({link : eventLink}).fetch()
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
+    }
+
+    /**
      * @description Get  all events
      *
      * @return {object} object -  Object containing all events / error

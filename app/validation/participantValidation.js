@@ -11,8 +11,17 @@ module.exports = {
         }
     },
 
-    updateParticipant: {
+    createParticipantWithLink: {
         params: {
+            event_link: joi.string().required()
+        },
+        body: {
+            user_id : joi.number().integer().optional()
+        }
+    },
+
+    updateParticipant: {
+        query: {
             id: joi.number().integer().optional(),
             user_id: joi.number().integer().optional()
         },
@@ -26,7 +35,7 @@ module.exports = {
 
     getParticipant: {
         params: {
-            id: joi.number().integer().optional(),
+            id: joi.number().min(0).max(1000).required(),
             user_id: joi.number().integer().optional()
         }
     },

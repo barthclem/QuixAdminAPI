@@ -36,7 +36,7 @@ module.exports = (app, serviceLocator) => {
                 organizerController.createOrganizer(req, res, next);
             });
 
-    router.route('/:id([0-9]+)').get(
+    router.route('/:id').get(
         [authMiddleware.authenticate(), validate(organizerValidation.getOrganizer), loadRoleMiddleWare(userGroup, true),
             authorizer.wants(constants.GET_AN_ORGANIZER)], (req, res, next) => {
             organizerController.getOrganizer(req, res, next);

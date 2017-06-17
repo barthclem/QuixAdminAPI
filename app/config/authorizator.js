@@ -10,7 +10,7 @@ let PERMISSIONS = constants.PERMISSIONS;
 authorizor.initialize({path : 'session.role'});
 authorizor.use('redisPolicy', rolePolicy);
 
-
+//TODO keep this in an in-memory database
 let guest = new Role(authorizor, constants.ROLES.GUEST);
 let participant = new Role(authorizor, constants.ROLES.PARTICIPANT);
 let organiser = new Role(authorizor, constants.ROLES.ORGANIZER);
@@ -82,6 +82,7 @@ superAdmin.canDo(
     PERMISSIONS.EVENT.VIEW_ALL_EVENTS,
     PERMISSIONS.EVENT.REGISTER_FOR_EVENT,
     PERMISSIONS.EVENT.DEREGISTER_AN_EVENT,
+    PERMISSIONS.PARTICIPANT.VIEW_A_PARTICIPANT,
     PERMISSIONS.USER.GET_ALL_USERS,
     PERMISSIONS.ORGANIZER.VIEW_ALL_ORGANIZERS,
     PERMISSIONS.ORGANIZER.ADD_ORGANIZER,

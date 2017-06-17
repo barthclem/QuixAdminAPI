@@ -13,7 +13,7 @@ module.exports = {
 
     updateOrganizer : {
         params : {
-            id: Joi.number().integer().optional(),
+            id: Joi.number().integer().required(),
             user_id : Joi.number().integer().optional()
         },
         body : {
@@ -23,7 +23,7 @@ module.exports = {
 
     getOrganizer : {
         params : {
-            id: Joi.number().integer().optional(),
+            id: Joi.number().integer().required(),
             user_id : Joi.number().integer().optional()
         }
     }

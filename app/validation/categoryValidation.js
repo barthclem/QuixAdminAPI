@@ -17,7 +17,7 @@ module.exports = {
     },
     editCategory: {
         params: {
-            id: Joi.number().integer().optional()
+            id: Joi.number().integer().required()
         },
         body: {
             event_id : Joi.number().integer().optional(),
@@ -31,7 +31,7 @@ module.exports = {
     },
     getCategory: {
         params: {
-            id: Joi.number().integer().optional()
+            id: Joi.number().integer().required()
         }
     }
 };

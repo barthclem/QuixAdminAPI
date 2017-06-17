@@ -34,7 +34,6 @@ module.exports =  (app, serviceLocator) => {
        [authMiddleware.authenticate(), loadRoleMiddleWare(userGroup), authorizer.wants(constants.GET_ALL_USERS)],
         (req, res, next) => {
         userController.listAll(req, res, next);
-        //next();
     })
         .post (validate(userValidation.signUp), (req, res, next)=> {
             userController.createUser(req, res, next);
@@ -45,7 +44,11 @@ module.exports =  (app, serviceLocator) => {
         userController.userLogin(authMiddleware, req, res, next);
     });
 
-    router.route('/:id([0-9]+)')
+    router.get('/verify/:token', validate(userValidation.getVerification), (req, res, next) => {
+        userController.verifyUserEmail(req, res, next);
+    });
+
+    router.route('/:id')
         .get([
             authMiddleware.authenticate(),
             validate(userValidation.getUser)
@@ -68,7 +71,7 @@ module.exports =  (app, serviceLocator) => {
         });
 
 //get user wi
-    router.get('/:username([a-zA-Z0-9_\.]+)', [authMiddleware.authenticate(), validate(userValidation.getUser)
+    router.get('/:username', [authMiddleware.authenticate(), validate(userValidation.getUser)
         , loadRoleMiddleWare(userGroup), authorizer.wants(constants.GET_A_USER)], (req, res, next) => {
         userController.getUserByUsername(req, res, next);
         //next();

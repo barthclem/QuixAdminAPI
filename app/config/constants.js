@@ -95,5 +95,10 @@ module.exports = {
       ROLE_USER : {title :'roleUser' , id: 8},
       USER : {title : 'user', id: 7},
       ROLE : {title :'role' , id: 9},
+  },
+  UTILITY : {
+      VERIFIED : 'verified',
+      UNVERIFIED : 'unVerified'
   }
+
 };

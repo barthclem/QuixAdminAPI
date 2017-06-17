@@ -27,6 +27,11 @@ module.exports = {
             username : Joi.string().regex(/^([a-zA-Z]{3,})([[a-zA-Z0-9_\.]*)$/).optional()
         }
     },
+    getVerification : {
+      params : {
+          token : Joi.string().regex(/^[A-Za-z0-9\-]{36}$/).required()
+      }
+    },
     editUser : {
         params : {
             id : Joi.number().integer().required()
