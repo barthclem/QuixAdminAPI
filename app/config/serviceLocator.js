@@ -278,7 +278,8 @@ module.exports = (()=> {
     serviceLocator.register('eventController', (serviceLocator) => {
         let EventService = serviceLocator.get('eventService');
         let OrganizerService = serviceLocator.get('organizerService');
-        return new EventController(EventService, OrganizerService);
+        let EmailAuthService = serviceLocator.get('emailAuthService');
+        return new EventController(EventService, OrganizerService, EmailAuthService);
     });
 
     /**

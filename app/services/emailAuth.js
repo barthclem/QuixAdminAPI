@@ -53,7 +53,8 @@ class EmailAuth {
             html: `<div><h2>Event ${eventTitle} Created</h2>
             <br/><br/>
             <p> Your event has been created<br/>
-            <a href="http://localhost:8000/api/event/verify/${authCode}">Click this link to activate your account </a>
+            Give this <a href="http://localhost:8000/api/participant/${eventLink}"> link </a> out for users to 
+            register for your event 
             </p></div>`
         });
     }
