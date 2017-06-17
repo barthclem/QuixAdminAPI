@@ -104,7 +104,7 @@ class EventService {
      *
      * @description Get  an event
      *
-     * @param {Number}  eventLink - The link of a registered event
+     * @param {string}  eventLink - The link of a registered event
      *
      * @return {object} object -  Event  Object / error
      */

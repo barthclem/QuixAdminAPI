@@ -31,6 +31,7 @@ class ParticipantService {
     createParticipant (participantData) {
         return new Promise((resolve, reject)=>{
             BookShelf.transaction((transaction) => {
+                let trx = transaction;
                 this.participant.forge().save(participantData, {transacting : transaction})
                     .tap((participant) => {
                        let roleUser = {
@@ -46,6 +47,7 @@ class ParticipantService {
                                       transaction.commit(participant);
                               })
                                   .catch(error => {
+                                      console.log(`Transactin Participant Creation => ${error}`);
                                      throw error;
                                   });
                           })
@@ -56,9 +58,11 @@ class ParticipantService {
                           });
                     })
                     .then(newParticipant => {
+                        console.log(`NewParticipant => ${JSON.stringify(newParticipant)}`);
                         return resolve(newParticipant);
                     })
                     .catch(error => {
+                        console.log(`Creating NewParticipant Error => ${error}`);
                         return reject(error);
                     });
             });
@@ -81,7 +85,15 @@ class ParticipantService {
                        event_id: eventId,
                        user_id : userId
                    };
-                   this.createParticipant(userData);
+                   this.createParticipant(userData)
+                       .then(newParticipant => {
+                           console.log(`NewParticipant with Link => ${newParticipant}`);
+                           return resolve(newParticipant);
+                       })
+                       .catch(error => {
+                           console.log(`Creating NewParticipant with Link Error => ${error}`);
+                           return reject(error);
+                       });
                 })
                 .catch(error => {
                     return reject(error);

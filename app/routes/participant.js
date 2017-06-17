@@ -38,7 +38,7 @@ module.exports = (app, serviceLocator) => {
             participantController.createParticipant(req, res, next);
         });
 
-    router.post(':/event_link',  [authMiddleware.authenticate(), validate(participantValidation.createParticipantWithLink),
+    router.post('/:event_link',  [authMiddleware.authenticate(), validate(participantValidation.createParticipantWithLink),
         loadRoleMiddleWare(userGroup, true)], (req, res, next) => {
         participantController.createParticipantWithLink(req, res, next);
     });

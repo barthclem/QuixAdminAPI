@@ -52,8 +52,9 @@ class ParticipantController {
                     return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             })
             .catch( error => {
-                console.log(`POST ERROR => ${error}`);
-                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                console.log(` POST ERROR => ${error}`);
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR,
+                    {status : 'failed'}));
         });
     }
 
