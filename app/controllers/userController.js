@@ -114,7 +114,7 @@ class UserController {
                 sessionData.userId  = userData.id;
                 sessionData.roleData = roles;
                 sessionData.role = null; // set this to null because of rbac module
-                let user = Object.assign({}, {id : loginData.id});
+                let user = Object.assign({}, {id : loginData.id, permission: sessionData});
                 authMiddleware.login(user).then(token => {
                     return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, { token : token}));
                 })

@@ -23,7 +23,6 @@ function AuthenticationMiddleWare(app) {
     });
     passport.use(strategy);
     app.use(passport.initialize());
-    app.use(passport.session());
 }
 AuthenticationMiddleWare.prototype.login = function (user) {
     return new Promise((resolve, reject) => {
@@ -33,7 +32,29 @@ AuthenticationMiddleWare.prototype.login = function (user) {
 };
 
 AuthenticationMiddleWare.prototype.authenticate = function () {
-    return passport.authenticate('jwt',{session: false});
+    return function (req, res, next){
+        return passport.authenticate('jwt',{session: false}, function(err, user, info){
+            if (err) { return next(err); }
+            let headers = req.headers;
+            if (headers && headers.authorization) {
+                let parted = headers.authorization.split(' ');
+                if (parted.length === 2) {
+                    console.log(`\n\n\n\nConsole Assignment began\n\n\n\n`);
+                    let decoded=jwt.decode(parted[1], config.security.jwt.jwtSecret);
+                    let sessionData = req.session;
+                    sessionData.email = decoded.permission.email;
+                    sessionData.userId  = decoded.permission.userId;
+                    sessionData.roleData = decoded.permission.roleData;
+                    console.log(`\n\n\n\nConsole Assignment done => ${JSON.stringify(decoded.permission)}\n\n\n\n`);
+                } else {
+                    console.log(`Authorization token is => nothing`);
+                }
+            } else {
+                console.log(`Authorization token is => nothing`);
+            }
+            next();
+        })(req, res, next);
+    }
   };
 
 module.exports = AuthenticationMiddleWare;

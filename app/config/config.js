@@ -41,7 +41,7 @@
      
      session : {
          cookie : {
-             duration : (process.env.COOKIE_DURATION) ? parseInt(process.env.COOKIE_DURATION) : 86400000
+             duration : (process.env.COOKIE_DURATION) ? parseInt(process.env.COOKIE_DURATION) : 60000
          }
      },
 
