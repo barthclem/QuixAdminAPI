@@ -16,6 +16,6 @@ module.exports =  (()=> {
         store : new RedisStore({ host: config.database.redis.redis_host,
             port : config.database.redis.redis_port,
             client : client, ttl:260}),
-        cookie : {maxAge: (Date.now() + config.session.cookie.duration), secure : false},
+        cookie : {maxAge: config.session.cookie.duration, secure : false},
         resave:false, saveUninitialized : true});
 })();

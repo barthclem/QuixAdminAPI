@@ -10,6 +10,10 @@ let participant = bookshelf.Model.extend({
     hidden : ['id'],
     tableName : 'participant',
 
+    user : function () {
+        return this.belongsTo('user');
+    },
+
     event : function () {
         return this.belongsToMany('event', 'participant_event','participant_id', 'event_id');
     }

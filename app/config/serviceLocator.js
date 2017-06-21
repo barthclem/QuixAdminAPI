@@ -33,6 +33,7 @@ let ParticipantService = require('../services/participantService');
 let UserService = require('../services/userService');
 let RBACRedisService = require('../services/rbacRedisService');
 let RoleUserService = require('../services/roleUserService');
+let MailScheduleService = require('../services/mailScheduleService');
 
 //Models
 let CategoryEntryModel = require('../models/categoryEntry');
@@ -182,6 +183,16 @@ module.exports = (()=> {
     });
 
     /**
+     * @description Creates an instance of mail scheduling service
+     */
+    serviceLocator.register('mailScheduleService', (serviceLocator) => {
+        let eventService = serviceLocator.get('eventService');
+        let emailService = serviceLocator.get('emailAuthService');
+        return new MailScheduleService(eventService, emailService);
+    });
+
+
+    /**
      * @description Creates an instance of CategoryEntry model
      */
     serviceLocator.register('categoryEntryModel', () => {
@@ -278,7 +289,8 @@ module.exports = (()=> {
     serviceLocator.register('eventController', (serviceLocator) => {
         let EventService = serviceLocator.get('eventService');
         let OrganizerService = serviceLocator.get('organizerService');
-        return new EventController(EventService, OrganizerService);
+        let EmailAuthService = serviceLocator.get('emailAuthService');
+        return new EventController(EventService, OrganizerService, EmailAuthService);
     });
 
     /**

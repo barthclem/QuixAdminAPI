@@ -51,6 +51,12 @@ module.exports = (app, serviceLocator) => {
             eventController.deleteEvent(req, res, next);
         });
 
+    router.route('/mails/:id').get(
+        [authMiddleware.authenticate(), validate(eventValidation.getEvent), loadRoleMiddleWare(userGroup, true),
+            authorizer.wants(constants.VIEW_AN_EVENT)], (req, res, next) => {
+            eventController.getAllEventMails(req, res, next);
+        });
+
     return router;
 
 };

@@ -8,6 +8,7 @@ let morgan = require('morgan');
 let ServiceLocator = require('./app/config/serviceLocator');
 let responseFormatter = require('./app/lib/responseFormatter');
 let redisTree = require('./app/services/rbacRedisService');
+const MailScheduleService = ServiceLocator.get('mailScheduleService');
 redisTree.initialize();
 
 app.use(bodyParser.json());
@@ -40,6 +41,7 @@ let server = app.listen(8000, function () {
     let port = server.address().port;
     let host = server.address().address;
     console.log( 'Server started on '+ host + ' on port : '+port);
+    MailScheduleService.startScheduler();
 });
 
 module.exports = server;

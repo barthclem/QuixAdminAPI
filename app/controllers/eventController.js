@@ -28,15 +28,17 @@ class EventController {
     createEvent (req, res, next) {
         let eventData = req.body;
         let userId = req.session.userId;
+        let $ = this;
         if(eventData.organizer_id) {
             this.organizerService.getOrganizer(eventData.organizer_id)
-                .then(organizer => {
+                .then(async function (organizer) {
                     eventData.userId = organizer.attributes.user_id;
-                    eventData.link = simpleLinkGenerator(eventData.title);
+                    eventData.link = await simpleLinkGenerator(eventData.title);
                     let organizerEmail = organizer.related('user').attributes.email;
-                    this.eventService.createEvent(eventData)
+                    $.eventService.createEvent(eventData)
                         .then(data => {
-                            this.emailAuthService.sendNewEventMail(organizerEmail, eventData.title, eventData.link);
+                            console.log(`$ event Controller data => ${data}`);
+                            $.emailAuthService.sendNewEventMail(organizerEmail, eventData.title, eventData.link);
                             return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, {
                                 message: `Event successfully registered`,
                                 eventLink: `/event/register/${eventData.link}`
@@ -47,7 +49,9 @@ class EventController {
                         })
                 })
                 .catch(error => {
-
+                    console.log(`POST ERROR => ${error}`);
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}))
                 });
         }
         else {
@@ -57,9 +61,9 @@ class EventController {
                     eventData.userId = userId;
                     eventData.link = simpleLinkGenerator(eventData.title);
                     let organizerEmail = organizer.related('user').attributes.email;
-                    this.eventService.createEvent(eventData)
+                    $.eventService.createEvent(eventData)
                         .then(data => {
-                            this.emailAuthService.sendNewEventMail(organizerEmail, eventData.title, eventData.link);
+                            $.emailAuthService.sendNewEventMail(organizerEmail, eventData.title, eventData.link);
                             return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, {
                                 message: `Event successfully registered`,
                                 eventLink: `/event/register/${eventData.link}`
@@ -137,9 +141,31 @@ class EventController {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });
-
-        next();
     }
+
+
+    /**
+     *@description ENDPOINT  GET /:/id - get a Event by id
+     *
+     *@param  {object} req express request object
+     *@param {object}  res express response object
+     *@param {function} next express routing callback
+     *@return {callback}
+     */
+    getAllEventMails (req, res, next) {
+        let id = Number(req.params.id);
+        this.eventService.getAllEventMailData(id)
+            .then(data => {
+                console.log(` GET All Event => ${JSON.stringify(data)}`);
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
+            })
+            .catch( error => {
+                console.log(`get All event Mails Error => ${error}`);
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            });
+    }
+
 
     /**
      *@description ENDPOINT  PUT /:/id - update a Event
