@@ -61,6 +61,53 @@ class EmailAuth {
 
     /**
      *
+     * @param {string} roleTitle - the title of the role of the person the email will be sent to.
+     * @param {string} emailAddress - the email address of the organizer of the event
+     * @param {string} eventTitle - the title of the newly created event
+     * @param {string} eventLink - the link through which a new participant for the event
+     * @param {string} time - the time remaining for the event to start
+     * @return {function} mailer - this function sends message to the recipient
+     */
+    sendMailToEventHeads ( roleTitle, emailAddress , eventTitle, eventLink, time) {
+        return this.mailer({
+            from: 'Event Platform',
+            to: emailAddress,
+            subject: `NOTICE FOR THE SCHEDULED EVENT`,
+            html: `<div><h2>Dear ${roleTitle}, </h2>
+            <br/><br/>
+            <p> This is to inform you that your event with title ${eventTitle} will start in <b>${time}<b></b><br/>
+            This is the link <a href="http://localhost:8000/api/participant/${eventLink}"> link </a> to your event.
+            </p></div>`
+        });
+    }
+
+    /**
+     *
+     * @param {string} roleTitle - the title of the role of the person the email will be sent to.
+     * @param {string} emailAddress - the email address of the organizer of the event
+     * @param {string} eventTitle - the title of the newly created event
+     * @param {string} eventLink - the link through which a new participant for the event
+     * @param {string} time - the time remaining for the event to start
+     * @return {function} mailer - this function sends message to the recipient
+     */
+    sendMailToEventParticipant ( roleTitle, emailAddress , eventTitle, eventLink, time) {
+        return this.mailer({
+            from: 'Event Platform',
+            to: emailAddress,
+            subject: `NOTICE FOR THE SCHEDULED EVENT`,
+            html: `<div><h2>Dear ${roleTitle}, </h2>
+            <br/><br/>
+            <p> This is to inform you that event you registered for with title ${eventTitle} will start in <b>${time}<b></b><br/>
+            This is the <a href="http://localhost:8000/api/participant/${eventLink}"> link </a> to your event.
+            Please ensure that you and your team members are logged on to the platform at least 5 minutes to the
+            beginning of the event.
+                                                                                Thank You.
+            </p></div>`
+        });
+    }
+
+    /**
+     *
      * @param {string} email - the email of a new user for who email verification is created
      * @return {Promise}
      */

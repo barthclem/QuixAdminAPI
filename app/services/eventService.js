@@ -4,6 +4,7 @@
  */
 let BookShelf = require('../bookshelf');
 let constants = require('../config/constants');
+let moment = require('moment');
 class EventService {
 
     /**
@@ -137,6 +138,85 @@ class EventService {
         });
     }
 
+ /**
+     * @description Get  all events
+     *
+     * @return {object} object -  Object containing all events / error
+     */
+    getAllEventMailData (id) {
+        return new Promise((resolve, reject)=>{
+            let emailData = {};
+            this.event.forge({id})
+                .fetch({withRelated: ['organizer', 'participant', 'eventAdmin']})
+                .then(data => {
+                    //console.log(`Real Event => ${JSON.stringify(data)}`);
+                    let organizerMailsPromise = new Promise((resolve, reject) => {
+                        data.related('organizer').fetch({withRelated:['user']})
+                            .then(organizerModel => {
+                                let user = organizerModel.related('user');
+                                emailData.organizer =  user.attributes.email;
+                                return resolve(emailData);
+                            })
+                            .catch(error => {
+                                console.log(`Organizer Model Error => ${error}`);
+                                return reject(error);
+                            })
+                    });
+                    let participantMailPromise = new Promise((resolve, reject) => {
+                        let participantMails = [];
+                        data.related('participant').fetch({withRelated : ['user']})
+                            .then(participantModels => {
+                                participantModels.each(
+                                    participantModel => {
+                                       let user = participantModel.related('user');
+                                       participantMails.push({name :user.attributes.name,
+                                           email: user.attributes.email});
+                                    });
+                                emailData.participant = participantMails;
+                                return resolve(emailData);
+                            })
+                            .catch(error => {
+                                console.log(`ParticipantModel error => ${error}`);
+                                return reject(error);
+                            })
+                    });
+                    let eventAdminMailPromise = new Promise((resolve, reject) => {
+                        let eventAdminMails = [];
+                        data.related('eventAdmin').fetch({withRelated : ['user']})
+                            .then(eventAdmins => {
+                                eventAdmins.each(
+                                    eventAdminModel => {
+                                        let user = eventAdminModel.related('user');
+                                        eventAdminMails.push(user.attributes.email);
+                                    });
+                                emailData.eventAdmin = eventAdminMails;
+                                return resolve(emailData);
+                            })
+                            .catch(error => {
+                                return reject(error);
+                            })
+                    });
+                    this.getAllEventMailParams().then(data => {
+                        console.log(`Scheduled Event Data => ${JSON.stringify(data)}`);
+                    }).
+                        catch(error => {
+                        console.log(`Get Scheduled Event Error => ${error}`);
+                    });
+                   Promise.all([organizerMailsPromise, participantMailPromise, eventAdminMailPromise])
+                       .then(emailData => {
+                           return resolve(emailData[2]);
+                       })
+                       .catch(error => {
+                           console.log(`Event Mails Error => ${error}`);
+                           return reject(error);
+                       });
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
+    }
+
     /**
      * @description Get  all events
      *@param {Number} organizerId - the id of organizer
@@ -145,6 +225,27 @@ class EventService {
     getAllEventsByOrganizer (organizerId) {
         return new Promise((resolve, reject)=>{
             this.event.forge({organizerId : organizerId}).fetchAll()
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    return reject(error);
+                });
+        });
+    }
+
+    /**
+     * @description Get  all events scheduled today and later
+     *
+     * @return {object} object -  Object containing all events / error
+     */
+    getAllEventMailParams () {
+        return new Promise((resolve, reject)=>{
+            let currentDate = moment().format('YYYY-MM-DD:HH:mm:ss');
+            this.event
+                .query(qb => {
+                    qb.whereRaw('scheduled_at >= ?', [currentDate]);})
+                .fetchAll({columns:['id', 'scheduled_at', 'title', 'link']})
                 .then(data => {
                     return resolve(data);
                 })

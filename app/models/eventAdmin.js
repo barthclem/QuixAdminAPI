@@ -10,6 +10,10 @@ let eventAdmin = bookshelf.Model.extend({
     //hidden : ['id'],
     tableName : 'eventAdmin',
 
+    user : function () {
+        return this.belongsTo('user');
+    },
+
     event : function () {
         return this.belongsTo('event');
     }
