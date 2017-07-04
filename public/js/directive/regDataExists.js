@@ -3,27 +3,29 @@
  */
 angular.module('messageApp').directive('datum', ['$http', function ($http) {
     return {
-        require : 'ngModel',
-        restrict : 'AE',
-        scope : {
-          dtype : '@'
+        require: 'ngModel',
+        restrict: 'AE',
+        scope: {
+            dtype: '@'
         },
-        link : function (scope,  elm, attr, ctrl) {
+        link: function (scope,  elm, attr, ctrl) {
             let list;
             $http.get('/users/').then(data => list = data);
-             function checkDataExist(inputData) {
-                 if (list !== undefined) {
-                     let propertyName = scope.dtype;
-                     let dataList = list.data;
-                     for (let i = 0; i < dataList.length; i++) {
+            function checkDataExist(inputData) {
+                if (list !== undefined) {
+                    let propertyName = scope.dtype;
+                    let dataList = list.data;
+                    for (let i = 0; i < dataList.length; i++) {
                         if ((dataList[i])[propertyName] === inputData) {
-                           return true;
-                     }
-                 }
-             }
+                            return true;
+                        }
+                    }
+                }
+
                 return false;
-             }
-            function checkData (viewValue) {
+            }
+
+            function checkData(viewValue) {
                 ctrl.$setValidity('datum', !checkDataExist(viewValue));
                 return viewValue;
             }
@@ -34,7 +36,4 @@ angular.module('messageApp').directive('datum', ['$http', function ($http) {
 
     };
 }]);
-
-
-
 

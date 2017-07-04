@@ -1,3 +1,4 @@
+// jscs:disable disallowMultipleLineBreaks
 'use strict';
 let HttpStatus = require('http-status-codes');
 let responseFormatter = require('../lib/responseFormatter');
@@ -11,7 +12,7 @@ class EventController {
      *@param  {object} organizerService - An instance of organizer service
      *@param {object}  emailAuthService email service instance
      */
-    constructor(eventService, organizerService, emailAuthService){
+    constructor(eventService, organizerService, emailAuthService) {
         this.eventService = eventService;
         this.organizerService = organizerService;
         this.emailAuthService = emailAuthService;
@@ -28,36 +29,35 @@ class EventController {
     createEvent (req, res, next) {
         let eventData = req.body;
         let userId = req.session.userId;
-        let $ = this;
-        if(eventData.organizer_id) {
+        let _this = this;
+        if (eventData.organizer_id) {
             this.organizerService.getOrganizer(eventData.organizer_id)
-                .then(async function (organizer) {
+                .then((async function (organizer) {
                     eventData.userId = organizer.attributes.user_id;
                     eventData.link = await simpleLinkGenerator(eventData.title);
                     let organizerEmail = organizer.related('user').attributes.email;
-                    $.eventService.createEvent(eventData)
+                    _this.eventService.createEvent(eventData)
                         .then(data => {
                             console.log(`$ event Controller data => ${data}`);
-                            $.emailAuthService.sendNewEventMail(organizerEmail, eventData.title, eventData.link);
+                            _this.emailAuthService.sendNewEventMail(organizerEmail, eventData.title, eventData.link);
                             return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, {
                                 message: `Event successfully registered`,
                                 eventLink: `/event/register/${eventData.link}`
                             }));
                         })
-                        .catch (error => {
+                        .catch(error => {
                             throw error;
-                        })
-                })
+                        });
+                }))
                 .catch(error => {
                     console.log(`POST ERROR => ${error}`);
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}))
+                        .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
                 });
-        }
-        else {
+        } else {
             this.organizerService.getOrganizerWithUserId(userId)
                 .then(organizer => {
-                    eventData.organizer_id= organizer.id;
+                    eventData.organizer_id = organizer.id;
                     eventData.userId = userId;
                     eventData.link = simpleLinkGenerator(eventData.title);
                     let organizerEmail = organizer.related('user').attributes.email;
@@ -69,17 +69,18 @@ class EventController {
                                 eventLink: `/event/register/${eventData.link}`
                             }));
                         })
-                        .catch (error => {
+                        .catch(error => {
                             throw error;
-                        })
+                        });
                 })
                 .catch(error => {
                     console.log(`POST ERROR => ${error}`);
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                        .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
                 });
-        }
+        }// jscs:ignore disallowMultipleLineBreaks
     }
+
 
     /**
      *@description ENDPOINT  GET /Event/ - Retrieves the list of all Events
@@ -89,12 +90,12 @@ class EventController {
      *@param {function} next express routing callback
      *@return {callback}
      */
-    listAllEvents (req, res, next ) {
+    listAllEvents (req, res, next) {
         this.eventService.getAllEvents()
             .then(data => {
                 return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             })
-            .catch( error => {
+            .catch(error => {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
         });
@@ -109,13 +110,13 @@ class EventController {
      *@param {function} next express routing callback
      *@return {callback}
      */
-    listAllEventsByOrganizer (req, res, next ) {
+    listAllEventsByOrganizer (req, res, next) {
         let organizerId = Number(req.params.organizer_id);
         this.eventService.getAllEventsByOrganizer(organizerId)
             .then(data => {
                 return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             })
-            .catch( error => {
+            .catch(error => {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
         });
@@ -137,9 +138,9 @@ class EventController {
                 console.log(` GET Event => ${data}`);
                 return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             })
-            .catch( error => {
+            .catch(error => {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
         });
     }
 
@@ -159,10 +160,10 @@ class EventController {
                 console.log(` GET All Event => ${JSON.stringify(data)}`);
                 return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             })
-            .catch( error => {
+            .catch(error => {
                 console.log(`get All event Mails Error => ${error}`);
                 return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
             });
     }
 
@@ -184,7 +185,7 @@ class EventController {
             })
             .catch(error => {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
         });
     }
 
@@ -206,7 +207,7 @@ class EventController {
                 return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));})
             .catch(error => {
                 return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
             });
     }
 }

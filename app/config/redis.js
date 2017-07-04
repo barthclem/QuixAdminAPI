@@ -4,6 +4,7 @@
 /**
  * @description REDIS CONFIG
  */
+'use strict';
 
 let session = require('express-session');
 let redis = require('redis');

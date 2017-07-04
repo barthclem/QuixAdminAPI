@@ -8,6 +8,7 @@
     "validateIndentation" : 4,
     "requireTrailingComma" : false,
     "requireCamelCaseOrUpperCaseIdentifiers" : "ignoreProperties",
-    "requireSpacesInsideObjectBrackets": "all"
-
+    "requireShorthandArrowFunctions" : true,
+    "requireSpacesInsideObjectBrackets": "all",
+    "maximumLineLength" : 120
 }

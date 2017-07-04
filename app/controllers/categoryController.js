@@ -14,7 +14,7 @@ class CategoryController {
      *@param  {object} categoryService - Category service instance
      *
      */
-    constructor(categoryService){
+    constructor(categoryService) {
         this.categoryService = categoryService;
     }
 
@@ -32,10 +32,10 @@ class CategoryController {
             .then(
                 data => {
                     return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
-                }).catch( error => {
+                }).catch(error => {
             console.log(`POST ERROR => ${error}`);
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
         });
     }
 
@@ -47,12 +47,12 @@ class CategoryController {
      *@param {function} next express routing callback
      *@return {callback}
      */
-    listAllCategories (req, res, next ) {
+    listAllCategories (req, res, next) {
         this.categoryService.getAllCategories().then(
             data => {
                 return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             }
-        ).catch( error => {
+        ).catch(error => {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
         });
@@ -73,9 +73,9 @@ class CategoryController {
             data => {
                 return res.status(HttpStatus.OK)
                 .send(responseFormatter(HttpStatus.OK, data));
-            }).catch( error => {
+            }).catch(error => {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
         });
     }
 
@@ -92,14 +92,14 @@ class CategoryController {
         let body = req.body;
         this.categoryService.editCategory(id, body).then(
             data => {
-            console.log(` UPdate Data => ${data}`);
+                console.log(` UPdate Data => ${data}`);
                 return res.status(HttpStatus.OK)
                 .send(responseFormatter(HttpStatus.OK, data));
             }
         ).catch(error => {
             console.log(` UPdate Error => ${error}`);
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+            .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
         });
     }
 
@@ -121,7 +121,7 @@ class CategoryController {
         ).catch(
             error => {
                 return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
             });
     }
 }

@@ -95,7 +95,7 @@ module.exports = (()=> {
      * @description Creates an instance of rbacRedisService
      */
     serviceLocator.register('rbacRedisService', () => {
-       return RBACRedisService;
+        return RBACRedisService;
     });
 
     /**
@@ -140,7 +140,7 @@ module.exports = (()=> {
      */
     serviceLocator.register('userService', (serviceLocator) => {
         let userModel = serviceLocator.get('userModel');
-         return new UserService(userModel);
+        return new UserService(userModel);
 
     });
 
