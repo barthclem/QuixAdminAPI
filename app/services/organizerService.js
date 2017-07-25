@@ -30,24 +30,24 @@ class OrganizerService {
      * @return {object} a newly created organizer object
      */
     createOrganizer (organizerData) {
-        return new Promise((resolve, reject)=>{
+        return new Promise((resolve, reject)=> {
             BookShelf.transaction((transaction) => {
-                this.organizer.forge().save(organizerData, {transacting : transaction})
+                this.organizer.forge().save(organizerData, { transacting: transaction })
                     .tap(organizer => {
                         let roleUser = {
                             user_id: organizer.attributes.user_id,
-                            role_title : constants.ROLES.ORGANIZER,
-                            itemId : organizer.attributes.id,
+                            role_title: constants.ROLES.ORGANIZER,
+                            itemId: organizer.attributes.id,
                             data_group_id: constants.DATA_GROUP.ORGANIZER.id
                         };
-                       this.roleService.createRoleUserTransaction(roleUser, transaction)
-                           .then(roleData => {
-                               transaction.commit(organizer);
-                               return resolve(organizer);
-                           })
-                           .catch(error => {
-                               return reject(error);
-                           })
+                        this.roleService.createRoleUserTransaction(roleUser, transaction)
+                            .then(roleData => {
+                                transaction.commit(organizer);
+                                return resolve(organizer);
+                            })
+                            .catch(error => {
+                                return reject(error);
+                            });
                     })
                     .then(data => {
                         console.log(`Organizer data Transaction Successful => ${data}`);
@@ -70,8 +70,8 @@ class OrganizerService {
      * @return {object} object - A modified Organizer Object / error
      */
     editOrganizer (organizerId, organizerData) {
-        return new Promise((resolve, reject)=>{
-            this.organizer.forge({id : organizerId}).save(organizerData)
+        return new Promise((resolve, reject)=> {
+            this.organizer.forge({ id: organizerId }).save(organizerData)
                 .then(data => {
                     return resolve(data);
                 })
@@ -90,9 +90,9 @@ class OrganizerService {
      * @return {object} object -  Organizer Object / error
      */
     getOrganizer (organizerId) {
-        return new Promise((resolve, reject)=>{
-            this.organizer.forge({id : organizerId})
-                .fetch({ withRelated : ['event', 'user']})
+        return new Promise((resolve, reject)=> {
+            this.organizer.forge({ id: organizerId })
+                .fetch({ withRelated: ['event', 'user'] })
                 .then(data => {
                     return resolve(data);
                 })
@@ -111,9 +111,9 @@ class OrganizerService {
      * @return {object} object -  Organizer Object / error
      */
     getOrganizerWithUserId (userId) {
-        return new Promise((resolve, reject)=>{
-            this.organizer.forge({user_id : userId})
-                .fetch()
+        return new Promise((resolve, reject)=> {
+            this.organizer.forge({ user_id: userId })
+                .fetch({ withRelated: ['event'] })
                 .then(data => {
                     return resolve(data);
                 })
@@ -130,7 +130,7 @@ class OrganizerService {
      * @return {object} object -  Object containing all organizers / error
      */
     getAllOrganizers () {
-        return new Promise((resolve, reject)=>{
+        return new Promise((resolve, reject)=> {
             this.organizer.forge().fetchAll()
                 .then(data => {
                     return resolve(data);
@@ -151,10 +151,10 @@ class OrganizerService {
      * @return {object} object - an object containing message/error
      */
     deleteOrganizer (organizerId) {
-        return new Promise((resolve, reject)=>{
+        return new Promise((resolve, reject)=> {
             BookShelf.transaction((transaction) => {
-                this.organizer.forge({id : organizerId})
-                    .destroy({transacting: transaction})
+                this.organizer.forge({ id: organizerId })
+                    .destroy({ transacting: transaction })
                     .tap(() => {
                         this.getOrganizer(organizerId)
                             .then(data => {
@@ -162,18 +162,18 @@ class OrganizerService {
                                 let itemId = data.attributes.id;
                                 let dataGroupId = constants.DATA_GROUP.ORGANIZER.id;
                                 this.roleService.deleteRoleUserAtUser(userId, itemId, dataGroupId, transaction)
-                                    .then( () => {
+                                    .then(() => {
                                         transaction.commit();
                                         console.log(`"organizer deleted successfully" `);
-                                        return resolve({message : "organizer deleted successfully"});
-                                    })
+                                        return resolve({ message: 'organizer deleted successfully' });
+                                    });
                             })
                             .catch(error => {
                                 throw error;
                             });
                     })
                     .then(() => {
-                        return resolve({message : "organizer deleted successfully"});
+                        return resolve({ message: 'organizer deleted successfully' });
                     })
                     .catch(error => {
                         transaction.rollback();
@@ -183,8 +183,6 @@ class OrganizerService {
             });
         });
     }
-
-
 
 }
 

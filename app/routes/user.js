@@ -14,7 +14,6 @@ let userGroup = require('../config/constants').DATA_GROUP.USER.title;
 let loadRoleMiddleWare = require('../lib/roleMiddleWare');
 let userValidation = require('../validation/userValidation');
 
-
 module.exports =  (app, serviceLocator) => {
     let authMiddleware = new AuthMiddleware(app);
     let userService = serviceLocator.get('userService');
@@ -22,7 +21,7 @@ module.exports =  (app, serviceLocator) => {
 
     router.use(function (req, res, next) {
         // Website you wish to allow to connect
-        // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+        res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
         res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
         res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -35,7 +34,7 @@ module.exports =  (app, serviceLocator) => {
         (req, res, next) => {
         userController.listAll(req, res, next);
     })
-        .post (validate(userValidation.signUp), (req, res, next)=> {
+        .post(validate(userValidation.signUp), (req, res, next)=> {
             userController.createUser(req, res, next);
 
         });
@@ -48,11 +47,14 @@ module.exports =  (app, serviceLocator) => {
         userController.verifyUserEmail(req, res, next);
     });
 
+    router.get('/checkToken', authMiddleware.authenticate(), (req, res, next) => {
+            userController.checkToken(res);
+        });
+
     router.route('/:id')
         .get([
             authMiddleware.authenticate(),
-            validate(userValidation.getUser)
-           , loadRoleMiddleWare(userGroup),
+            validate(userValidation.getUser), loadRoleMiddleWare(userGroup),
            authorizer.wants(constants.GET_A_USER)
         ], (req, res, next) => {
             userController.getUser(req, res, next);
@@ -62,17 +64,18 @@ module.exports =  (app, serviceLocator) => {
         .put([
             authMiddleware.authenticate(), validate(userValidation.editUser), loadRoleMiddleWare(userGroup),
             authorizer.wants(constants.UPDATE_A_USER)], (req, res, next) => {
-            userController.updateUser(req, res ,next);
+            userController.updateUser(req, res, next);
         })
 
-        .delete ([authMiddleware.authenticate(), validate(userValidation.getUser), loadRoleMiddleWare(userGroup),
+        .delete([authMiddleware.authenticate(), validate(userValidation.getUser), loadRoleMiddleWare(userGroup),
           authorizer.wants(constants.DELETE_A_USER)], (req, res, next) => {
             userController.deleteUser(req, res, next);
         });
 
-//get user wi
-    router.get('/:username', [authMiddleware.authenticate(), validate(userValidation.getUser)
-        , loadRoleMiddleWare(userGroup), authorizer.wants(constants.GET_A_USER)], (req, res, next) => {
+    //get user with userName
+    router.get('/username/:username', [authMiddleware.authenticate(), validate(userValidation.getUser),
+       // loadRoleMiddleWare(userGroup), authorizer.wants(constants.GET_A_USER)
+    ], (req, res, next) => {
         userController.getUserByUsername(req, res, next);
         //next();
     });

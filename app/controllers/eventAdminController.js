@@ -112,6 +112,29 @@ class EventAdminAdminController {
                 console.log(` GET EventAdmin => ${data}`);
                 return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             }).catch( error => {
+                console.log(`\n\n Get Event Admin By EventId Error => ${error}`);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+        });
+    }
+
+    /**
+     *@description ENDPOINT  GET /:/userId - get a EventAdmin by eventId
+     *
+     *@param  {object} req express request object
+     *@param {object}  res express response object
+     *@param {function} next express routing callback
+     *@return {callback}
+     */
+    getAllEventsEventAdminByUserId (req, res, next) {
+        let userId = Number(req.params.userId);
+        this.eventAdminService.getAllEventsOfEventAdmin(userId)
+            .then(
+                data => {
+                console.log(` GET All  Events of EventAdmin => ${data}`);
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
+            })
+            .catch(error => {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
         });

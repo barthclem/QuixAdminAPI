@@ -4,36 +4,36 @@
 let joi = require('joi');
 
 module.exports =  {
-    newRoleUser : {
-        body : {
+    newRoleUser: {
+        body: {
             user_id: joi.number().integer().required(),
-            role_title : joi.string().required(),
-            itemId : joi.number().integer().optional(),
+            role_title: joi.string().required(),
+            itemId: joi.number().integer().optional(),
             data_group_id: joi.number().integer().required()
         }
     },
 
-    getRoleUser : {
+    getRoleUser: {
         params: {
-            id : joi.number().integer().required()
+            id: joi.number().integer().required()
         }
     },
 
-    getRoleUserId : {
-        params : {
-            user_id : joi.number().integer().required()
+    getRoleUserId: {
+        params: {
+            user_id: joi.number().integer().required()
         }
     },
 
-    editRoleUser : {
+    editRoleUser: {
         params: {
-          id: joi.number().integer().optional()
+            id: joi.number().integer().optional()
         },
         body: {
             user_id: joi.number().integer().optional(),
-            title : joi.string().optional(),
+            title: joi.string().optional(),
             role_id: joi.number().integer().optional(),
-            itemId : joi.number().integer().optional(),
+            itemId: joi.number().integer().optional(),
             data_group_id: joi.number().integer().optional()
         }
     }

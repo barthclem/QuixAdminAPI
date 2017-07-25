@@ -11,22 +11,21 @@ const tree = 'Quix_Tree';
 const quixRoot = 'q';
 let event = require('../models/event');
 
-
 module.exports = {
 
     /**
      * @description this function initializes the quiz tree and creates a new one if none exists
      */
-    initialize :   function intialize() {
+    initialize:   function intialize() {
         //check if a relationship already exist
-          redis.texists(tree, 'root').then(result => {
-              if (result === 0) {
-                  redis.tinsert(tree, 'root', quixRoot);
-                  this.loadData();
-              }
-          }).catch(error => {
-              console.log(` Redis Error => ${error}`);
-              });
+        redis.texists(tree, 'root').then(result => {
+            if (result === 0) {
+                redis.tinsert(tree, 'root', quixRoot);
+                this.loadData();
+            }
+        }).catch(error => {
+                console.log(` Redis Error => ${error}`);
+            });
     },
 
     /**
@@ -35,7 +34,7 @@ module.exports = {
      * @param {integer} catEntId - this is the ID of the categoryEntry
      * @return {boolean}
      */
-    catEntBelongsToCat : function (catId, catEntId) {
+    catEntBelongsToCat: function (catId, catEntId) {
         let category = `C${catId}`;
         let categoryEntry = `CE${catEntId}`;
         redis.tparents(tree, categoryEntry)
@@ -50,7 +49,7 @@ module.exports = {
      * @param {integer} categoryId - this is the ID of the category
      * @return {boolean}
      */
-    categoryBelongsToEvent : function (eventId, categoryId) {
+    categoryBelongsToEvent: function (eventId, categoryId) {
         let event = `E${eventId}`;
         let category = `C${categoryId}`;
         return redis.tparents(tree, category)
@@ -65,7 +64,7 @@ module.exports = {
      * @param {integer} catEntId - this is the ID of the categoryEntry
      * @return {boolean}
      */
-    catEntBelongsToEvent : function (evtId, catEntId) {
+    catEntBelongsToEvent: function (evtId, catEntId) {
         let event = `E${evtId}`;
         let categoryEntry = `CE${catEntId}`;
 
@@ -73,11 +72,11 @@ module.exports = {
             .then(parent => {
                 return redis.tparents(tree, parent)
                     .then(grandParent => {
-                       return grandParent[0] === event;
-                    })
+                        return grandParent[0] === event;
+                    });
             })
             .catch(error => {
-                console.log(`CategoryEntry to Event Error => ${error}`)
+                console.log(`CategoryEntry to Event Error => ${error}`);
             });
     },
 
@@ -85,7 +84,7 @@ module.exports = {
      * @description this function creates a new event node in the tree
      * @param {integer} evtId - the ID of the new event to be added to the tree
      */
-    createNewEvent : function (evtId) {
+    createNewEvent: function (evtId) {
         let event = `E${evtId}`;
         redis.tinsert(tree, quixRoot, event);
     },
@@ -95,7 +94,7 @@ module.exports = {
      * @param {integer} evtId - the ID of the event parent node
      * @param {integer} catId - the ID of the category child node
      */
-    createNewCategory : function ( evtId, catId) {
+    createNewCategory: function (evtId, catId) {
         let event = `E${evtId}`;
         let category = `C${catId}`;
         redis.tinsert(tree, event, category);
@@ -106,7 +105,7 @@ module.exports = {
      * @param {integer} catId - the ID of the category parent node
      * @param {integer} catEntId - the ID of the category child node
      */
-    createNewCategoryEntry : function ( catId, catEntId) {
+    createNewCategoryEntry: function (catId, catEntId) {
         let category = `C${catId}`;
         let categoryEntry = `CE${catEntId}`;
         redis.tinsert(tree, category, categoryEntry);
@@ -116,7 +115,7 @@ module.exports = {
      * @description this function removes a child categoryEntry from the tree
      * @param {integer} catEntId - the ID of the categoryEntry
      */
-    removeCategoryEntry : function (catEntId) {
+    removeCategoryEntry: function (catEntId) {
         let categoryEntry = `CE${catEntId}`;
         redis.tmrem(tree, categoryEntry);
     },
@@ -125,7 +124,7 @@ module.exports = {
      * @description this function removes category node with its all its categoryEntry nodes
      * @param {integer} catId - the ID of the category
      */
-    removeCategory : function (catId) {
+    removeCategory: function (catId) {
         let category = `C${catId}`;
         redis.tdestroy(tree, category);
     },
@@ -134,7 +133,7 @@ module.exports = {
      * @description this function removes event node with its all children nodes
      * @param {integer} evtId - the ID of the event
      */
-    removeEvent : function (evtId) {
+    removeEvent: function (evtId) {
         let event = `E${evtId}`;
         redis.tdestroy(tree, event);
     },
@@ -142,14 +141,14 @@ module.exports = {
     /**
      * @description this function forms a tree structure model of existing data in the database
      */
-    loadData : function () {
+    loadData: function () {
         event.forge().fetchAll()
             .then(eventsData => {
                 eventsData.each(eachEvent => {
                     let eventId = eachEvent.id;
                     eachEvent.load('category')
-                        .then( eventData => {
-                            eventData.related('category').fetch({withRelated:['categoryEntry']}).then(category => {
+                        .then(eventData => {
+                            eventData.related('category').fetch({ withRelated: ['categoryEntry'] }).then(category => {
                                 this.createNewEvent(eventId);
                                 category.each(categoryEntry => {
                                     let categoryId = categoryEntry.id;
@@ -161,9 +160,9 @@ module.exports = {
                                         }
                                     );
 
-                                })
+                                });
                             });
-                        })
+                        });
                 });
 
             })

@@ -17,6 +17,16 @@ module.exports = (app, serviceLocator) => {
     let authMiddleware = new AuthMiddleware(app);
     let categoryEntryController = serviceLocator.get('categoryEntryController');
 
+    router.use(function (req, res, next) {
+        // Website you wish to allow to connect
+        res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        res.setHeader('Content-Type', 'application/json');
+        next();
+    });
+
     router.route('/').get(
         [authMiddleware.authenticate(), loadRoleMiddleWare(userGroup), authorizer.wants(constants.VIEW_ALL_CATEGORIES)],
         (req, res, next) => {

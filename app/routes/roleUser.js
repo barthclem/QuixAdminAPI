@@ -20,7 +20,7 @@ module.exports = (app, serviceLocator) => {
 
     router.use(function (req, res, next) {
         // Website you wish to allow to connect
-        // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+        res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
         res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
         res.setHeader('Access-Control-Allow-Credentials', 'true');

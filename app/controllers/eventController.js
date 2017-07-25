@@ -111,15 +111,16 @@ class EventController {
      *@return {callback}
      */
     listAllEventsByOrganizer (req, res, next) {
-        let organizerId = Number(req.params.organizer_id);
+        let organizerId = Number(req.params.id);
         this.eventService.getAllEventsByOrganizer(organizerId)
             .then(data => {
                 return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             })
             .catch(error => {
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
-        });
+                console.log(`Error unable to fetch all events of an organizer => ${JSON.stringify(error)}`);
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
+            });
 
     }
 

@@ -4,11 +4,13 @@
 {
     "preset" : "airbnb",
     "maxErrors" : null,
-    "excludeFiles" : ["node_modules/**", "coverage/**", "bower_components/**"],
+    "excludeFiles" : ["node_modules/**", "coverage/**", "bower_components/**",
+      "./app/routes/event.js"
+    ],
     "validateIndentation" : 4,
     "requireTrailingComma" : false,
     "requireCamelCaseOrUpperCaseIdentifiers" : "ignoreProperties",
-    "requireShorthandArrowFunctions" : true,
+    "requireShorthandArrowFunctions" : false,
     "requireSpacesInsideObjectBrackets": "all",
     "maximumLineLength" : 120
 }

@@ -10,7 +10,7 @@ class OrganizerController {
      *@param  {object} organizerService - organizer service instance
      *
      */
-    constructor(organizerService){
+    constructor(organizerService) {
         this.organizerService = organizerService;
     }
 
@@ -29,11 +29,11 @@ class OrganizerController {
                 data => {
                 return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             })
-            .catch( error => {
+            .catch(error => {
                 console.log(`POST ERROR => ${error}`);
                 return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-        });
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
+            });
     }
 
     /**
@@ -44,12 +44,12 @@ class OrganizerController {
      *@param {function} next express routing callback
      *@return {callback}
      */
-    listAllOrganizers (req, res, next ) {
+    listAllOrganizers (req, res, next) {
         this.organizerService.getAllOrganizers().then(
             data => {
                 return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             })
-            .catch( error => {
+            .catch(error => {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, error));
         });
@@ -69,11 +69,32 @@ class OrganizerController {
             data => {
                 console.log(` GET organizer => ${data}`);
                 return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
-            }).catch( error => {
+            }).catch(error => {
                 console.log(`GET Organizer Error => ${error}`);
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
-        });
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
+            });
+    }
+
+    /**
+     * *@description ENDPOINT  GET /:/id - get a organizer by id
+     *
+     *@param  {object} req express request object
+     *@param {object}  res express response object
+     *@param {function} next express routing callback
+     *@return {callback}
+     */
+    getOrganizerWithUserId (req, res, next) {
+        let userId = Number(req.params.userId);
+        this.organizerService.getOrganizerWithUserId(userId).then(
+            data => {
+                console.log(` GET organizer => ${data}`);
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
+            }).catch(error => {
+                console.log(`GET Organizer Error => ${error}`);
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
+            });
     }
 
     /**
@@ -93,10 +114,9 @@ class OrganizerController {
             })
             .catch(error => {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
         });
     }
-
 
 
     /**
@@ -115,7 +135,7 @@ class OrganizerController {
             .catch(error => {
                 console.log(`Delete Organizer Error => ${error}`);
                 return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, {status : 'failed'}));
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
             });
     }
 }

@@ -1,7 +1,7 @@
 'use strict';
 let passport = require('passport');
 let passportJWT = require('passport-jwt');
-let user= require('../models/user');
+let user = require('../models/user');
 let jwt = require('jsonwebtoken');
 let config = require('../config/config');
 let ExtractJWT = passportJWT.ExtractJwt;
@@ -13,46 +13,52 @@ let params = {
 
 function AuthenticationMiddleWare(app) {
     let strategy = new Strategy(params, function (payload, done) {
-        user.forge({id: payload.id}).fetch()
-            .then( data => {
+        user.forge({ id: payload.id }).fetch()
+            .then(data => {
                 done(null, data);
             })
             .catch(error => {
                 done(error, false);
             });
     });
+
     passport.use(strategy);
     app.use(passport.initialize());
 }
+
 AuthenticationMiddleWare.prototype.login = function (user) {
     return new Promise((resolve, reject) => {
-        let token = jwt.sign(user, params.secretOrKey, {expiresIn: '14400m'});
+        let token = jwt.sign(user, params.secretOrKey, { expiresIn: '14400m' });
         return resolve(token);
     });
 };
 
 AuthenticationMiddleWare.prototype.authenticate = function () {
-    return function (req, res, next){
-        return passport.authenticate('jwt',{session: false}, function(err, user, info){
+    return function (req, res, next) {
+        return passport.authenticate('jwt', { session: false }, function (err, user, info) {
             if (err) { return next(err); }
+
             let headers = req.headers;
             if (headers && headers.authorization) {
                 let parted = headers.authorization.split(' ');
                 if (parted.length === 2) {
-                    let decoded=jwt.decode(parted[1], config.security.jwt.jwtSecret);
+                    let decoded = jwt.decode(parted[1], config.security.jwt.jwtSecret);
                     let sessionData = req.session;
                     sessionData.email = decoded.permission.email;
                     sessionData.userId  = decoded.permission.userId;
                     sessionData.roleData = decoded.permission.roleData;
                 } else {
                     console.log(`Authorization token is => nothing`);
+                    return next({ status: 401, message: 'ensure the jwt token is included in your http header' });
                 }
             } else {
                 console.log(`Authorization token is => nothing`);
+                return next({ status: 401, message: 'ensure the jwt token is included in your http header' });
             }
+
             next();
         })(req, res, next);
-    }
-  };
+    };
+};
 
 module.exports = AuthenticationMiddleWare;

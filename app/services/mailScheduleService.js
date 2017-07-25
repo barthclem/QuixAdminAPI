@@ -11,12 +11,12 @@ class Scheduler{
      *@param {object} eventService - an instance of event Service
      * @param {object} emailService - an instance of email Service
      */
-    constructor(eventService, emailService){
+    constructor(eventService, emailService) {
         this.eventService = eventService;
-       this.emailService = emailService;
-       this.participantEmailScheduleArray = [];
-       this.eventAdminEmailScheduleArray = [];
-       this.organizerEmailScheduleArray = [];
+        this.emailService = emailService;
+        this.participantEmailScheduleArray = [];
+        this.eventAdminEmailScheduleArray = [];
+        this.organizerEmailScheduleArray = [];
     }
 
     /**
@@ -35,7 +35,7 @@ class Scheduler{
             })
             .catch(error => {
                 console.log(`Scheduler Error Message => ${error}`);
-            })
+            });
     }
 
     /**
@@ -64,13 +64,13 @@ class Scheduler{
                 .then(eventMailData => {
                     let organizerMail = eventMailData.organizer;
                     this.emailService.sendMailToEventHeads(role.ORGANIZER, organizerMail, eventData.title,
-                        eventData.link,  `${timeNumber} + ${timeUnit}` )
+                        eventData.link,  `${timeNumber} + ${timeUnit}`)
                         .then(()=> {
-                        console.log(`Email sent to the organizer of ${eventData.title}`);
+                            console.log(`Email sent to the organizer of ${eventData.title}`);
                         });
                     eventMailData.eventAdmin.forEach(eventAdminMail => {
                         this.emailService.sendMailToEventHeads(role.EVENT_ADMIN, eventAdminMail, eventData.title,
-                            eventData.link, 'one hour' )
+                            eventData.link, 'one hour')
                             .then(()=> {
                                 console.log(`Email sent to the eventAdmin of ${eventData.title}`);
                             });
@@ -96,7 +96,7 @@ class Scheduler{
                 .then(eventMailData => {
                     eventMailData.participant.forEach(participantData => {
                         this.emailService.sendMailToEventParticipant(participantData.name, participantData.email,
-                            eventData.title, eventData.link, `${timeNumber} + ${timeUnit}` )
+                            eventData.title, eventData.link, `${timeNumber} + ${timeUnit}`)
                             .then(()=> {
                                 console.log(`Email sent to the participant of ${eventData.title}`);
                             });
@@ -111,25 +111,25 @@ class Scheduler{
     /**
      * @description this function clears all schedules of organizer, participant and eventAdmins
      */
-    clearAllSchedule(){
-      this.participantEmailScheduleArray.forEach(
-          participantMailSchedule => {
-              participantMailSchedule.cancel();
-          }
-      );
-      this.participantEmailScheduleArray.splice(0, this.participantEmailScheduleArray.length); //empty array content
-      this.eventAdminEmailScheduleArray.forEach(
-          eventAdminMailSchedule => {
-              eventAdminMailSchedule.cancel();
-          }
-      );
-      this.eventAdminEmailScheduleArray.splice(0, this.eventAdminEmailScheduleArray.length);
-      this.organizerEmailScheduleArray.forEach(
-          organizerMailSchedule => {
-              organizerMailSchedule.cancel();
-          }
-      );
-      this.organizerEmailScheduleArray.splice(0, this.organizerEmailScheduleArray.length);
+    clearAllSchedule() {
+        this.participantEmailScheduleArray.forEach(
+            participantMailSchedule => {
+                participantMailSchedule.cancel();
+            }
+        );
+        this.participantEmailScheduleArray.splice(0, this.participantEmailScheduleArray.length); //empty array content
+        this.eventAdminEmailScheduleArray.forEach(
+            eventAdminMailSchedule => {
+                eventAdminMailSchedule.cancel();
+            }
+        );
+        this.eventAdminEmailScheduleArray.splice(0, this.eventAdminEmailScheduleArray.length);
+        this.organizerEmailScheduleArray.forEach(
+            organizerMailSchedule => {
+                organizerMailSchedule.cancel();
+            }
+        );
+        this.organizerEmailScheduleArray.splice(0, this.organizerEmailScheduleArray.length);
     };
 
     /**
@@ -147,10 +147,14 @@ class Scheduler{
      * @description it also clears all the schedule and re-schedule every 12:00 in the morning
      */
     startScheduler() {
-        console.log(`\n\nEVENT MAIL SCHEDULER STARTED AT ${moment().format('YYYY-MM-DD:HH:mm:ss')}\n\n`);
+        console.log(`
+
+EVENT MAIL SCHEDULER STARTED AT ${moment().format('YYYY-MM-DD:HH:mm:ss')}
+
+`);
         this.clearAllSchedule();
         this.scheduleAll();
-        scheduler.scheduleJob('0 0 * * *', ()=>{
+        scheduler.scheduleJob('0 0 * * *', ()=> {
             this.clearAllSchedule();
             this.scheduleAll();
         });

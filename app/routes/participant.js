@@ -15,25 +15,26 @@ let loadRoleMiddleWare = require('../lib/roleMiddleWare');
 let participantValidation = require('../validation/participantValidation');
 
 module.exports = (app, serviceLocator) => {
-    let authMiddleware= new AuthMiddleware(app);
+    let authMiddleware = new AuthMiddleware(app);
     let participantController = serviceLocator.get('participantController');
 
     router.use(function (req, res, next) {
         // Website you wish to allow to connect
-        // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+        res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
         res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
         res.setHeader('Access-Control-Allow-Credentials', 'true');
         res.setHeader('Content-Type', 'application/json');
         next();
     });
+
     router.route('/').get(
         [authMiddleware.authenticate(), loadRoleMiddleWare(userGroup), authorizer.wants(constants.VIEW_ALL_PARTICIPANTS)],
         (req, res, next) => {
             participantController.listAllParticipants(req, res, next);
             //next();
         })
-        .post ([authMiddleware.authenticate(),  validate(participantValidation.createParticipant)],
+        .post([authMiddleware.authenticate(),  validate(participantValidation.createParticipant)],
             (req, res, next)=> {
             participantController.createParticipant(req, res, next);
         });
@@ -50,32 +51,30 @@ module.exports = (app, serviceLocator) => {
         })
         .put([authMiddleware.authenticate(), validate(participantValidation.updateParticipant), loadRoleMiddleWare(userGroup, true),
             authorizer.wants(constants.EDIT_A_PARTICIPANT)], (req, res, next) => {
-            participantController.updateParticipant(req, res ,next);
+            participantController.updateParticipant(req, res, next);
         })
         .delete([authMiddleware.authenticate(), validate(participantValidation.getParticipant), loadRoleMiddleWare(userGroup, true),
             authorizer.wants(constants.DELETE_A_PARTICIPANT)], (req, res, next) => {
             participantController.deleteParticipant(req, res, next);
         });
 
-    router.get('/data/:user_id([0-9]+)', [authMiddleware.authenticate(), validate(participantValidation.getParticipant),
-            loadRoleMiddleWare(userGroup, true),authorizer.wants(constants.VIEW_A_PARTICIPANT)],
+    router.get('/data/:user_id', [authMiddleware.authenticate(), validate(participantValidation.getParticipant),
+            loadRoleMiddleWare(userGroup, true), authorizer.wants(constants.VIEW_A_PARTICIPANT)],
         (req, res, next) => {
             participantController.getParticipantDataByUserId(req, res, next);
         });
 
-    router.get('/events/:user_id([0-9]+)', [authMiddleware.authenticate(), validate(participantValidation.getParticipant),
-            loadRoleMiddleWare(userGroup, true),authorizer.wants(constants.VIEW_A_PARTICIPANT)],
+    router.get('/events/:user_id', [authMiddleware.authenticate(), validate(participantValidation.getParticipant),
+            loadRoleMiddleWare(userGroup, true), authorizer.wants(constants.VIEW_A_PARTICIPANT)],
         (req, res, next) => {
             participantController.getParticipantEventsByUserId(req, res, next);
         });
 
-    router.get('/event/:event_id([0-9]+)', [authMiddleware.authenticate(), validate(participantValidation.getParticipantByEvent),
+    router.get('/event/:event_id', [authMiddleware.authenticate(), validate(participantValidation.getParticipantByEvent),
             loadRoleMiddleWare(userGroup, true), authorizer.wants(constants.VIEW_ALL_PARTICIPANTS)],
         (req, res, next) => {
         participantController.getParticipantsByEventId(req, res, next);
     });
-
-
 
     return router;
 };

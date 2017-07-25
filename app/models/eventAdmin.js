@@ -3,18 +3,18 @@
  */
 'use strict';
 
-let bookshelf = require ('../bookshelf');
+let bookshelf = require('../bookshelf');
 
 let eventAdmin = bookshelf.Model.extend({
-    idAttribute : 'id',
+    idAttribute: 'id',
     //hidden : ['id'],
-    tableName : 'eventAdmin',
+    tableName: 'eventAdmin',
 
-    user : function () {
+    user: function () {
         return this.belongsTo('user');
     },
 
-    event : function () {
+    event: function () {
         return this.belongsTo('event');
     }
 });

@@ -4,21 +4,21 @@
 
 'use strict';
 
-let bookshelf = require ('../bookshelf');
+let bookshelf = require('../bookshelf');
 
 let organizer = bookshelf.Model.extend({
-    idAttribute : 'id',
-    hidden : ['id'],
-    tableName : "organizer",
+    idAttribute: 'id',
+    tableName: 'organizer',
 
-    user : function () {
+    user: function () {
         return this.belongsTo('user');
     },
-    eventAdmin : function () {
+
+    eventAdmin: function () {
         return this.hasMany('eventAdmin');
     },
 
-    event : function () {
+    event: function () {
         return this.hasMany('event');
     }
 
