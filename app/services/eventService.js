@@ -96,10 +96,66 @@ class EventService {
                     return resolve(data);
                 })
                 .catch(error => {
+                    console.log();
                     return reject(error);
                 });
         });
     }
+
+    /**
+     *
+     * @description Get  an event
+     *
+     * @param {Number}  eventId - Number identifying an event
+     *
+     * @return {object} object -  Event  Object / error
+     */
+    getCatEvent (eventId) {
+        return new Promise((resolve, reject)=> {
+            this.event.forge({ id: eventId }).fetch({ withRelated: [
+                { 'organizer' : function (qb) { qb.select('id', 'organizername'); }}, 'category',
+                {'category.categoryEntry' : function (query) {
+                    query.count();
+                }}] })
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    console.log(`\n\n Error => ${JSON.stringify(error)}\n\n`);
+                    return reject(error);
+                });
+        });
+    }
+
+    /**
+     *
+     * @description Get  an event
+     *
+     * @param {Number}  eventId - Number identifying an event
+     *
+     * @return {object} object -  Event  Object / error
+     */
+    getEvent (eventId) {
+        return new Promise((resolve, reject)=> {
+            this.event.forge({ id: eventId }).fetch({ withRelated: [
+                { 'organizer' : function (qb) {
+                    qb.select('id', 'organizername');
+                }}, 'category', {'category.user' : function (qb) {
+                    qb.select('id','name');
+                }},
+                {'category.categoryEntry' : function (query) {
+                    query.count();
+                }}] })
+                .then(data => {
+                    return resolve(data);
+                })
+                .catch(error => {
+                    console.log(`\n\n Error => ${JSON.stringify(error)}\n\n`);
+                    return reject(error);
+                });
+        });
+    }
+
 
     /**
      *

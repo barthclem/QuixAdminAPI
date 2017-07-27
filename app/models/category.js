@@ -15,6 +15,10 @@ let category = bookshelf.Model.extend({
 
     categoryEntry : function () {
         return this.hasMany('categoryEntry');
+    },
+
+    user : function () {
+        return this.belongsTo('user');
     }
 
 });

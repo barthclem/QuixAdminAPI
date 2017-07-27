@@ -65,7 +65,7 @@ module.exports = (app, serviceLocator) => {
         });
 
     router.get('/allEvent/:userId', [authMiddleware.authenticate(), validate(eventAdminValidation.getEventAdmin),
-        loadRoleMiddleWare(userGroup, true), authorizer.wants(constants.VIEW_AN_EVENT_ADMIN)],
+        loadRoleMiddleWare(userGroup, true), authorizer.wants(constants.VIEW_ALL_EVENTS)],
         (req, res, next)=> {
             eventAdminController.getAllEventsEventAdminByUserId(req, res, next);
         });

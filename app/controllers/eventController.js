@@ -145,6 +145,27 @@ class EventController {
         });
     }
 
+    /**
+     *@description ENDPOINT  GET /:/id - get a Event by id
+     *
+     *@param  {object} req express request object
+     *@param {object}  res express response object
+     *@param {function} next express routing callback
+     *@return {callback}
+     */
+    getCatEvent (req, res, next) {
+        let id = Number(req.params.id);
+        this.eventService.getCatEvent(id)
+            .then(data => {
+                console.log(` GET Event => ${data}`);
+                return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
+            })
+            .catch(error => {
+                console.log(` Get Cat Event Error => ${error}`);
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send(responseFormatter(HttpStatus.INTERNAL_SERVER_ERROR, { status: 'failed' }));
+            });
+    }
 
     /**
      *@description ENDPOINT  GET /:/id - get a Event by id

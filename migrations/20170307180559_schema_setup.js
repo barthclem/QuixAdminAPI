@@ -71,7 +71,7 @@ exports.up = function (knex) {
         .createTableIfNotExists('category', (table) => {
             table.increments('id').primary();
             table.integer('event_id').unsigned().references('event.id');
-            table.integer('created_by').unsigned().references('eventAdmin.id');
+            table.integer('created_by').unsigned().references('user.id');
             table.boolean('has_bonus');
             table.integer('question_time').unsigned();
             table.integer('bonus_time').unsigned();

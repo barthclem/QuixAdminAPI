@@ -13,7 +13,8 @@ exports.seed = function(knex, Promise) {
           {id: 5, group_name: constants.DATA_GROUP.ORGANIZER.title},
           {id: 6, group_name: constants.DATA_GROUP.PARTICIPANT.title},
           {id: 7, group_name: constants.DATA_GROUP.USER.title},
-          {id: 8, group_name: constants.DATA_GROUP.ROLE_USER.title}
+          {id: 8, group_name: constants.DATA_GROUP.ROLE_USER.title},
+          {id: 9, group_name: constants.DATA_GROUP.GUEST.title}
 
       ]);
     });

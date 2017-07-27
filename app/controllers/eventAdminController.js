@@ -109,7 +109,7 @@ class EventAdminAdminController {
         let eventId = Number(req.params.eventId);
         this.eventAdminService.getEventAdminByEventId(eventId).then(
             data => {
-                console.log(` GET EventAdmin => ${data}`);
+                console.log(` GET EventAdmin => ${JSON.stringify(data)}`);
                 return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             }).catch( error => {
                 console.log(`\n\n Get Event Admin By EventId Error => ${error}`);
@@ -131,7 +131,7 @@ class EventAdminAdminController {
         this.eventAdminService.getAllEventsOfEventAdmin(userId)
             .then(
                 data => {
-                console.log(` GET All  Events of EventAdmin => ${data}`);
+                console.log(` GET All  Events of EventAdmin => ${JSON.stringify(data)}`);
                 return res.status(HttpStatus.OK).send(responseFormatter(HttpStatus.OK, data));
             })
             .catch(error => {

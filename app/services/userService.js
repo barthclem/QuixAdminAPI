@@ -75,7 +75,7 @@ class UserService {
         return new Promise((resolve, reject) => {
             return this.users.
                forge({ username: username })
-                .fetch({ columns: ['name', 'username', 'picture'] })
+                .fetch({ columns: ['id', 'name', 'username', 'picture'] })
                 .then(
                     data => { return resolve(data);}
                     )

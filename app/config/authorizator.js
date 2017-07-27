@@ -21,7 +21,9 @@ let superAdmin = new Role(authorizor, constants.ROLES.SUPERADMIN);
 
 module.exports = (()=> {
 
-    guest.canDo(PERMISSIONS.GENERAL.VIEW_ONGOING_EVENTS);
+    guest.canDo(PERMISSIONS.GENERAL.VIEW_ONGOING_EVENTS,
+                         PERMISSIONS.EVENT.VIEW_ALL_EVENTS,
+                         PERMISSIONS.EVENT.VIEW_AN_EVENT);
     participant.canDo(PERMISSIONS.USER.GET_A_USER,
                       PERMISSIONS.USER.UPDATE_A_USER,
                       PERMISSIONS.PARTICIPANT.DELETE_A_PARTICIPANT,
@@ -43,8 +45,6 @@ module.exports = (()=> {
                     PERMISSIONS.PARTICIPANT.SEND_MESSAGE_TO_PARTICIPANT,
                     PERMISSIONS.PARTICIPANT.VIEW_ALL_PARTICIPANTS,
                     PERMISSIONS.EVENT.EDIT_AN_EVENT,
-                    PERMISSIONS.EVENT.VIEW_AN_EVENT,
-                    PERMISSIONS.EVENT.VIEW_ALL_EVENTS,
                     PERMISSIONS.CATEGORY.CREATE_A_CATEGORY,
                     PERMISSIONS.CATEGORY.VIEW_ALL_CATEGORIES,
                     PERMISSIONS.CATEGORY.VIEW_A_CATEGORY,

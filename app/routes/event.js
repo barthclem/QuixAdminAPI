@@ -11,6 +11,7 @@ let authorizer = require('../config/authorizator');
 let constants = require('../config/constants').PERMISSIONS.EVENT;
 let userGroup = require('../config/constants').DATA_GROUP.EVENT.id;
 let organizerGroup = require('../config/constants').DATA_GROUP.ORGANIZER.id;
+let guestGroup = require('../config/constants').DATA_GROUP.GUEST.id;
 let loadRoleMiddleWare = require('../lib/roleMiddleWare');
 let eventValidation = require('../validation/eventValidation');
 
@@ -28,7 +29,7 @@ module.exports = (app, serviceLocator) => {
     });
 
     router.route('/').get(
-        [authMiddleware.authenticate(), loadRoleMiddleWare(organizerGroup), authorizer.wants(constants.REGISTER_AN_EVENT)],
+        [authMiddleware.authenticate(), loadRoleMiddleWare(organizerGroup), authorizer.wants(constants.VIEW_ALL_EVENTS)],
         (req, res, next) => {
             eventController.listAllEvents(req, res, next);
             //next();
@@ -57,6 +58,15 @@ module.exports = (app, serviceLocator) => {
         [authMiddleware.authenticate(), validate(eventValidation.getEvent), loadRoleMiddleWare(userGroup, true),
             authorizer.wants(constants.VIEW_AN_EVENT)], (req, res, next) => {
             eventController.getAllEventMails(req, res, next);
+        });
+
+    /**
+     * Get Categories of event with ID :id
+     */
+     router.route('/cat/:id').get(
+        [authMiddleware.authenticate(), validate(eventValidation.getEvent), loadRoleMiddleWare(userGroup, true),
+            authorizer.wants(constants.VIEW_AN_EVENT)], (req, res, next) => {
+            eventController.getCatEvent(req, res, next);
         });
 
     router.route('/organizer/:id').get(

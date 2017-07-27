@@ -133,15 +133,13 @@ class EventAdminService {
      */
     getEventAdminByEventId (eventId) {
         return new Promise((resolve, reject)=> {
-            this.eventAdmin.forge({ event_id: eventId })
-                .fetch({ withRelated: [{ event: function (query) { query.select('id', 'title');} },
+            this.eventAdmin.query(qb => {qb.where('event_id', '=', eventId);})
+                .fetchAll({ withRelated: [{ event: function (query) { query.select('id', 'title');} },
 
                     { user: function (query) {query.select('id', 'name');} }
                 ] })
                 .then(data => {
-                    console.log(`
-
-Get eventAdmin Data => ${JSON.stringify(data)}`);
+                    console.log(`Get eventAdmin Data => ${JSON.stringify(data)}`);
                     return resolve(data);
                 })
                 .catch(error => {
@@ -177,8 +175,8 @@ Get eventAdmin Data => ${JSON.stringify(data)}`);
      */
     getAllEventsOfEventAdmin (userId) {
         return new Promise((resolve, reject)=> {
-            this.eventAdmin.forge({ user_id: userId })
-                .fetch({ withRelated: ['event'] })
+            this.eventAdmin.query(qb => {qb.where('user_id', '=', userId )})
+                .fetchAll({ withRelated: ['event'] })
                 .then(data => {
                     return resolve(data);
                 })
