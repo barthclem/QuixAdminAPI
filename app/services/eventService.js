@@ -113,15 +113,18 @@ class EventService {
     getCatEvent (eventId) {
         return new Promise((resolve, reject)=> {
             this.event.forge({ id: eventId }).fetch({ withRelated: [
-                { 'organizer' : function (qb) { qb.select('id', 'organizername'); }}, 'category',
-                {'category.categoryEntry' : function (query) {
-                    query.count();
-                }}] })
+                { organizer: function (qb) { qb.select('id', 'organizername'); } },
+
+                'category', 'category.categoryEntry'] })
                 .then(data => {
                     return resolve(data);
                 })
                 .catch(error => {
-                    console.log(`\n\n Error => ${JSON.stringify(error)}\n\n`);
+                    console.log(`
+
+ Error => ${JSON.stringify(error)}
+
+`);
                     return reject(error);
                 });
         });
@@ -138,19 +141,25 @@ class EventService {
     getEvent (eventId) {
         return new Promise((resolve, reject)=> {
             this.event.forge({ id: eventId }).fetch({ withRelated: [
-                { 'organizer' : function (qb) {
-                    qb.select('id', 'organizername');
-                }}, 'category', {'category.user' : function (qb) {
-                    qb.select('id','name');
-                }},
-                {'category.categoryEntry' : function (query) {
-                    query.count();
-                }}] })
+                { organizer: function (qb) {
+                        qb.select('id', 'organizername');
+                    } }, 'category', { 'category.user': function (qb) {
+
+                        qb.select('id', 'name');
+                    } },
+
+                { 'category.categoryEntry': function (query) {
+                        query.count();
+                    } }] })
                 .then(data => {
                     return resolve(data);
                 })
                 .catch(error => {
-                    console.log(`\n\n Error => ${JSON.stringify(error)}\n\n`);
+                    console.log(`
+
+ Error => ${JSON.stringify(error)}
+
+`);
                     return reject(error);
                 });
         });
